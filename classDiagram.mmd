@@ -1,68 +1,68 @@
 classDiagram
     class jeu {
-        - combat : fonction
-        - menu : menu
-        - gameplay : gameplay
-        - logique : fonction
+        + combat : fonction
+        + menu : menu
+        + gameplay : gameplay
+        + logique : fonction
     }
     class gameplay {
-        - combat : fonction
-        - joueur : joueur
-        - maps : list[map]
+        + combat : fonction
+        + joueur : joueur
+        + maps : list[map]
     }
     class menu {
-        - option : fonction
-        - sauvegarde : fonction
-        - volume : fonction
-        - quitter : fonction
+        + option : fonction
+        + sauvegarde : fonction
+        + volume : fonction
+        + quitter : fonction
     }
     class entité {
-        - déplacement : fonction
-        - combat : fonction
-        - pv : entier
-        - sprite : list[image]
-        - interagir : fonction
-        - coordonnées : list[x, y]
+        + déplacement : fonction
+        + combat : fonction
+        + pv : entier
+        + sprite : list[image]
+        + interagir : fonction
+        + coordonnées : list[x, y]
     }
     class mob {
-        - déplacement : fonction
-        - combat : fonction
-        - attaque : fonction
+        + déplacement : fonction
+        + combat : fonction
+        + attaque : fonction
     }
     class objet {
-        - durabilité : entier
-        - forme : list
-        - utilisation : fonction
+        + durabilité : entier
+        + forme : list
+        + utilisation : fonction
     }
     class map {
-        - fond : image
-        - carte : image
-        - secteur : list[secteur]
-        - update : fonction
+        + fond : image
+        + carte : image
+        + secteur : list[secteur]
+        + update : fonction
     }
     class joueur {
-        - déplacement : fonction
-        - inventaire : list[objet]
-        - objet en main : entier
-        - utilisation objet : fonction
-        - changer de main : fonction
-        - alliés : list[allié]
-        - ouverture inventaire : fonction
+        + déplacement : fonction
+        + inventaire : list[objet]
+        + objet en main : entier
+        + utilisation objet : fonction
+        + changer de main : fonction
+        + alliés : list[allié]
+        + ouverture inventaire : fonction
     }
     class allié {
-        - interaction : fonction
-        - déplacement : fonction
-        - attaque : fonction
+        + interaction : fonction
+        + déplacement : fonction
+        + attaque : fonction
     }
     class secteur {
-        - mob : list[mob]
-        - décor : list[décor]
+        + mob : list[mob]
+        + décor : list[décor]
     }
     class décor {
-        - coordonnées : list[x, y]
-        - collision : rect pygame
-        - image : image
-        - taille : int
+        + coordonnées : list[x, y]
+        + collision : rect pygame
+        + image : image
+        + taille : int
     }
 
     gameplay --> joueur
