@@ -54,36 +54,16 @@ classe de gestion de la map ainsi que de la carte et de toutes les entitées inc
 
 
 
-## Classe 
+## Classe joueur
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
 
 
-## Classe 
+## Classe amis
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
 
 
-## Classe 
+## Classe secteur
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-
-
-## Classe 
-| Classe                | Attribut | Type | Description |
-| -------------------- | ------ |------------|------------|
-
-
-## Classe 
-| Classe                | Attribut | Type | Description |
-| -------------------- | ------ |------------|------------|
-
-
-## Classe Map
-| Classe                | Attribut | Type | Description |
-| -------------------- | ------ |------------|------------|
-| map | map | map | classe map qui gère la map ainsi que la carte et toutes les entités présent sur la map hormis le joueurs et les amis |
-| map | fond | image | image du fond |
-|    |        |
-|                |        |
-|           |        |
