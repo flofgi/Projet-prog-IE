@@ -48,7 +48,7 @@ classe assurant la gestion des mobs : attaque et déplacement ainsi que les in
 | mob | attaque | fonction | logique des attaques des mobs (inflige des PV) |
 
 ## Classe objet
-Classe abstraite gérant les différents objets
+Classe abstraite gérant les différents objets implémenter indépendamment
 
 | Classe | Attribut | Type | Description |
 | ------ | -------- | ---- | ----------- |
