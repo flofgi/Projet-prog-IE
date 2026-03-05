@@ -1,10 +1,21 @@
 # Listing des fonctions
 
-## Classe jeux
+## Classe jeu
 classe principale qui gère le jeu, la logique, les événements et les fenêtres
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-| jeux | combat | fonction | fonction qui gère la logique de combat |
+| jeu | combat | fonction | fonction qui gère la logique de combat |
+| jeu | menu | menu | variable permettant de stocker le fonctionnement du menu |
+| jeu | menu | gameplay | variable permettant de stocker le fonctionnement du gameplay |
+| jeu | logique | fonction | fonction qui permet de gerer le fonctionnement du jeu en lancant les differentes classes |
+
+## Classe gameplay
+classe principale qui gère le gameplay
+| Classe                | Attribut | Type | Description |
+| -------------------- | ------ |------------|------------|
+| gameplay | combat | fonction | fonction qui gère la logique de combat |
+| gameplay | joueur | joueur | variable qui stocke le joueur |
+| gameplay | maps | list[map] | liste des différentes maps du jeu |
 
 ## Classe du menu
 classe qui permet la gestion du menu après une sortie
@@ -15,15 +26,15 @@ classe qui permet la gestion du menu après une sortie
 | menu | volume | fonction | fonction qui gère la logique du réglage du volume |
 | menu | quitter | fonction | fonction qui gère la logique d'arrêt du jeu avec la sauvegarde de la partie en cours |
 
-## Classe entité
-classe mère des entités gérant de manière unifiée la mort, les Pv et les déplacements
+## Classe abstraite entité
+classe mère des entités gérant de manière unifiée la mort, les PV et les déplacements (pour mobs, joueur et alliés)
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
 | entité | déplacement | fonction | gestion des déplacements de manière abstraite pour les entités |
 | entité | combat | fonction | fonction qui gère de manière abstraite la partie combat pour chaque entité |
-| entité | pv | entier | variable donnant un nombre de Pv à une entité |
-| entité | sprite | list[image] | listes des images utilisées pour le rendu d'une entité |
-| entité | interagir | fonction | fonction gérant le fait d'interagir avec une entité (parler ...) |
+| entité | pv | entier | variable donnant un nombre de PV à une entité |
+| entité | sprite | list[image] | liste des images utilisées pour le rendu d'une entité |
+| entité | interagir | fonction | fonction gérant le fait d'interagir avec une entité (parler …) |
 | entité | coordonnées | list[x, y] | position de l'entité |
 
 ## Classe mob
@@ -32,14 +43,14 @@ classe assurant la gestion des mobs : attaque et déplacement ainsi que les in
 | -------------------- | ------ |------------|------------|
 | mob | déplacement | fonction | logique de déplacement des mobs |
 | mob | combat | fonction | logique du combat des mobs |
-| mob | attaque | fonction | logique des attaques des mobs (inflige des Pv) |
+| mob | attaque | fonction | logique des attaques des mobs (inflige des PV) |
 
 ## Classe objet
 classe abstraite gérant les différents objets
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
 | objet | durabilité | entier | variable gardant la valeur de la durabilité d'un objet avec une valeur par défaut pour les durabilités infinies |
-| objet | forme | list | listes des images à afficher si c'est une entité ou sélectionnées dans l'inventaire |
+| objet | forme | list | liste des images à afficher si c'est une entité ou sélectionnées dans l'inventaire |
 | objet | utilisation | fonction | utilisation d'un objet (ex : tir avec le fusil) |
 
 ## Classe map
@@ -49,9 +60,10 @@ classe de gestion de la map ainsi que de la carte et de toutes les entités incl
 | map | fond | image | image du fond de la map |
 | map | carte | image | image de la carte du jeu pour cette map |
 | map | secteur | list[secteur] | liste des secteurs de gestion des entités de la map |
+| map | update | fonction | fonction qui met à jour les éléments |
 
 ## Classe joueur
-classe fille de entité permettant la mise en mouvement et la gestion de l'inventaire du joueur ainsi que de la gestion de l'utilisation des objets, changer de main …
+classe fille de l'entité permettant la mise en mouvement et la gestion de l'inventaire du joueur ainsi que la gestion de l'utilisation des objets, le changement de main …
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
 | joueur | déplacement | fonction | fonction qui gère la logique de déplacement du joueur |
@@ -60,14 +72,15 @@ classe fille de entité permettant la mise en mouvement et la gestion de l'inven
 | joueur | utilisation objet | fonction |
 | joueur | changer de main | fonction | fonction permettant de changer l'objet dans la main |
 | joueur | alliés | list[allié] | liste des alliés |
+| joueur | ouverture inventaire | fonction | fonction permettant au joueur de gérer son inventaire |
 
-## Classe amis
-classe amis permettant la gestion des alliés dans le jeu ainsi que leur déplacement et leurs actions
+## Classe allié
+classe allié permettant la gestion des alliés dans le jeu ainsi que leur déplacement et leurs actions
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-| amis | interaction | fonction | fonction qui gère les interactions avec lui et les alliés |
-| amis | déplacement | fonction | fonction qui gère le déplacement des alliés |
-| amis | attaque | fonction | fonction qui gère l'attaque de l'allié |
+| allié | interaction | fonction | fonction qui gère les interactions avec lui et les alliés |
+| allié | déplacement | fonction | fonction qui gère le déplacement des alliés |
+| allié | attaque | fonction | fonction qui gère l'attaque de l'allié |
 
 ## Classe secteur
 classe implémentant les différents secteurs de gestion des entités sur la carte
