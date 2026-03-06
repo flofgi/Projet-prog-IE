@@ -4,24 +4,24 @@ class entite:
     """Abstract base class for all game entities.
     
     This parent class provides a unified interface for managing entity lifecycle,
-    including health (PV), visual representation through sprites, and spatial
+    including health (hp), visual representation through sprites, and spatial
     positioning. Foundation for various entity types such as mobs,
     players, and allies.
 
     Attributes:
-        pv (int): The entity's health points. When this reaches zero, the entity dies.
+        hp (int): The entity's health points. When this reaches zero, the entity dies.
         sprites (list[str]): List of sprite identifiers or paths for rendering the entity.
         x (int): The x-coordinate of the entity's position on the game map.
         y (int): The y-coordinate of the entity's position on the game map.
     """
-    def __init__(self, pv: int, sprites: list[str], coordonnees: tuple[int, int]) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordonnees: tuple[int, int]) -> None:
         """
         Args:
-            pv (int): Initial health points for the entity. Must be a positive integer.
+            hp (int): Initial health points for the entity. Must be a positive integer.
             sprites (list[str]): List of sprite identifiers for visual representation.
             coordonnees (tuple[int, int]): Initial (x, y) coordinates on the game map.
         """
-        self.pv = pv
+        self.hp = hp
         self.sprites = sprites
         self.x, self.y = coordonnees
 
