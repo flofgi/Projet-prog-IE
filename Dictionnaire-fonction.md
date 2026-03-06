@@ -6,16 +6,16 @@ fenêtres
 
 | Classe | Attribut | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| jeu | combat | fonction | fonction qui gère la logique de combat |
-| jeu | menu | menu | variable permettant de stocker le fonctionnement du menu |
-| jeu | gameplay | gameplay | variable permettant de stocker le fonctionnement du gameplay |
-| jeu | logique | fonction | fonction qui permet de gerer le fonctionnement du jeu en lancant les differentes classes |
+| jeu | combat | méthode | méthode qui gère la logique de combat |
+| jeu | menu | menu | variable permettant de stocker le méthodenement du menu |
+| jeu | gameplay | gameplay | variable permettant de stocker le méthodenement du gameplay |
+| jeu | logique | méthode | méthode qui permet de gerer le méthodenement du jeu en lancant les differentes classes |
 
 ## Classe gameplay
 classe principale qui gère le gameplay
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-| gameplay | combat | fonction | fonction qui gère la logique de combat |
+| gameplay | combat | méthode | méthode qui gère la logique de combat |
 | gameplay | joueur | joueur | variable qui stocke le joueur |
 | gameplay | maps | list[map] | liste des différentes maps du jeu |
 
@@ -23,29 +23,29 @@ classe principale qui gère le gameplay
 classe qui permet la gestion du menu après une sortie
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-| menu | option | fonction | fonction qui gère la logique du menu option dans la classe Menu |
-| menu | sauvegarde | fonction | fonction qui gère la logique de la sauvegarde du jeu dans la classe Menu |
-| menu | volume | fonction | fonction qui gère la logique du réglage du volume |
-| menu | quitter | fonction | fonction qui gère la logique d'arrêt du jeu avec sauvegarde de la partie en cours |
+| menu | option | méthode | méthode qui gère la logique du menu option dans la classe Menu |
+| menu | sauvegarde | méthode | méthode qui gère la logique de la sauvegarde du jeu dans la classe Menu |
+| menu | volume | méthode | méthode qui gère la logique du réglage du volume |
+| menu | quitter | méthode | méthode qui gère la logique d'arrêt du jeu avec sauvegarde de la partie en cours |
 
 ## Classe abstraite entité
 classe mère des entités gérant de manière unifiée la mort, les PV et les déplacements (pour mobs, joueur et alliés)
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-| entité | déplacement | fonction | gestion des déplacements de manière abstraite pour les entités |
-| entité | combat | fonction | fonction qui gère de manière abstraite la partie combat pour chaque entité |
+| entité | déplacement | méthode | gestion des déplacements de manière abstraite pour les entités |
+| entité | combat | méthode | méthode qui gère de manière abstraite la partie combat pour chaque entité |
 | entité | pv | entier | variable donnant le nombre de PV d'une entité |
 | entité | sprite | list[image] | liste des images utilisées pour le rendu d'une entité |
-| entité | interagir | fonction | fonction gérant le fait d'interagir avec une entité (parler…) |
+| entité | interagir | méthode | méthode gérant le fait d'interagir avec une entité (parler…) |
 | entité | coordonnées | list[x, y] | position de l'entité |
 
 ## Classe mob
 classe assurant la gestion des mobs : attaque et déplacement ainsi que les interactions
 | Classe                | Attribut | Type | Description |
 | -------------------- | ------ |------------|------------|
-| mob | déplacement | fonction | logique de déplacement des mobs |
-| mob | combat | fonction | logique du combat des mobs |
-| mob | attaque | fonction | logique des attaques des mobs (inflige des PV) |
+| mob | déplacement | méthode | logique de déplacement des mobs |
+| mob | combat | méthode | logique du combat des mobs |
+| mob | attaque | méthode | logique des attaques des mobs (inflige des PV) |
 
 ## Classe objet
 Classe abstraite gérant les différents objets implémenter indépendamment
@@ -54,7 +54,7 @@ Classe abstraite gérant les différents objets implémenter indépendamment
 | ------ | -------- | ---- | ----------- |
 | objet | durabilité | entier | variable gardant la valeur de la durabilité d'un objet, avec une valeur par défaut pour les durabilités infinies |
 | objet | forme | list | liste des images à afficher si c'est une entité ou à sélectionner dans l'inventaire |
-| objet | utilisation | fonction | utilisation d'un objet (ex. : tir avec le fusil) |
+| objet | utilisation | méthode | utilisation d'un objet (ex. : tir avec le fusil) |
 
 ## Classe map
 Classe de gestion de la map ainsi que de la carte et de toutes les
@@ -65,7 +65,7 @@ entités incluses dedans
 | map | fond | image | image du fond de la map |
 | map | carte | image | image de la carte du jeu pour cette map |
 | map | secteur | list[secteur] | liste des secteurs de gestion des entités de la map |
-| map | update | fonction | fonction qui met à jour les éléments |
+| map | update | méthode | méthode qui met à jour les éléments |
 
 ## Classe joueur
 Classe fille de l'entité permettant la mise en mouvement et la gestion
@@ -74,13 +74,13 @@ objets, le changement de main…
 
 | Classe | Attribut | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| joueur | déplacement | fonction | fonction qui gère la logique de déplacement du joueur |
+| joueur | déplacement | méthode | méthode qui gère la logique de déplacement du joueur |
 | joueur | inventaire | list[objet] | variable contenant la liste des objets qui appartiennent au joueur |
 | joueur | objet en main | entier | objet tenu en main par le joueur, avec valeur pour « rien en main » |
-| joueur | utilisation objet | fonction | |
-| joueur | changer de main | fonction | fonction permettant de changer l'objet dans la main |
+| joueur | utilisation objet | méthode | |
+| joueur | changer de main | méthode | méthode permettant de changer l'objet dans la main |
 | joueur | alliés | list[allié] | liste des alliés |
-| joueur | ouverture inventaire | fonction | fonction permettant au joueur de gérer son inventaire |
+| joueur | ouverture inventaire | méthode | méthode permettant au joueur de gérer son inventaire |
 
 ## Classe allié
 Classe allié permettant la gestion des alliés dans le jeu ainsi que
@@ -88,9 +88,9 @@ leur déplacement et leurs actions
 
 | Classe | Attribut | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| allié | interaction | fonction | fonction qui gère les interactions avec lui et les alliés |
-| allié | déplacement | fonction | fonction qui gère le déplacement des alliés |
-| allié | attaque | fonction | fonction qui gère l'attaque de l'allié |
+| allié | interaction | méthode | méthode qui gère les interactions avec lui et les alliés |
+| allié | déplacement | méthode | méthode qui gère le déplacement des alliés |
+| allié | attaque | méthode | méthode qui gère l'attaque de l'allié |
 
 ## Classe secteur
 Classe implémentant les différents secteurs de gestion des entités sur la
