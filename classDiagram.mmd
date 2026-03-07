@@ -1,78 +1,129 @@
 classDiagram
     class game {
-        + combat : function
-        + menu : menu
-        + gameplay : gameplay
-        + logic : function
-    }
-    class gameplay {
-        + combat : function
-        + player : player
-        + maps : list[map]
-    }
-    class menu {
-        + option : function
-        + save : function
-        + volume : function
-        + quit : function
-    }
-    class entity {
-        + move : function
-        + combat : function
-        + hp : int
-        + sprite : list[image]
-        + interact : function
-        + coordinates : list[x, y]
-    }
-    class mob {
-        + move : function
-        + combat : function
-        + attack : function
-    }
-    class object {
-        + durability : int
-        + form : list
-        + use : function
-    }
-    class map {
-        + background : image
-        + map : image
-        + sectors : list[sector]
-        + update : function
-    }
-    class player {
-        + move : function
-        + inventory : list[object]
-        + held_item : int
-        + use_item : function
-        + switch_item : function
-        + allies : list[ally]
-        + open_inventory : function
-    }
-    class ally {
-        + interaction : function
-        + move : function
-        + attack : function
-    }
-    class sector {
-        + mobs : list[mob]
-        + decor : list[decor]
-    }
-    class decor {
-        + coordinates : list[x, y]
-        + collision : pygame rect
-        + image : image
-        + size : int
+        +combat()
+        +menu : Menu
+        +gameplay : Gameplay
+        +logic()
+        +current_screen : String
     }
 
-    gameplay --> player
-    gameplay --> map
-    game --> gameplay
-    game --> menu
+    class gameplay {
+        +combat()
+        +player : Player
+        +maps : list~Map~
+        +current_map : Map
+    }
+
+    class menu {
+        +option()
+        +save()
+        +volume()
+        +quit()
+    }
+
+    class entity {
+        <<abstract>>
+        +hp : int
+        +sprite : list~image~
+        +coordinates : pygame.Vector2
+        +rect : pygame.Rect
+        +velocity : pygame.Vector2
+        +move()*
+        +combat()*
+        +interact()
+        +update()
+        +name : string
+    }
+
+    class mob {
+        +move()
+        +combat()
+        +attack()
+    }
+
+    class player {
+        +inventory : list~Object~
+        +held_item : int
+        +allies : list~Ally~
+        +move()
+        +use_item()
+        +switch_item()
+        +open_inventory()
+    }
+
+    class ally {
+        +interaction()
+        +move()
+        +attack()
+    }
+
+    class object {
+        <<abstract>>
+        +durability : int
+        +sprites : list~image~
+        +coordinates : pygame.Vector2
+        +is_drop : bool
+        +use()
+        +interact()
+    }
+
+    class map {
+        +background : image
+        +map_img : image
+        +sectors : list~Sector~
+        +sector_size : int
+        +camera : Camera
+        +tiles : list~list~int~~
+        +update()
+        +draw()
+        +get_sector(coords)
+        +visible_sectors()
+        +transfer_entity(entity, old, new)
+    }
+
+    class sector {
+        +mobs : list~Mob~
+        +decor : list~Decor~
+        +rect : pygame.Rect
+        +is_safe : bool
+        +is_locked : bool
+        +update()
+        +draw()
+    }
+
+    class decor {
+        +coordinates : pygame.Vector2
+        +collision : pygame.Rect
+        +image : image
+        +size : int
+        +is_collidable : bool
+        +draw()
+    }
+
+    class camera {
+        +coordinates : pygame.Vector2
+        +width : int
+        +height : int
+        +update(player_pos)
+        +apply(entity_pos)
+        +limit()
+    }
+
+    %% Relations
+    game "1" --o "1" menu
+    game "1" --o "1" gameplay
+    gameplay "1" --* "many" map
+    gameplay "1" --o "1" player
+    
+    map "1" --* "many" sector
+    map "1" --o "1" camera
+    
+    sector "1" --o "many" mob
+    sector "1" --o "many" decor
+    
+    entity <|-- mob
     entity <|-- player
-    entity <|-- mob    
     entity <|-- ally
-    sector --> mob
-    sector --> decor
-    player --> ally
-    map --> sector
+    
+    player "1" --o "many" object : inventory
+    player "1" --o "many" ally
