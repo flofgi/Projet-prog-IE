@@ -4,10 +4,13 @@ import pygame
 class Player(Entity):
     """"""
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, allies: list[ally], inventory = []) -> None:
         Entity.__init__(self, hp, sprites, coordinates, " ")
         self.rect = pygame.Rect(self.x, self.y, 32, 32)
         self.max_speed = 1
+        self.allies = allies
+        self.held_item = 0
+        self.inventory = inventory
 
     
     def move(self):
@@ -27,3 +30,23 @@ class Player(Entity):
     
     def interact(self):
         pass
+
+    def add_ally(self, ally: Ally) -> None:
+        self.allies.append(ally)
+
+    def use_item(self):
+        pass
+
+    def switch_item(self, item_id):
+        self.held_item = item_id
+
+    def open_inventory(self):
+        pass
+
+    def drop(self, item):
+        pass
+
+    def add_ally(self, ally: Ally):
+        self.allies.append(ally)
+
+    
