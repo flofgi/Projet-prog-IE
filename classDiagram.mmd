@@ -28,11 +28,14 @@ classDiagram
         +coordinates : pygame.Vector2
         +rect : pygame.Rect
         +velocity : pygame.Vector2
+        +name : string
+        +current_frame : int
+        +animation_timer : int
         +move()*
         +combat()*
         +interact()
         +update()
-        +name : string
+        +get_coordinates
     }
 
     class mob {

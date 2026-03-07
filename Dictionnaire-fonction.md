@@ -36,16 +36,19 @@ Base class for entities managing death, HP and movement uniformly (for mobs, pla
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| entity | move | method | abstract handling of entity movement |
-| entity | combat | method | abstract combat logic for each entity |
-| entity | hp | int | variable giving an entity's hit points |
-| entity | sprite | list[image] | list of images used to render an entity |
-| entity | interact | method | method handling interaction with an entity (talking, etc.) |
+| entity | name | string | name of entity |
+| entity | current_frame | int | index of the current sprit load
+| entity | animation_timer | int | index of the fps to load the next sprite
 | entity | coordinates | pygame.Vector2 | position of the entity |
 | entity | rect | pygame.Rect |
+| entity | hp | int | variable giving an entity's hit points |
+| entity | sprite | list[image] | list of images used to render an entity |
 | entity | velocity | pygame.Vector2 | vector of mouvement
+| entity | move | method | abstract handling of entity movement |
+| entity | combat | method | abstract combat logic for each entity |
+| entity | interact | method | method handling interaction with an entity (talking, etc.) |
 | entity | update | method | |
-| entity | name | string | name of entity |
+| entity | get_coordinates | method |
 
 ## Class Mob
 Class managing mobs: attacks, movement and interactions.
@@ -92,12 +95,12 @@ Subclass of Entity enabling movement and inventory management, as well as object
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| player | move | method | method that handles player movement logic |
-| player | inventory | list[object] | variable containing the list of objects owned by the player |
+| player | allies | list[ally] | list of allies |
 | player | held_item | int | item held in the player's hand, with a value for "no item" |
+| player | inventory | list[object] | variable containing the list of objects owned by the player |
+| player | move | method | method that handles player movement logic |
 | player | use_item | method | |
 | player | switch_item | method | method allowing changing the item in hand |
-| player | allies | list[ally] | list of allies |
 | player | open_inventory | method | method allowing the player to manage their inventory |
 | player | drop | method |
 
