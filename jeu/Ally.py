@@ -1,0 +1,67 @@
+from Entity import Entity
+from Player import Player
+import pygame
+from random import uniform, randint
+from math import pi, cos, sin
+
+
+class Ally(Entity):
+    """"""
+
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+        Entity.__init__(self, hp, sprites, coordinates, " ")
+        self.wandering_point = pygame.Vector2(0, 0)
+        self.target_coordonnees = coordinates
+        self.ALERT_ZONE = 400
+        self.CONFORT_ZONE = 20
+        self.WANDERING_ZONE = 200
+
+    def interaction(self):
+        pass
+
+
+    def attack(self):
+        pass
+
+    def update(self, target: Player = None):
+        self.animation_timer += 1
+
+        if target != None:
+            self.target_coordonnees = target.get_coordinates()
+
+        player_position = target.get_coordinates()
+        distance_player_ally = player_position.distance_to(self.coordinates) 
+        
+        if distance_player_ally < self.CONFORT_ZONE:
+            self.velocity = pygame.Vector2(0, 0)
+        
+        if distance_player_ally > self.ALERT_ZONE:
+            self.coordinates = player_position
+            self.velocity = pygame.Vector2(0, 0)
+
+        else:
+            self.wandering(target)
+        self.move()
+
+    def wandering(self, target: pygame.Vector2):
+        if self.animation_timer > 100:
+            self.animation_timer = 0
+            if randint(0, 1) == 1:
+                self.wandering_point = self.target_random_point(self.CONFORT_ZONE, self.wandering_point, target)
+
+        direction = self.wandering_point - self.coordinates
+        self.velocity = direction.normalize() * (self.max_speed * 0.5)
+
+    def modifie_zone(self, ALERT_ZONE = 400, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
+        self.ALERT_ZONE = ALERT_ZONE
+        self.CONFORT_ZONE = CONFORT_ZONE
+        self.WANDERING_ZONE = WANDERING_ZONE
+
+
+    def target_random_point(self, min_rayon_limite, max_rayon_limite, target: pygame.Vector2 = None) -> pygame.Vector2:
+        if target == None:
+            target = self.coordinates
+        
+        rayon = uniform(min_rayon_limite, min_rayon_limite)
+        angle = uniform(0, pi*2)
+        return pygame.Vector2(cos(angle)*rayon, sin(angle)*rayon)+target

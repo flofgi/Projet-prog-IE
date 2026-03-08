@@ -44,10 +44,11 @@ Base class for entities managing death, HP and movement uniformly (for mobs, pla
 | entity | hp | int | variable giving an entity's hit points |
 | entity | sprite | list[image] | list of images used to render an entity |
 | entity | velocity | pygame.Vector2 | vector of mouvement
-| entity | move | method | abstract handling of entity movement |
+| entity | max_speed | float | Maximum speed for entity move |
+| entity | move | method | handling of entity movement |
 | entity | combat | method | abstract combat logic for each entity |
 | entity | interact | method | method handling interaction with an entity (talking, etc.) |
-| entity | update | method | |
+| entity | update | method | abstract method to update the movement speed and update the animation timer |
 | entity | get_coordinates | method |
 
 ## Class Mob
@@ -55,7 +56,6 @@ Class managing mobs: attacks, movement and interactions.
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| mob | move | method | mob movement logic |
 | mob | combat | method | mob combat logic |
 | mob | attack | method | mob attack logic (inflicts HP damage) |
 
@@ -99,21 +99,29 @@ Subclass of Entity enabling movement and inventory management, as well as object
 | player | allies | list[ally] | list of allies |
 | player | held_item | int | item held in the player's hand, with a value for "no item" |
 | player | inventory | list[object] | variable containing the list of objects owned by the player |
-| player | move | method | method that handles player movement logic |
 | player | use_item | method | |
 | player | switch_item | method | method allowing changing the item in hand |
 | player | open_inventory | method | method allowing the player to manage their inventory |
 | player | drop | method |
-| player | add_ally | method
+| player | add_ally | method |
+| player | is_ally | method | return True if the Ally is a player's ally |
+| player | update | method | method to update the movement speed and update the animation timer |
 
 ## Class Ally
 Ally class allowing management of allies in the game along with their movement and actions.
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
+| ally | wandering_point | pygame.Vector2 | target point for wandering |
+| ally | ALERT_ZONE | int | distance beyond which the ally teleports to the player |
+| ally | CONFORT_ZONE | int | distance below which the ally stops walking |
+| ally | WANDERING_ZONE | int | maximum wandering range | 
 | ally | interaction | method | method that handles interactions with the ally |
-| ally | move | method | method that handles ally movement |
 | ally | attack | method | method that handles the ally's attack |
+| ally | update | method | method to update the movement speed and update the animation timer |
+| ally | wandering | mehtod | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
+| ally | modifie_zone | method | modifi  all radius zone |
+| ally | target_random_point | method | calculed a random point aroud the target |
 
 ## Class Sector
 Class implementing different sectors for managing entities on the map.

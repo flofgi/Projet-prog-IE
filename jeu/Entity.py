@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import pygame
+from Player import Player
 
 class Entity(ABC):
     """Abstract base class for all game entities.
@@ -37,16 +38,17 @@ class Entity(ABC):
         self.name = name
         self.current_frame = 0
         self.animation_timer = 0
+        self.max_speed = 1
 
 
-    @abstractmethod
-    def move(self, speed: tuple[int, int]) -> None:
+    def move(self) -> None:
         """Handle entity movement with a given speed.
 
         Args:
             speed (tuple[int, int]): displacement vector (dx, dy) to apply.
         """
-        pass
+        self.coordinates += self.velocity
+        self.rect.topleft = (self.coordinates.x, self.coordinates.y)
 
 
     @abstractmethod
@@ -62,11 +64,13 @@ class Entity(ABC):
         pass
 
     @abstractmethod
-    def update():
+    def update(self, target: "Player" = None):
+        """update position and animation of entity
+        Don't forget to change the animation timer. """
         pass
 
 
     def get_coordinates(self) -> pygame.Vector2:
-        """Return the current position of the entity as (x, y)."""
+        """Return the current position of the entity as pygame.Vector2."""
         return self.coordinates
     
