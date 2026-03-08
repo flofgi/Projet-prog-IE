@@ -40,6 +40,7 @@ class Player(Entity):
 
     def update(self, target: "Player" = None):
         self.animation_timer += 1
+
         keys = pygame.key.get_pressed()
         direction_x = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
         direction_y = keys[pygame.K_DOWN] - keys[pygame.K_UP]
@@ -51,6 +52,8 @@ class Player(Entity):
         else:
             self.velocity = pygame.Vector2(0, 0)
         self.move()
+        for ally in self.allies:
+            ally.update(self)
 
     def is_ally(self, ally: Ally):
         return ally in self.allies

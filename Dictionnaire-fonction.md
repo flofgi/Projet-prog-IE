@@ -56,8 +56,17 @@ Class managing mobs: attacks, movement and interactions.
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
+| mob | wandering_point | pygame.Vector2 | target point for wandering |
+| mob | ALERT_ZONE | int | distance beyond which the mob teleports to the player |
+| mob | CONFORT_ZONE | int | distance below which the mob stops walking |
+| mob | WANDERING_ZONE | int | maximum wandering range | 
 | mob | combat | method | mob combat logic |
 | mob | attack | method | mob attack logic (inflicts HP damage) |
+| mob | interaction | method | method that handles interactions with the mob |
+| mob | update | method | method to update the movement speed and update the animation timer |
+| mob | wandering | mehtod | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
+| mob | modifie_zone | method | modifi  all radius zone |
+| mob | target_random_point | method | calculed a random point aroud the target |
 
 ## Class Object
 Abstract class managing different objects implemented independently.

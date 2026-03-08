@@ -5,16 +5,16 @@ from random import uniform, randint
 from math import pi, cos, sin
 
 
-class Ally(Entity):
+class Mob(Entity):
     """"""
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
         Entity.__init__(self, hp, sprites, coordinates, " ")
         self.wandering_point = pygame.Vector2(0, 0)
         self.target_coordonnees = coordinates
-        self.ALERT_ZONE = 400
+        self.ALERT_ZONE = 200
         self.CONFORT_ZONE = 20
-        self.WANDERING_ZONE = 200
+        self.WANDERING_ZONE = 400
 
     def interaction(self):
         pass
@@ -35,11 +35,11 @@ class Ally(Entity):
                 self.velocity = pygame.Vector2(0, 0)
             
             if distance_player_ally > self.ALERT_ZONE:
-                self.coordinates = self.target_coordonnees
-                self.velocity = pygame.Vector2(0, 0)
+                self.wandering(target)
 
             else:
-                self.wandering(target)
+                self.coordinates = self.target_coordonnees
+                self.velocity = pygame.Vector2(0, 0)
         else:
             self.wandering(self.target_coordonnees)
         self.move()
@@ -53,7 +53,7 @@ class Ally(Entity):
         direction = self.wandering_point - self.coordinates
         self.velocity = direction.normalize() * (self.max_speed * 0.5)
 
-    def modifie_zone(self, ALERT_ZONE = 400, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
+    def modifie_zone(self, ALERT_ZONE = 200, CONFORT_ZONE = 20, WANDERING_ZONE = 400):
         self.ALERT_ZONE = ALERT_ZONE
         self.CONFORT_ZONE = CONFORT_ZONE
         self.WANDERING_ZONE = WANDERING_ZONE
