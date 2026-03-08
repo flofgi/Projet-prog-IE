@@ -1,6 +1,6 @@
 import pygame
 
-from jeu.States.State import State
+from States.State import State
 
 class StateManager:
     """Base class for managing game states.
@@ -47,16 +47,17 @@ class StateManager:
         self.pop_state()
         self.push_state(state)
 
-    def update(self, dt: float):
+    def update(self, dt: float, events):
         """Called every frame to update the current state.
 
         Args:
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
             for 'delta time'
+            events (list): List of pygame events to handle.
         """
     
         if self.states:
-            self.states[-1].update(dt)
+            self.states[-1].update(dt, events)
 
     def render(self, screen: pygame.Surface):
         """Called every frame to render the current state.

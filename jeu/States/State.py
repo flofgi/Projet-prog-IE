@@ -2,8 +2,6 @@ import pygame
 
 from abc import ABC, abstractmethod
 
-from jeu.States.StateManager import StateManager
-
 class State(ABC):
     """Abstract base class for all game states.
     
@@ -15,16 +13,16 @@ class State(ABC):
         manager (StateManager): Reference to the state manager for state transitions.
     """
 
-
-    def __init__(self, state_manager: StateManager):
+    def __init__(self, state_manager):
         self.manager = state_manager
 
     @abstractmethod
     def enter(self):
+        """Load resources or initialize variables specific to the state here."""
         pass
 
     @abstractmethod
-    def update(self, dt):
+    def update(self, dt, events):
         pass
 
     @abstractmethod
@@ -33,6 +31,8 @@ class State(ABC):
 
     @abstractmethod
     def exit(self):
+        """Clear resources and save any necessary data."""
+
         pass
 
 
