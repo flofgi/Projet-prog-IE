@@ -16,6 +16,9 @@ class Ally(Entity):
         rect (pygame.Rect) collisions zone of the entity
         velocity (pygame.Vector2) vector of mouvement
         name (string) name of entity
+        ALERT_ZONE (int) radius of the player detection by the mob
+        CONFORT_ZONE (int) radius of the collision zone with player
+        WANDERING_ZONE (int) radius of the wandering circle where the mob moves around
     """
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
