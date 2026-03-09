@@ -6,7 +6,17 @@ from math import pi, cos, sin
 
 
 class Ally(Entity):
-    """"""
+    """class for mob.
+    
+
+    Attributes:
+        hp (int): The entity's health points. When this reaches zero, the entity dies.
+        sprites (list[str]): List of sprite identifiers or paths for rendering the entity.
+        coordinates (pygame.Vector2) position of the entity
+        rect (pygame.Rect) collisions zone of the entity
+        velocity (pygame.Vector2) vector of mouvement
+        name (string) name of entity
+    """
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
         Entity.__init__(self, hp, sprites, coordinates, " ")
@@ -63,6 +73,6 @@ class Ally(Entity):
         if target == None:
             target = self.coordinates
         
-        rayon = uniform(min_rayon_limite, min_rayon_limite)
+        rayon = uniform(min_rayon_limite, max_rayon_limite)
         angle = uniform(0, pi*2)
         return pygame.Vector2(cos(angle)*rayon, sin(angle)*rayon)+target

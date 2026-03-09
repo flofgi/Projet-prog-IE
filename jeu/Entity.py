@@ -74,3 +74,7 @@ class Entity(ABC):
         """Return the current position of the entity as pygame.Vector2."""
         return self.coordinates
     
+    def attack(self, attacked: "Entity"):
+        """add the logic of the attack for entity"""
+        pass
+    

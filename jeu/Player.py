@@ -12,6 +12,8 @@ class Player(Entity):
         self.held_item = 0
         self.inventory = inventory
 
+    def attack(self, attacked: "Entity"):
+        pass
         
     def combat(self):
         pass
@@ -19,22 +21,24 @@ class Player(Entity):
     def interact(self):
         pass
 
-    def add_ally(self, ally: Ally) -> None:
-        self.allies.append(ally)
-
     def use_item(self):
+        """add the logic of using an item to the player(ex: shot with firegun ...)"""
         pass
 
     def switch_item(self, item_id):
+        """switch the item in the hand"""
         self.held_item = item_id
 
     def open_inventory(self):
+        """transition into the inventory scene"""
         pass
 
     def drop(self, item):
+        """The item drops in the sector at the exact spot where the player is located"""
         pass
 
     def add_ally(self, new_ally: Ally):
+        """add new ally to Player base"""
         if new_ally not in self.allies:
             self.allies.append(new_ally)
 
@@ -56,4 +60,5 @@ class Player(Entity):
             ally.update(self)
 
     def is_ally(self, ally: Ally):
+        """check if an ally is an player's ally"""
         return ally in self.allies
