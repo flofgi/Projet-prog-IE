@@ -70,18 +70,3 @@ class Player(Entity):
         """check if an ally is an player's ally"""
         return ally in self.allies
     
-        
-    def draw(self, surface: pygame.Surface):
-        """draw the sprites on the screen"""
-        if self.sprite:
-            # On récupère l'image correspondant à la frame actuelle
-            current_image = self.sprite[self.current_frame]
-            surface.blit(current_image, self.rect)
-        for ally in self.allies:
-            ally.draw(surface)
-    
-    def move(self):
-        self.coordinates += self.velocity
-        self.rect.topleft = (self.coordinates.x, self.coordinates.y)
-        for ally in self.allies:
-            ally.move()

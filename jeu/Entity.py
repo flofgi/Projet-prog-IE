@@ -39,7 +39,10 @@ class Entity(ABC):
             animation_timer (int) index of the fps to load the next sprite
         """
         self.hp = hp
+        self.sprite = [pygame.image.load(s).convert_alpha() for s in sprites]
         self.coordinates = coordinates
+        if self.sprite:
+            self.rect = self.sprite[0].get_rect(topleft=(self.coordinates.x, self.coordinates.y))
         self.velocity = pygame.Vector2(0, 0)
         self.name = name
         self.current_frame = 0
@@ -83,4 +86,4 @@ class Entity(ABC):
     def attack(self, attacked: "Entity"):
         """add the logic of the attack for entity"""
         pass
-    
+
