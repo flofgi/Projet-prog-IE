@@ -14,6 +14,13 @@ class State(ABC):
     """
 
     def __init__(self, state_manager):
+
+        """Initialize the state with a reference to the state manager.
+        
+        Args:   
+            state_manager (StateManager): The state manager that controls state transitions.
+        """
+
         self.manager = state_manager
 
     @abstractmethod
@@ -23,10 +30,23 @@ class State(ABC):
  
     @abstractmethod
     def update(self, dt, events, mouse_pos):
+        """Call the current state update method to get the state logic done.
+
+        Args:
+            dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
+            for 'delta time'
+            events (list): List of pygame events to handle.
+            mouse_pos (tuple[int, int]): Position of the mouse cursor.
+        """
         pass
 
     @abstractmethod
     def render(self, screen):
+        """Call the current state render method to draw the state on the screen.
+        
+        Args:
+            screen (pygame.Surface): The surface to render on.
+        """
         pass
 
     @abstractmethod
