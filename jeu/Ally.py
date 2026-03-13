@@ -1,5 +1,13 @@
+from __future__ import annotations # Permet d'utiliser les types sans guillemets (Python 3.7+)
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    # Cet import ne sera JAMAIS exécuté au lancement du jeu
+    # Il sert uniquement à ton éditeur pour l'autocomplétion
+    from Player import Player
+
+
 from Entity import Entity
-from Player import Player
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
@@ -33,6 +41,12 @@ class Ally(Entity):
     def attack(self):
         pass
 
+    def combat(self):
+        pass
+
+    def interact(self):
+        pass
+
     def update(self, target: Player = None):
         self.animation_timer += 1
         
@@ -45,11 +59,11 @@ class Ally(Entity):
                 self.velocity = pygame.Vector2(0, 0)
             
             if distance_player_ally > self.ALERT_ZONE:
-                self.coordinates = self.target_coordonnees
+                self.coordinates = self.target_coordonnees +  self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+10, target.coordinates)
                 self.velocity = pygame.Vector2(0, 0)
 
             else:
-                self.wandering(target)
+                self.wandering(target.coordinates)
         else:
             self.wandering(self.target_coordonnees)
         self.move()
@@ -58,7 +72,7 @@ class Ally(Entity):
         if self.animation_timer > 100:
             self.animation_timer = 0
             if randint(0, 1) == 1:
-                self.wandering_point = self.target_random_point(self.CONFORT_ZONE, self.wandering_point, target)
+                self.wandering_point = self.target_random_point(self.CONFORT_ZONE, self.WANDERING_ZONE, target)
 
         direction = self.wandering_point - self.coordinates
         self.velocity = direction.normalize() * (self.max_speed * 0.5)

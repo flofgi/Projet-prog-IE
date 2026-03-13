@@ -1,14 +1,21 @@
+from __future__ import annotations # Permet d'utiliser les types sans guillemets (Python 3.7+)
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    # Cet import ne sera JAMAIS exécuté au lancement du jeu
+    # Il sert uniquement à ton éditeur pour l'autocomplétion
+    from Ally import Ally
+
 from Entity import Entity
-from Ally import Ally
 import pygame
+
 
 class Player(Entity):
     """"""
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, allies: list[Ally] = [], inventory = []) -> None:
         Entity.__init__(self, hp, sprites, coordinates, " ")
-        self.rect = pygame.Rect(self.x, self.y, 32, 32)
-        self.allies: list[Ally] = allies
+        self.allies: list["Ally"] = allies
         self.held_item = 0
         self.inventory = inventory
 
@@ -62,3 +69,19 @@ class Player(Entity):
     def is_ally(self, ally: Ally):
         """check if an ally is an player's ally"""
         return ally in self.allies
+    
+        
+    def draw(self, surface: pygame.Surface):
+        """draw the sprites on the screen"""
+        if self.sprite:
+            # On récupère l'image correspondant à la frame actuelle
+            current_image = self.sprite[self.current_frame]
+            surface.blit(current_image, self.rect)
+        for ally in self.allies:
+            ally.draw(surface)
+    
+    def move(self):
+        self.coordinates += self.velocity
+        self.rect.topleft = (self.coordinates.x, self.coordinates.y)
+        for ally in self.allies:
+            ally.move()

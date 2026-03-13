@@ -1,6 +1,14 @@
+from __future__ import annotations # Permet d'utiliser les types sans guillemets (Python 3.7+)
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    # Cet import ne sera JAMAIS exécuté au lancement du jeu
+    # Il sert uniquement à ton éditeur pour l'autocomplétion
+    from Player import Player
+
 from abc import ABC, abstractmethod
 import pygame
-from Player import Player
+
 
 class Entity(ABC):
     """Abstract base class for all game entities.
@@ -31,9 +39,7 @@ class Entity(ABC):
             animation_timer (int) index of the fps to load the next sprite
         """
         self.hp = hp
-        self.sprite = sprites
         self.coordinates = coordinates
-        self.rect = pygame.Rect()
         self.velocity = pygame.Vector2(0, 0)
         self.name = name
         self.current_frame = 0
