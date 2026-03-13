@@ -17,12 +17,12 @@ class State(ABC):
         self.manager = state_manager
 
     @abstractmethod
-    def enter(self):
+    def load(self):
         """Load resources or initialize variables specific to the state here."""
         pass
-
+ 
     @abstractmethod
-    def update(self, dt, events):
+    def update(self, dt, events, mouse_pos):
         pass
 
     @abstractmethod
@@ -30,7 +30,7 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def exit(self):
+    def unload(self):
         """Clear resources and save any necessary data."""
 
         pass

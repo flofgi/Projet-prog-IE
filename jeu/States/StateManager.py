@@ -24,7 +24,7 @@ class StateManager:
         """
 
         self.states.append(state)
-        state.enter()
+        state.load()
 
     def pop_state(self):
         """Remove the current state from the stack and clear it with its exit method.
@@ -34,7 +34,7 @@ class StateManager:
         """
 
         if self.states:
-            self.states[-1].exit()
+            self.states[-1].unload()
             self.states.pop()
 
     def change_state(self, state: State):
@@ -47,17 +47,18 @@ class StateManager:
         self.pop_state()
         self.push_state(state)
 
-    def update(self, dt: float, events):
+    def update(self, dt: float, events: list[pygame.event.Event], mouse_pos: tuple[int, int]):
         """Called every frame to update the current state.
 
         Args:
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
             for 'delta time'
             events (list): List of pygame events to handle.
+            mouse_pos (tuple[int, int]): Position of the mouse cursor.
         """
     
         if self.states:
-            self.states[-1].update(dt, events)
+            self.states[-1].update(dt, events, mouse_pos)
 
     def render(self, screen: pygame.Surface):
         """Called every frame to render the current state.
