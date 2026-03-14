@@ -1,9 +1,7 @@
-from __future__ import annotations # Permet d'utiliser les types sans guillemets (Python 3.7+)
+from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    # Cet import ne sera JAMAIS exécuté au lancement du jeu
-    # Il sert uniquement à ton éditeur pour l'autocomplétion
     from Player import Player
 
 from abc import ABC, abstractmethod

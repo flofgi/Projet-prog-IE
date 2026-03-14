@@ -1,9 +1,7 @@
-from __future__ import annotations # Permet d'utiliser les types sans guillemets (Python 3.7+)
+from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    # Cet import ne sera JAMAIS exécuté au lancement du jeu
-    # Il sert uniquement à ton éditeur pour l'autocomplétion
     from Ally import Ally
 
 from Entity import Entity
@@ -11,9 +9,26 @@ import pygame
 
 
 class Player(Entity):
-    """"""
+    """Class for player entity.
+
+    This class extends Entity with player-specific systems such as ally
+    management and inventory handling. It also handles keyboard-driven
+    movement updates during gameplay.
+
+    Attributes:
+        hp (int): The entity's health points. When this reaches zero, the entity dies.
+        sprites (list[str]): List of sprite identifiers or paths for rendering the entity.
+        coordinates (pygame.Vector2): Position of the entity.
+        rect (pygame.Rect): Collision zone of the entity.
+        velocity (pygame.Vector2): Movement vector of the entity.
+        name (str): Name of the entity.
+        allies (list[Ally]): List of allies currently linked to the player.
+        held_item (int): Index or identifier of the currently selected inventory item.
+        inventory (list): List of items owned by the player.
+    """
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, allies: list[Ally] = [], inventory = []) -> None:
+        """Initialize a player with allies and inventory state."""
         Entity.__init__(self, hp, sprites, coordinates, " ")
         self.allies: list["Ally"] = allies
         self.held_item = 0
@@ -50,6 +65,7 @@ class Player(Entity):
             self.allies.append(new_ally)
 
     def update(self, target: "Player" = None):
+        """Update player movement from keyboard input and update allies."""
         self.animation_timer += 1
 
         keys = pygame.key.get_pressed()

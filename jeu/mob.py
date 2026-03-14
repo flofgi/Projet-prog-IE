@@ -22,6 +22,7 @@ class Mob(Entity):
     """
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+        """Initialize a mob with tracking and wandering parameters."""
         Entity.__init__(self, hp, sprites, coordinates, " ")
         self.wandering_point = pygame.Vector2(0, 0)
         self.target_coordonnees = coordinates
@@ -37,6 +38,7 @@ class Mob(Entity):
         pass
 
     def update(self, target: Player = None):
+        """Update mob behavior depending on distance to target."""
         self.animation_timer += 1
         
         if target != None:
@@ -83,6 +85,7 @@ class Mob(Entity):
 
 
     def target_random_point(self, min_rayon_limite, max_rayon_limite, target: pygame.Vector2 = None) -> pygame.Vector2:
+        """Return a random point around target within radius limits."""
         if target == None:
             target = self.coordinates
         

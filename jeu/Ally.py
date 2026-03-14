@@ -1,9 +1,7 @@
-from __future__ import annotations # Permet d'utiliser les types sans guillemets (Python 3.7+)
+from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    # Cet import ne sera JAMAIS exécuté au lancement du jeu
-    # Il sert uniquement à ton éditeur pour l'autocomplétion
     from Player import Player
 
 
@@ -27,6 +25,7 @@ class Ally(Entity):
     """
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+        """Initialize an ally with follow and wandering parameters."""
         Entity.__init__(self, hp, sprites, coordinates, " ")
         self.wandering_point = pygame.Vector2(0, 0)
         self.target_coordonnees = coordinates
@@ -48,6 +47,7 @@ class Ally(Entity):
         pass
 
     def update(self, target: Player = None):
+        """Update ally behavior to follow or wander around a target."""
         self.animation_timer += 1
         
         if target != None:
@@ -69,6 +69,7 @@ class Ally(Entity):
         self.move()
 
     def wandering(self, target: pygame.Vector2):
+        """Move ally toward a random wandering point near the target."""
         if self.animation_timer > 100:
             self.animation_timer = 0
             if randint(0, 1) == 1:
@@ -78,12 +79,14 @@ class Ally(Entity):
         self.velocity = direction.normalize() * (self.max_speed * 0.5)
 
     def modifie_zone(self, ALERT_ZONE = 400, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
+        """Update ally distance thresholds for follow and wandering zones."""
         self.ALERT_ZONE = ALERT_ZONE
         self.CONFORT_ZONE = CONFORT_ZONE
         self.WANDERING_ZONE = WANDERING_ZONE
 
 
     def target_random_point(self, min_rayon_limite, max_rayon_limite, target: pygame.Vector2 = None) -> pygame.Vector2:
+        """Return a random point around target within radius limits."""
         if target == None:
             target = self.coordinates
         
