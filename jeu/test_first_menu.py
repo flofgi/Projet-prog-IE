@@ -2,7 +2,6 @@ import pygame
 
 from States.FirstMenu import FirstMenu
 from States.StateManager import StateManager
-from States.NextState import NextState
 
 pygame.font.init()
 
