@@ -12,7 +12,7 @@ from math import pi, cos, sin
 
 
 class Ally(Entity):
-    """class for mob.
+    """class for player's Ally.
     
 
     Attributes:
@@ -37,7 +37,7 @@ class Ally(Entity):
         pass
 
 
-    def attack(self):
+    def attack(self, attacked: Entity):
         pass
 
     def combat(self):
@@ -46,9 +46,9 @@ class Ally(Entity):
     def interact(self):
         pass
 
-    def update(self, target: Player = None):
+    def update(self, dt: float, target: Player = None):
         """Update ally behavior to follow or wander around a target."""
-        self.animation_timer += 1
+        self.animation_timer += dt
         
         if target != None:
             self.target_coordonnees = target.get_coordinates()
@@ -58,25 +58,25 @@ class Ally(Entity):
             if distance_player_ally < self.CONFORT_ZONE:
                 self.velocity = pygame.Vector2(0, 0)
             
-            if distance_player_ally > self.ALERT_ZONE:
-                self.coordinates = self.target_coordonnees +  self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+10, target.coordinates)
-                self.velocity = pygame.Vector2(0, 0)
+            elif distance_player_ally > self.ALERT_ZONE:
+                self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+10, self.target_coordonnees)
 
             else:
                 self.wandering(target.coordinates)
         else:
             self.wandering(self.target_coordonnees)
-        self.move()
+        self.move(dt)
 
     def wandering(self, target: pygame.Vector2):
         """Move ally toward a random wandering point near the target."""
-        if self.animation_timer > 100:
+        if self.animation_timer > 100 / self.BASE_FPS:
             self.animation_timer = 0
             if randint(0, 1) == 1:
                 self.wandering_point = self.target_random_point(self.CONFORT_ZONE, self.WANDERING_ZONE, target)
 
         direction = self.wandering_point - self.coordinates
-        self.velocity = direction.normalize() * (self.max_speed * 0.5)
+        if direction.length_squared() > 0:
+            self.velocity = direction.normalize() * (self.max_speed * 0.5)
 
     def modifie_zone(self, ALERT_ZONE = 400, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
         """Update ally distance thresholds for follow and wandering zones."""

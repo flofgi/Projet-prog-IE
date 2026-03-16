@@ -27,12 +27,12 @@ class Player(Entity):
         inventory (list): List of items owned by the player.
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, allies: list[Ally] = [], inventory = []) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, allies: list[Ally] = None, inventory = None) -> None:
         """Initialize a player with allies and inventory state."""
         Entity.__init__(self, hp, sprites, coordinates, " ")
-        self.allies: list["Ally"] = allies
+        self.allies: list["Ally"] = list(allies) if allies is not None else []
+        self.inventory = list(inventory) if inventory is not None else []
         self.held_item = 0
-        self.inventory = inventory
 
     def attack(self, attacked: "Entity"):
         pass
@@ -64,9 +64,9 @@ class Player(Entity):
         if new_ally not in self.allies:
             self.allies.append(new_ally)
 
-    def update(self, target: "Player" = None):
+    def update(self, dt: float, target: "Player" = None):
         """Update player movement from keyboard input and update allies."""
-        self.animation_timer += 1
+        self.animation_timer += dt
 
         keys = pygame.key.get_pressed()
         direction_x = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
@@ -78,9 +78,9 @@ class Player(Entity):
         
         else:
             self.velocity = pygame.Vector2(0, 0)
-        self.move()
+        self.move(dt)
         for ally in self.allies:
-            ally.update(self)
+            ally.update(dt, self)
 
     def is_ally(self, ally: Ally):
         """check if an ally is an player's ally"""

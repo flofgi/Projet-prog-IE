@@ -24,7 +24,8 @@ class Mob(Entity):
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
         """Initialize a mob with tracking and wandering parameters."""
         Entity.__init__(self, hp, sprites, coordinates, " ")
-        self.wandering_point = pygame.Vector2(0, 0)
+        self.wandering_point = pygame.Vector2(coordinates)
+        self.is_paused = False
         self.target_coordinates = coordinates
         self.ALERT_ZONE = 200
         self.CONFORT_ZONE = 20
@@ -34,48 +35,58 @@ class Mob(Entity):
         pass
 
 
-    def attack(self):
+    def attack(self, attacked: "Entity"):
         pass
 
-    def update(self, target: Player = None):
+    def update(self, dt: float, target: Player = None):
         """Update mob behavior depending on distance to target."""
-        self.animation_timer += 1
+        self.animation_timer += dt
         
-        if target != None:
+        if target is not None:
             self.target_coordinates = target.get_coordinates()
 
             distance_player_mob = self.target_coordinates.distance_to(self.coordinates) 
             
             if distance_player_mob < self.CONFORT_ZONE:
                 self.velocity = pygame.Vector2(0, 0)
-            
-            if distance_player_mob > self.ALERT_ZONE:
-                self.wandering(target)
+
+            elif distance_player_mob > self.ALERT_ZONE:
+                self.wandering(self.target_coordinates)
 
             else:
-                self.coordinates = self.target_coordinates
-                self.velocity = pygame.Vector2(0, 0)
+                direction = self.target_coordinates - self.coordinates
+                if direction.length_squared() > 0:
+                    self.velocity = direction.normalize() * self.max_speed
+                else:
+                    self.velocity = pygame.Vector2(0, 0)
         else:
             self.wandering(self.target_coordinates)
-        self.move()
+        self.move(dt)
 
     def wandering(self, target: pygame.Vector2):
         """Add the wandering logic: the mob moves towards a random point within a circle of radius WANDERING_ZONE,
           with the point wandering_point as its center.
           Every 100 ticks, the point has a 50% chance of changing; otherwise, it stays in place."""
-        if self.animation_timer > 100:
+        if self.animation_timer > 100 / self.BASE_FPS:
             self.animation_timer = 0
-            if randint(0, 1) == 1:
-                self.wandering_point = self.target_random_point(0, self.WANDERING_ZONE, self.wandering_point)
-            else:
-                self.velocity = pygame.Vector2(0, 0)
+            self.is_paused = randint(0, 1) == 0
+            if not self.is_paused:
+                self.wandering_point = self.target_random_point(0, self.WANDERING_ZONE, target)
+
+        if self.is_paused:
+            self.velocity = pygame.Vector2(0, 0)
+            return
 
         direction = self.wandering_point - self.coordinates
-        if self.velocity != pygame.Vector2(0, 0):
+        if direction.length_squared() > 0:
             self.velocity = direction.normalize() * (self.max_speed * 0.5)
+        else:
+            self.velocity = pygame.Vector2(0, 0)
+
+
 
     def modifie_zone(self, ALERT_ZONE = 200, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
-        """modifie the raduis of the different zone
+        """modifie the radius of the different zone
         ALERT_ZONE
         CONFORT_ZONE
         WANDERING_ZONE"""

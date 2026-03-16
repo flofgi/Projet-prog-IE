@@ -24,7 +24,8 @@ class Entity(ABC):
         velocity (pygame.Vector2) vector of mouvement
         name (string) name of entity
     """
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str) -> None:
+
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = 60) -> None:
         """
         Args:
             hp (int): Initial health points for the entity. Must be a positive integer.
@@ -33,7 +34,7 @@ class Entity(ABC):
             rect (pygame.Rect) collisions zone of the entity
             velocity (pygame.Vector2) vector of mouvement
             name (string) name of entity
-            current_frame (int) index of the current sprit load
+            current_frame (int) index of the current sprite load
             animation_timer (int) index of the fps to load the next sprite
         """
         self.hp = hp
@@ -41,20 +42,23 @@ class Entity(ABC):
         self.coordinates = coordinates
         if self.sprite:
             self.rect = self.sprite[0].get_rect(topleft=(self.coordinates.x, self.coordinates.y))
+        else:
+            self.rect = pygame.Rect(coordinates.x, coordinates.y, 0, 0)
         self.velocity = pygame.Vector2(0, 0)
         self.name = name
         self.current_frame = 0
         self.animation_timer = 0
         self.max_speed = 1
+        self.BASE_FPS = BASE_FPS
 
 
-    def move(self) -> None:
-        """Handle entity movement with a given speed.
+    def move(self, dt: float) -> None:
+        """Handle entity movement with a given speed in self.velocity.
 
-        Args:
-            speed (tuple[int, int]): displacement vector (dx, dy) to apply.
+        dt is expected in seconds. Multiplying by BASE_FPS preserves legacy
+        tuning where max_speed was effectively calibrated per frame at 60 FPS.
         """
-        self.coordinates += self.velocity
+        self.coordinates += self.velocity * dt * self.BASE_FPS
         self.rect.topleft = (self.coordinates.x, self.coordinates.y)
 
 
@@ -71,7 +75,7 @@ class Entity(ABC):
         pass
 
     @abstractmethod
-    def update(self, target: "Player" = None):
+    def update(self, dt: float, target: "Player" = None):
         """update position and animation of entity
         Don't forget to change the animation timer. """
         pass
