@@ -29,7 +29,7 @@ class State(ABC):
         pass
  
     @abstractmethod
-    def update(self, dt, events, mouse_pos):
+    def update(self, dt: float, events: list[pygame.event.Event], mouse_pos: tuple[int, int]):
         """Call the current state update method to get the state logic done.
 
         Args:
@@ -41,7 +41,7 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def render(self, screen):
+    def render(self, screen: pygame.Surface):
         """Call the current state render method to draw the state on the screen.
         
         Args:
