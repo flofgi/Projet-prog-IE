@@ -1,8 +1,10 @@
 import pygame
 
+
+from States.Buttons import Buttons
 from States.NextState import NextState
 
-class Button:
+class Button(Buttons):
     def __init__(self, x, y, text, font, sprite, sprite_hovered, scale):
         
         baseScale = (int(sprite.get_width()*scale), int(sprite.get_height()*scale))
@@ -21,15 +23,6 @@ class Button:
         
         self.nhovered = pygame.transform.scale(sprite, baseScale)
         self.hovered = pygame.transform.scale(sprite_hovered, (int(baseScale[0]*ZOOM_HOVERED), int(baseScale[1]*ZOOM_HOVERED)))
-        
-
-    def is_hovered(self, mouse_pos):
-        return self.rect.collidepoint(mouse_pos)
-
-    def is_clicked(self, mouse_pos, event):
-        if self.is_hovered(mouse_pos) and pygame.mouse.get_pressed()[0]:
-            return True
-        return False
 
     def update(self, mouse_pos, event, statemanager) :
         if self.is_hovered(mouse_pos) == True :
@@ -44,9 +37,8 @@ class Button:
             next_state = NextState(statemanager)
             statemanager.change_state(next_state)
             
-    def draw(self, screen):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
-        pass
+
+
 
 
 
