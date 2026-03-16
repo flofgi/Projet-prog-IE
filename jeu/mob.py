@@ -25,7 +25,7 @@ class Mob(Entity):
         """Initialize a mob with tracking and wandering parameters."""
         Entity.__init__(self, hp, sprites, coordinates, " ")
         self.wandering_point = pygame.Vector2(0, 0)
-        self.target_coordonnees = coordinates
+        self.target_coordinates = coordinates
         self.ALERT_ZONE = 200
         self.CONFORT_ZONE = 20
         self.WANDERING_ZONE = 200
@@ -42,9 +42,9 @@ class Mob(Entity):
         self.animation_timer += 1
         
         if target != None:
-            self.target_coordonnees = target.get_coordinates()
+            self.target_coordinates = target.get_coordinates()
 
-            distance_player_mob = self.target_coordonnees.distance_to(self.coordinates) 
+            distance_player_mob = self.target_coordinates.distance_to(self.coordinates) 
             
             if distance_player_mob < self.CONFORT_ZONE:
                 self.velocity = pygame.Vector2(0, 0)
@@ -53,10 +53,10 @@ class Mob(Entity):
                 self.wandering(target)
 
             else:
-                self.coordinates = self.target_coordonnees
+                self.coordinates = self.target_coordinates
                 self.velocity = pygame.Vector2(0, 0)
         else:
-            self.wandering(self.target_coordonnees)
+            self.wandering(self.target_coordinates)
         self.move()
 
     def wandering(self, target: pygame.Vector2):
