@@ -50,10 +50,7 @@ Base class for entities managing death, HP and movement uniformly (for mobs, pla
 | entity | interact | method | method handling interaction with an entity (talking, etc.) |
 | entity | update | method | abstract method to update the movement speed and update the animation timer |
 | entity | get_coordinates | method |
-| entity | coordinates | pygame.Vector2 | position of the entity |
-| entity | rect | pygame.Rect |
-| entity | velocity | pygame.Vector2 | vector of mouvement
-| entity | name | string | name of entity |
+
 
 ## Class Mob
 Class managing mobs: attacks, movement and interactions.
