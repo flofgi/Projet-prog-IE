@@ -66,7 +66,7 @@ Class managing mobs: attacks, movement and interactions.
 | mob | update | method | method to update the movement speed and update the animation timer |
 | mob | wandering | method | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
 | mob | modifie_zone | method | modifi  all radius zone |
-| mob | target_random_point | method | calculed a random point aroud the target |
+| mob | target_random_point | method | calculates a random point around the target |
 
 ## Class Object
 Abstract class managing different objects implemented independently.
