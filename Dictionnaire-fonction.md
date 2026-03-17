@@ -9,7 +9,7 @@ Main class that handles the game, logic, events and windows.
 | game | menu | menu | variable used to store the menu object |
 | game | gameplay | gameplay | variable used to store the gameplay object |
 | game | logic | method | method that manages the game flow by launching the different classes |
-| game | current_screen | 
+| game | current_screen | string | variable that stores the current screen |
 
 ## Class Gameplay
 Primary class that manages the gameplay.
