@@ -60,6 +60,7 @@ class Ally(Entity):
             
             elif distance_player_ally > self.ALERT_ZONE:
                 self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+10, self.target_coordonnees)
+                self.velocity = pygame.Vector2(0, 0)
 
             else:
                 self.wandering(target.coordinates)
