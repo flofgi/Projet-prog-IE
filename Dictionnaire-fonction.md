@@ -93,7 +93,7 @@ Class managing the map, the mini-map and all entities within it.
 | map | sector_size | int | size of sector in world units |
 | map | camera | Camera | camera object controlling the visible area of the map |
 | map | update | method | method that updates elements |
-| map | draw | method | renders the map and visivle entities |
+| map | draw | method | renders the map and visible entities |
 | map | get_sector | method | returns the sector countaining given coordinates |
 | map | visible_sectors | method | returns the list of sectors currently visible by the camera |
 | map | tiles | list[list[int]] | structure to stock the collision of the map |
