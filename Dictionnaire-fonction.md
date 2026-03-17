@@ -37,7 +37,7 @@ Base class for entities managing death, HP and movement uniformly (for mobs, pla
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
 | entity | name | string | name of entity |
-| entity | current_frame | int | index of the current sprit load
+| entity | current_frame | int | index of the current sprite load
 | entity | animation_timer | int | index of the fps to load the next sprite
 | entity | coordinates | pygame.Vector2 | position of the entity |
 | entity | rect | pygame.Rect |
