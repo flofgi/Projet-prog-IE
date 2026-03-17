@@ -57,7 +57,7 @@ Class managing mobs: attacks, movement and interactions.
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
 | mob | wandering_point | pygame.Vector2 | target point for wandering |
-| mob | ALERT_ZONE | int | distance beyond which the mob teleports to the player |
+| mob | ALERT_ZONE | int | maximum distance at which the mob actively pursues the player; beyond this it resumes wandering instead of teleporting |
 | mob | CONFORT_ZONE | int | distance below which the mob stops walking |
 | mob | WANDERING_ZONE | int | maximum wandering range | 
 | mob | combat | method | mob combat logic |
