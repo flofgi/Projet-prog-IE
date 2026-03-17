@@ -64,7 +64,7 @@ Class managing mobs: attacks, movement and interactions.
 | mob | attack | method | mob attack logic (inflicts HP damage) |
 | mob | interaction | method | method that handles interactions with the mob |
 | mob | update | method | method to update the movement speed and update the animation timer |
-| mob | wandering | mehtod | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
+| mob | wandering | method | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
 | mob | modifie_zone | method | modifi  all radius zone |
 | mob | target_random_point | method | calculed a random point aroud the target |
 
