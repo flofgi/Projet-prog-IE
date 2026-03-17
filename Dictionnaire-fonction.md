@@ -9,7 +9,7 @@ Main class that handles the game, logic, events and windows.
 | game | menu | menu | variable used to store the menu object |
 | game | gameplay | gameplay | variable used to store the gameplay object |
 | game | logic | method | method that manages the game flow by launching the different classes |
-| game | current_screen | 
+| game | current_screen | string | variable that stores the current screen |
 
 ## Class Gameplay
 Primary class that manages the gameplay.
@@ -36,15 +36,23 @@ Base class for entities managing death, HP and movement uniformly (for mobs, pla
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| entity | move | method | abstract handling of entity movement |
-| entity | combat | method | abstract combat logic for each entity |
+| entity | name | string | name of entity |
+| entity | current_frame | int | index of the current sprite load
+| entity | animation_timer | int | index of the fps to load the next sprite
+| entity | coordinates | pygame.Vector2 | position of the entity |
+| entity | rect | pygame.Rect |
 | entity | hp | int | variable giving an entity's hit points |
 | entity | sprite | list[image] | list of images used to render an entity |
+| entity | velocity | pygame.Vector2 | vector of mouvement
+| entity | max_speed | float | Maximum speed for entity move |
+| entity | move | method | handling of entity movement |
+| entity | combat | method | abstract combat logic for each entity |
 | entity | interact | method | method handling interaction with an entity (talking, etc.) |
+| entity | update | method | abstract method to update the movement speed and update the animation timer |
+| entity | get_coordinates | method |
 | entity | coordinates | pygame.Vector2 | position of the entity |
 | entity | rect | pygame.Rect |
 | entity | velocity | pygame.Vector2 | vector of mouvement
-| entity | update | method | |
 | entity | name | string | name of entity |
 
 ## Class Mob
@@ -52,9 +60,17 @@ Class managing mobs: attacks, movement and interactions.
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| mob | move | method | mob movement logic |
+| mob | wandering_point | pygame.Vector2 | target point for wandering |
+| mob | ALERT_ZONE | int | maximum distance at which the mob actively pursues the player; beyond this it resumes wandering instead of teleporting |
+| mob | CONFORT_ZONE | int | distance below which the mob stops walking |
+| mob | WANDERING_ZONE | int | maximum wandering range | 
 | mob | combat | method | mob combat logic |
 | mob | attack | method | mob attack logic (inflicts HP damage) |
+| mob | interaction | method | method that handles interactions with the mob |
+| mob | update | method | method to update the movement speed and update the animation timer |
+| mob | wandering | method | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
+| mob | modifie_zone | method | modifi  all radius zone |
+| mob | target_random_point | method | calculates a random point around the target |
 
 ## Class Object
 Abstract class managing different objects implemented independently.
@@ -67,6 +83,7 @@ Abstract class managing different objects implemented independently.
 | object | coordinates | pygame.Vector2 | position of the object |
 | object | is_drop | bool | if True : this object is drop to the coordinates.|
 | object | interact | method | retrieve the object, interact with it (portal, merchant...)|
+| object | drop | method |
 
 
 ## Class Map
@@ -80,7 +97,7 @@ Class managing the map, the mini-map and all entities within it.
 | map | sector_size | int | size of sector in world units |
 | map | camera | Camera | camera object controlling the visible area of the map |
 | map | update | method | method that updates elements |
-| map | draw | method | renders the map and visivle entities |
+| map | draw | method | renders the map and visible entities |
 | map | get_sector | method | returns the sector countaining given coordinates |
 | map | visible_sectors | method | returns the list of sectors currently visible by the camera |
 | map | tiles | list[list[int]] | structure to stock the collision of the map |
@@ -92,23 +109,32 @@ Subclass of Entity enabling movement and inventory management, as well as object
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
-| player | move | method | method that handles player movement logic |
-| player | inventory | list[object] | variable containing the list of objects owned by the player |
+| player | allies | list[ally] | list of allies |
 | player | held_item | int | item held in the player's hand, with a value for "no item" |
+| player | inventory | list[object] | variable containing the list of objects owned by the player |
 | player | use_item | method | |
 | player | switch_item | method | method allowing changing the item in hand |
-| player | allies | list[ally] | list of allies |
 | player | open_inventory | method | method allowing the player to manage their inventory |
 | player | drop | method |
+| player | add_ally | method |
+| player | is_ally | method | return True if the Ally is a player's ally |
+| player | update | method | method to update the movement speed and update the animation timer |
 
 ## Class Ally
 Ally class allowing management of allies in the game along with their movement and actions.
 
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
+| ally | wandering_point | pygame.Vector2 | target point for wandering |
+| ally | ALERT_ZONE | int | distance beyond which the ally teleports to the player |
+| ally | CONFORT_ZONE | int | distance below which the ally stops walking |
+| ally | WANDERING_ZONE | int | maximum wandering range | 
 | ally | interaction | method | method that handles interactions with the ally |
-| ally | move | method | method that handles ally movement |
 | ally | attack | method | method that handles the ally's attack |
+| ally | update | method | method to update the movement speed and update the animation timer |
+| ally | wandering | mehtod | calculed the new random wandering_point arond the target 1/100 tick and update the velocity |
+| ally | modifie_zone | method | modifi  all radius zone |
+| ally | target_random_point | method | calculed a random point aroud the target |
 
 ## Class Sector
 Class implementing different sectors for managing entities on the map.
