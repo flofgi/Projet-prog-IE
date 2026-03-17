@@ -65,8 +65,8 @@ class Mob(Entity):
 
     def wandering(self, target: pygame.Vector2):
         """Add the wandering logic: the mob moves towards a random point within a circle of radius WANDERING_ZONE,
-          with the point wandering_point as its center.
-          Every 100 ticks, the point has a 50% chance of changing; otherwise, it stays in place."""
+          centered on the given target position. The chosen destination is stored in wandering_point.
+          Every 100 ticks, the destination point has a 50% chance of changing; otherwise, it stays in place."""
         if self.animation_timer > 100 / self.BASE_FPS:
             self.animation_timer = 0
             self.is_paused = randint(0, 1) == 0
