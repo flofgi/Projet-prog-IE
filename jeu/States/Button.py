@@ -4,12 +4,12 @@ from States.ButtonMenu import ButtonMenu
 from States.NextState import NextState
 
 class Button(ButtonMenu):
-    def __init__(self, x: int, y:int , text: str, font: pygame.font.Font, sprite: pygame.Surface, sprite_hovered: pygame.Surface, scale: tuple):
-        super().__init__(x, y, scale, sprite)
+    def __init__(self, center_pos: tuple[int, int], text: str, font: pygame.font.Font, sprite: pygame.image, sprite_hovered: pygame.image, scale: int):
+        super().__init__(center_pos, scale, sprite)
         
         ZOOM_HOVERED = 1.1
 
-        self.TOP_LEFT_HOVERED = (x - (self.BaseScale[0]*ZOOM_HOVERED - self.BaseScale[0])//2, y - (self.BaseScale[1]*ZOOM_HOVERED - self.BaseScale[1])//2)
+        self.TOP_LEFT_HOVERED = (self.TOP_LEFT[0] - (self.BaseScale[0]*ZOOM_HOVERED - self.BaseScale[0])//2, self.TOP_LEFT[1] - (self.BaseScale[1]*ZOOM_HOVERED - self.BaseScale[1])//2)
         
         self.nhovered = pygame.transform.scale(sprite, self.BaseScale)
         self.hovered = pygame.transform.scale(sprite_hovered, (int(self.BaseScale[0]*ZOOM_HOVERED), int(self.BaseScale[1]*ZOOM_HOVERED)))
