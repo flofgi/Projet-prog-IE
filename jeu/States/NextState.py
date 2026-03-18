@@ -12,7 +12,7 @@ class NextState(State):
     def load(self):
         print("Entering NextState state")
 
-    def update(self, dt: float, events: list[pygame.event.Event], mouse_pos: tuple[int, int]):
+    def update(self, dt: float):
         """Handle the transition to the Menu state."""
         pass
 

@@ -32,7 +32,8 @@ class FirstMenu(State):
                             self.button_game, 
                             self.button_game_hovered, 
                             self.BUTTON1_SCALE,
-                            self.manager)
+                            self.manager,
+                            "next_state")
         
         """ self.but_2 = ScrollButton(self.BUTTON2_POS,
                                   self.button_scroll_background,

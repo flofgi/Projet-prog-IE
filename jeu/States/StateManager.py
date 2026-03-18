@@ -1,5 +1,7 @@
 import pygame
 
+from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE
+
 from States.State import State
 
 class StateManager:
@@ -79,6 +81,13 @@ class StateManager:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            elif event.type == STATE_REPLACE:
+                self.replace_state(self.routes[event.state])
+            elif event.type == STATE_POP:
+                self.pop_state()
+            elif event.type == STATE_PUSH:
+                self.push_state(self.routes[event.state])
+
             else: 
                 if self.states:
                     self.current_state.handle_events(event)

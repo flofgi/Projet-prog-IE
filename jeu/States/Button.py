@@ -1,12 +1,15 @@
 import pygame
+from EVENTS import STATE_PUSH
 
 from States.ButtonMenu import ButtonMenu
 from States.NextState import NextState
 
+
 class Button(ButtonMenu):
-    def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, sprite_hovered: pygame.image, scale: int, state_manager):
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, sprite_hovered: pygame.image, scale: int, state_manager, state_name: str):
         super().__init__(center_pos, sprite, scale, state_manager)
 
+        self.state_name = state_name
         self.button_game_is_hovered = False
         self.button_scroll_is_hovered = False   
         self.button_game_is_clicked = False
@@ -29,11 +32,11 @@ class Button(ButtonMenu):
         else :
             self.image = self.nhovered
             self.rect = self.image.get_rect()
-            self.rect.topleft = self.TOP_LEFT_NOT_HOVERED          
+            self.rect.topleft = self.TOP_LEFT_NOT_HOVERED
             
         if self.button_game_is_clicked == True : 
-            self.manager.change_state(self.manager.routes["next_state"])
-            print("button clicked")
+            pygame.event.post(pygame.event.Event(STATE_PUSH, state=self.state_name))
+            self.button_game_is_clicked = False
             
     def handle_events(self, events: list[pygame.event.Event]):
         """Optional method to handle events specific to the button."""
