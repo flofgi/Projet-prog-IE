@@ -14,7 +14,29 @@ class StateManager:
     """
 
     def __init__(self):
-        self.states = []
+        self.states: list[State] = []
+        self.routes: dict[str, callable[[], State]] = {}
+
+    def register_route(self, route_name: str, state: State):
+        """Register a state with a route name for easy transitions.
+
+        Args:
+            route_name (str): The name of the route to register.
+            state (State): The state associated with the route.
+        """
+
+        self.routes[route_name] = state
+
+    @property
+    def current_state(self) -> State | None:
+        """Get the current active state.
+
+        Returns:
+            State | None: The current state if there is one, otherwise None.
+        """
+
+        return self.states[-1] if self.states else None
+    
 
     def push_state(self, state: State):
         """Add the state in argument into the stack and call the enter method of the state.

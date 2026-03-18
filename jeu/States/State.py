@@ -23,13 +23,16 @@ class State(ABC):
 
         self.manager = state_manager
 
-    @abstractmethod
     def load(self):
         """Load resources or initialize variables specific to the state here."""
         pass
+
+    def pause(self):
+        """Optional method to pause the state when another state is pushed on top."""
+        pass
  
     @abstractmethod
-    def update(self, dt: float, events: list[pygame.event.Event], mouse_pos: tuple[int, int]):
+    def update(self, dt: float, mouse_pos: tuple[int, int]):
         """Call the current state update method to get the state logic done.
 
         Args:
@@ -40,6 +43,15 @@ class State(ABC):
         """
         pass
 
+    def handle_events(self, events: list[pygame.event.Event]):
+        """Optional method to handle events specific to the state.
+
+        Args:
+            events (list): List of pygame events to handle.
+        """
+        pass
+    
+    
     @abstractmethod
     def render(self, screen: pygame.Surface):
         """Call the current state render method to draw the state on the screen.
@@ -49,10 +61,13 @@ class State(ABC):
         """
         pass
 
-    @abstractmethod
     def unload(self):
         """Clear resources and save any necessary data."""
 
+        pass
+
+    def unpause(self):
+        """Optional method to unpause the state when it becomes active again."""
         pass
 
 
