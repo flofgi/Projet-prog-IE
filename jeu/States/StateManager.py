@@ -1,5 +1,7 @@
 import pygame
 
+from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE
+
 from States.State import State
 
 class StateManager:
@@ -32,7 +34,7 @@ class StateManager:
         """Get the current active state.
 
         Returns:
-            State | None: The current state if there is one, otherwise None.
+            State | None: The current state if there is one, if not None.
         """
 
         return self.states[-1] if self.states else None
@@ -56,7 +58,7 @@ class StateManager:
         """
 
         if self.states:
-            self.states[-1].unload()
+            self.current_state.unload()
             self.states.pop()
 
     def change_state(self, state: State):
@@ -69,18 +71,29 @@ class StateManager:
         self.pop_state()
         self.push_state(state)
 
-    def update(self, dt: float, events: list[pygame.event.Event], mouse_pos: tuple[int, int]):
+    def update(self, dt: float):
         """Called every frame to update the current state.
 
         Args:
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
             for 'delta time'
-            events (list): List of pygame events to handle.
-            mouse_pos (tuple[int, int]): Position of the mouse cursor.
         """
-    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == STATE_REPLACE:
+                self.replace_state(self.routes[event.state])
+            elif event.type == STATE_POP:
+                self.pop_state()
+            elif event.type == STATE_PUSH:
+                self.push_state(self.routes[event.state])
+
+            else: 
+                if self.states:
+                    self.current_state.handle_events(event)
+
         if self.states:
-            self.states[-1].update(dt, events, mouse_pos)
+            self.current_state.update(dt)
 
     def render(self, screen: pygame.Surface):
         """Called every frame to render the current state.
@@ -90,6 +103,4 @@ class StateManager:
         """
 
         if self.states:
-            self.states[-1].render(screen)
-
-    
+            self.current_state.render(screen)
