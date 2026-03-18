@@ -32,7 +32,7 @@ class StateManager:
         """Get the current active state.
 
         Returns:
-            State | None: The current state if there is one, otherwise None.
+            State | None: The current state if there is one, if not None.
         """
 
         return self.states[-1] if self.states else None
@@ -69,18 +69,16 @@ class StateManager:
         self.pop_state()
         self.push_state(state)
 
-    def update(self, dt: float, events: list[pygame.event.Event], mouse_pos: tuple[int, int]):
+    def update(self, dt: float):
         """Called every frame to update the current state.
 
         Args:
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
             for 'delta time'
-            events (list): List of pygame events to handle.
-            mouse_pos (tuple[int, int]): Position of the mouse cursor.
         """
     
         if self.states:
-            self.states[-1].update(dt, events, mouse_pos)
+            self.states[-1].update(dt)
 
     def render(self, screen: pygame.Surface):
         """Called every frame to render the current state.

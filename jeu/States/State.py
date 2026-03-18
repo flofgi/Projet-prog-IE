@@ -32,14 +32,12 @@ class State(ABC):
         pass
  
     @abstractmethod
-    def update(self, dt: float, mouse_pos: tuple[int, int]):
+    def update(self, dt: float):
         """Call the current state update method to get the state logic done.
 
         Args:
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
-            for 'delta time'
-            events (list): List of pygame events to handle.
-            mouse_pos (tuple[int, int]): Position of the mouse cursor.
+            for 'delta time' 
         """
         pass
 
