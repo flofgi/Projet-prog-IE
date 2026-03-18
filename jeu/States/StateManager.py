@@ -56,7 +56,7 @@ class StateManager:
         """
 
         if self.states:
-            self.states[-1].unload()
+            self.current_state.unload()
             self.states.pop()
 
     def change_state(self, state: State):
@@ -76,9 +76,15 @@ class StateManager:
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' 
             for 'delta time'
         """
-    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            else: 
+                if self.states:
+                    self.current_state.handle_events(event)
+
         if self.states:
-            self.states[-1].update(dt)
+            self.current_state.update(dt)
 
     def render(self, screen: pygame.Surface):
         """Called every frame to render the current state.
@@ -88,6 +94,6 @@ class StateManager:
         """
 
         if self.states:
-            self.states[-1].render(screen)
+            self.current_state.render(screen)
 
     

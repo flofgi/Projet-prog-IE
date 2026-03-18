@@ -4,8 +4,13 @@ from States.ButtonMenu import ButtonMenu
 from States.NextState import NextState
 
 class Button(ButtonMenu):
-    def __init__(self, center_pos: tuple[int, int], text: str, font: pygame.font.Font, sprite: pygame.image, sprite_hovered: pygame.image, scale: int):
-        super().__init__(center_pos, scale, sprite)
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, sprite_hovered: pygame.image, scale: int, state_manager):
+        super().__init__(center_pos, sprite, scale, state_manager)
+
+        self.button_game_is_hovered = False
+        self.button_scroll_is_hovered = False   
+        self.button_game_is_clicked = False
+        self.button_scroll_is_clicked = False
         
         ZOOM_HOVERED = 1.1
 
@@ -16,8 +21,8 @@ class Button(ButtonMenu):
         self.hovered = pygame.transform.scale(sprite_hovered, (int(self.BASESCALE[0]*ZOOM_HOVERED), int(self.BASESCALE[1]*ZOOM_HOVERED)))
 
 
-    def update(self, mouse_pos: tuple[int, int], event: pygame.event.Event, statemanager) :
-        if self.is_hovered(mouse_pos) == True :
+    def update(self, dt: float) :
+        if self.button_game_is_hovered == True :
             self.image = self.hovered
             self.rect = self.image.get_rect()
             self.rect.topleft = self.TOP_LEFT_HOVERED
@@ -26,10 +31,20 @@ class Button(ButtonMenu):
             self.rect = self.image.get_rect()
             self.rect.topleft = self.TOP_LEFT_NOT_HOVERED          
             
-        if self.is_clicked(mouse_pos, event) == True :
-            next_state = NextState(statemanager)
-            statemanager.change_state(next_state)
+        if self.button_game_is_clicked == True : 
+            self.manager.change_state(self.manager.routes["next_state"])
+            print("button clicked")
             
+    def handle_events(self, events: list[pygame.event.Event]):
+        """Optional method to handle events specific to the button."""
+        if events.type == pygame.MOUSEMOTION:
+            self.button_game_is_hovered = self.rect.collidepoint(events.pos)
+            
+        if events.type == pygame.MOUSEBUTTONDOWN:
+            print(events.pos)
+            if self.rect.collidepoint(events.pos):
+                self.button_game_is_clicked = True
+                
 
 
 

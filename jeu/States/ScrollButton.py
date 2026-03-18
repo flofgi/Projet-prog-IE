@@ -36,8 +36,6 @@ class ScrollButton(ButtonMenu):
     
 
     
-
-    def load(self):
         self.rect.topleft = self.scroll_pourcent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
         
 
