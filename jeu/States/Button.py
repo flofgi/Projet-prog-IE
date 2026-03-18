@@ -10,10 +10,8 @@ class Button(ButtonMenu):
         super().__init__(center_pos, sprite, scale, state_manager)
 
         self.state_name = state_name
-        self.button_game_is_hovered = False
-        self.button_scroll_is_hovered = False   
+        self.button_game_is_hovered = False 
         self.button_game_is_clicked = False
-        self.button_scroll_is_clicked = False
         
         ZOOM_HOVERED = 1.1
 
@@ -44,7 +42,6 @@ class Button(ButtonMenu):
             self.button_game_is_hovered = self.rect.collidepoint(events.pos)
             
         if events.type == pygame.MOUSEBUTTONDOWN:
-            print(events.pos)
             if self.rect.collidepoint(events.pos):
                 self.button_game_is_clicked = True
                 

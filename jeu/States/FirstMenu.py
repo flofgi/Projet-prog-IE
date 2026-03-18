@@ -35,11 +35,12 @@ class FirstMenu(State):
                             self.manager,
                             "next_state")
         
-        """ self.but_2 = ScrollButton(self.BUTTON2_POS,
+        self.but_2 = ScrollButton(self.BUTTON2_POS,
                                   self.button_scroll_background,
                                   self.button_scroll,
                                   self.scroll_trail, 
-                                  self.BUTTON2_SCALE) """
+                                  self.BUTTON2_SCALE,
+                                  self.manager)
 
     def handle_events(self, events: list[pygame.event.Event]):
         """Handle events specific to the FirstMenu state."""
@@ -47,7 +48,7 @@ class FirstMenu(State):
         # Handle events for the buttons.
 
         self.but_g.handle_events(events)
-        #self.but_2.handle_events(events)
+        self.but_2.handle_events(events)
 
     def update(self, dt):
         """Handle the transition to the Menu state."""
@@ -55,13 +56,13 @@ class FirstMenu(State):
         mouse_pos = pygame.mouse.get_pos()
 
         # Update the buttons based on mouse position.
-        self.but_g.update(mouse_pos)
-        #self.but_2.update(mouse_pos)
+        self.but_g.update(dt)
+        self.but_2.update(dt)
 
     def render(self, screen: pygame.Surface):
         # Render the buttons on the screen.
         self.but_g.draw(screen)
-        #self.but_2.draw(screen)
+        self.but_2.draw(screen)
 
     def unload(self):
         # Unload resources specific to the buttons.

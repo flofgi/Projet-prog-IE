@@ -32,7 +32,7 @@ class ButtonMenu(ABC):
         screen.blit(self.image, self.rect)
 
     @abstractmethod
-    def update(self, mouse_pos: tuple[int, int]): 
+    def update(self, dt: float): 
         """Update the button state based on mouse position and events."""
         pass
     
