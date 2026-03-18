@@ -9,12 +9,11 @@ class ButtonMenu(ABC):
     def __init__(self, center_pos: tuple[int, int], scale: int, sprite: pygame.image):
         """Initialize the button with its position and size."""
 
-        self.BaseScale = (int(sprite.get_width()*scale), int(sprite.get_height()*scale))
-        self.TOP_LEFT = (center_pos[0] - self.BaseScale[0] // 2, center_pos[1] - self.BaseScale[1] // 2)
+        self.BASESCALE = (int(sprite.get_width()*scale), int(sprite.get_height()*scale))
         
-        self.image = pygame.transform.scale(sprite, self.BaseScale)
+        self.image = pygame.transform.scale(sprite, self.BASESCALE)
         self.rect = self.image.get_rect()
-        self.rect.topleft = self.TOP_LEFT
+        self.rect.topleft = (center_pos[0] - self.BASESCALE[0] // 2, center_pos[1] - self.BASESCALE[1] // 2)
 
     # changer en @abstractmethod
     def is_clicked(self, mouse_pos: tuple[int, int], events: list[pygame.event.Event]) -> bool:
@@ -28,7 +27,7 @@ class ButtonMenu(ABC):
         return self.rect.collidepoint(mouse_pos)
 
     def draw(self, screen: pygame.Surface):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        screen.blit(self.image, self.rect)
 
     @abstractmethod
     def update(self, mouse_pos: tuple[int, int], events: list[pygame.event.Event]):
