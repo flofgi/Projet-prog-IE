@@ -3,7 +3,10 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Ally import Ally
+    from Object import Object
 
+
+from events import RECUP_EVENT, ALLY_EVENT
 from Entity import Entity
 import pygame
 
@@ -55,17 +58,24 @@ class Player(Entity):
         """transition into the inventory scene"""
         pass
 
-    def drop(self, item):
+    def drop(self, item: Object):
         """The item drops in the sector at the exact spot where the player is located"""
-        pass
+        item.drop(self.coordinates)
 
     def add_ally(self, new_ally: Ally):
         """add new ally to Player base"""
         if new_ally not in self.allies:
             self.allies.append(new_ally)
 
-    def update(self, dt: float, target: "Player" = None):
+    def update(self, dt: float, events: list[pygame.event.Event], target: "Player" = None):
         """Update player movement from keyboard input and update allies."""
+        for event in events:
+            if event.type == ALLY_EVENT:
+                self.add_ally(event.dict["target"])
+            if event.type == RECUP_EVENT:
+                self.add_object(event.dict["target"])
+        
+        
         self.animation_timer += dt
 
         keys = pygame.key.get_pressed()
@@ -83,6 +93,14 @@ class Player(Entity):
             ally.update(dt, self)
 
     def is_ally(self, ally: Ally):
-        """check if an ally is an player's ally"""
+        """check if an ally is a player's ally"""
         return ally in self.allies
+    
+    def add_object(self, item: Object):
+        if item is not None:
+            self.inventory.append(item)
+            return True
+        else:
+            return False
+            
     

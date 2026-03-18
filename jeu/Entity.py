@@ -75,7 +75,8 @@ class Entity(ABC):
         pass
 
     @abstractmethod
-    def update(self, dt: float, target: "Player" = None):
+
+    def update(self, dt: float, events: list[pygame.event.Event], target: "Player" = None):
         """update position and animation of entity
         Don't forget to change the animation timer. """
         pass

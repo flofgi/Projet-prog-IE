@@ -38,7 +38,8 @@ class Mob(Entity):
     def attack(self, attacked: "Entity"):
         pass
 
-    def update(self, dt: float, target: Player = None):
+
+    def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
         """Update mob behavior depending on distance to target."""
         self.animation_timer += dt
         
@@ -62,6 +63,10 @@ class Mob(Entity):
         else:
             self.wandering(self.target_coordinates)
         self.move(dt)
+
+
+
+
 
     def wandering(self, target: pygame.Vector2):
         """Add the wandering logic: the mob moves towards a random point within a circle of radius WANDERING_ZONE,
