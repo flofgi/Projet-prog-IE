@@ -14,9 +14,11 @@ class FirstMenu(State):
 
         self.BUTTON1_POS = (266, 200)
         self.BUTTON2_POS = (100, 400)
+        self.BUTTON3_POS = (500, 400)
 
         self.BUTTON1_SCALE = 1
         self.BUTTON2_SCALE = 1
+        self.BUTTON3_SCALE = 1
 
 
     def load(self):
@@ -42,6 +44,13 @@ class FirstMenu(State):
                                   self.BUTTON2_SCALE,
                                   self.manager)
 
+        self.but_g2 = Button(self.BUTTON3_POS,
+                             self.button_game,
+                             self.button_game_hovered,
+                             self.BUTTON3_SCALE,
+                             self.manager,
+                             "title")
+
     def handle_events(self, events: list[pygame.event.Event]):
         """Handle events specific to the FirstMenu state."""
         
@@ -49,20 +58,21 @@ class FirstMenu(State):
 
         self.but_g.handle_events(events)
         self.but_2.handle_events(events)
+        self.but_g2.handle_events(events)
 
     def update(self, dt):
         """Handle the transition to the Menu state."""
 
-        mouse_pos = pygame.mouse.get_pos()
-
         # Update the buttons based on mouse position.
         self.but_g.update(dt)
         self.but_2.update(dt)
+        self.but_g2.update(dt)
 
     def render(self, screen: pygame.Surface):
         # Render the buttons on the screen.
         self.but_g.draw(screen)
         self.but_2.draw(screen)
+        self.but_g2.draw(screen)
 
     def unload(self):
         # Unload resources specific to the buttons.

@@ -32,7 +32,7 @@ class State(ABC):
         pass
  
     @abstractmethod
-    def update(self, dt: float):
+    def update(self, dt: float): 
         """Call the current state update method to get the state logic done.
 
         Args:
