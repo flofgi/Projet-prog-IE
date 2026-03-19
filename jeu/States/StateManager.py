@@ -17,7 +17,7 @@ class StateManager:
 
     def __init__(self):
         self.states: list[State] = []
-        self.routes: dict[str, callable[[], State]] = {}
+        self.routes: dict[str, state] = {}
 
     def register_route(self, route_name: str, state: State):
         """Register a state with a route name for easy transitions.
@@ -82,7 +82,7 @@ class StateManager:
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == STATE_REPLACE:
-                self.replace_state(self.routes[event.state])
+                self.change_state(self.routes[event.state])
             elif event.type == STATE_POP:
                 self.pop_state()
             elif event.type == STATE_PUSH:
