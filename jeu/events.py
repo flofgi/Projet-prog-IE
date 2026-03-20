@@ -1,5 +1,5 @@
 import pygame
 
 
-RECUP_EVENT = pygame.USEREVENT + 1
-ALLY_EVENT = pygame.USEREVENT + 2
+RECUP_EVENT = pygame.event.custom_type()
+ALLY_EVENT = pygame.event.custom_type()

@@ -30,12 +30,16 @@ class Mob(Entity):
         self.ALERT_ZONE = 200
         self.CONFORT_ZONE = 20
         self.WANDERING_ZONE = 200
+        self.max_speed = 0.3
 
-    def interact(self):
-        pass
+    def interact(self, player: Player) -> bool:
+        return False
 
 
     def attack(self, attacked: "Entity"):
+        pass
+
+    def combat(self):
         pass
 
 
@@ -44,7 +48,7 @@ class Mob(Entity):
         self.animation_timer += dt
         
         if target is not None:
-            self.target_coordinates = target.get_coordinates()
+            self.target_coordinates = target.get_coordinates
 
             distance_player_mob = self.target_coordinates.distance_to(self.coordinates) 
             

@@ -9,6 +9,7 @@ from Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
+from events import ALLY_EVENT
 
 
 class Ally(Entity):
@@ -43,16 +44,22 @@ class Ally(Entity):
     def combat(self):
         pass
 
-    def interact(self):
-        pass
+    def interact(self, player: Player) -> bool:
+        if player.get_coordinates.distance_to(self.coordinates) < 20:
+            print("ally is ally")
+            pygame.event.post(pygame.event.Event(ALLY_EVENT, {
+                "target": self
+            }))
+            return True
+        return False
 
 
     def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
         """Update ally behavior to follow or wander around a target."""
         self.animation_timer += dt
         
-        if target is not None:
-            self.target_coordinates = target.get_coordinates()
+        if target is not None and target.is_ally(self):
+            self.target_coordinates = target.get_coordinates
 
             distance_player_ally = self.target_coordinates.distance_to(self.coordinates) 
             
@@ -60,11 +67,13 @@ class Ally(Entity):
                 self.velocity = pygame.Vector2(0, 0)
             
             elif distance_player_ally > self.ALERT_ZONE:
-                self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+10, self.target_coordinates)
+                self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+5, self.target_coordinates)
+                print(self.target_coordinates)
                 self.velocity = pygame.Vector2(0, 0)
+                
 
             else:
-                self.wandering(target.get_coordinates())
+                self.wandering(target.get_coordinates)
         else:
             self.wandering(self.target_coordinates)
         self.move(dt)
@@ -89,7 +98,7 @@ class Ally(Entity):
 
     def target_random_point(self, min_rayon_limite, max_rayon_limite, target: pygame.Vector2 = None) -> pygame.Vector2:
         """Return a random point around target within radius limits."""
-        if target is not None:
+        if target is None:
             target = self.coordinates
         
         rayon = uniform(min_rayon_limite, max_rayon_limite)

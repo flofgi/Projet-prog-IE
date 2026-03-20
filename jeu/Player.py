@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Ally import Ally
-    from Object import Object
+    from jeu.Item import Item
 
 
 from events import RECUP_EVENT, ALLY_EVENT
@@ -32,7 +32,7 @@ class Player(Entity):
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, allies: list[Ally] = None, inventory = None) -> None:
         """Initialize a player with allies and inventory state."""
-        Entity.__init__(self, hp, sprites, coordinates, " ")
+        super().__init__(hp, sprites, coordinates, " ")
         self.allies: list["Ally"] = list(allies) if allies is not None else []
         self.inventory = list(inventory) if inventory is not None else []
         self.held_item = 0
@@ -44,7 +44,7 @@ class Player(Entity):
         pass
     
     def interact(self):
-        pass
+        return False
 
     def use_item(self):
         """add the logic of using an item to the player(ex: shot with firegun ...)"""
@@ -58,7 +58,7 @@ class Player(Entity):
         """transition into the inventory scene"""
         pass
 
-    def drop(self, item: Object):
+    def drop(self, item: Item):
         """The item drops in the sector at the exact spot where the player is located"""
         item.drop(self.coordinates)
 
@@ -73,7 +73,7 @@ class Player(Entity):
             if event.type == ALLY_EVENT:
                 self.add_ally(event.dict["target"])
             if event.type == RECUP_EVENT:
-                self.add_object(event.dict["target"])
+                self.add_Item(event.dict["target"])
         
         
         self.animation_timer += dt
@@ -90,17 +90,32 @@ class Player(Entity):
             self.velocity = pygame.Vector2(0, 0)
         self.move(dt)
         for ally in self.allies:
-            ally.update(dt, self)
+            ally.update(dt, events, self)
 
     def is_ally(self, ally: Ally):
         """check if an ally is a player's ally"""
         return ally in self.allies
     
-    def add_object(self, item: Object):
+    def add_Item(self, item: Item):
         if item is not None:
             self.inventory.append(item)
             return True
         else:
             return False
+        
+    def load(self, sprites = None):
+        """Load sprites from disk.
+
+        If sprites is provided, replace the stored sprite paths before loading.
+        """
+        if sprites is not None:
+            self.sprite_paths = list(sprites)
+        self.sprite = [pygame.image.load(s).convert_alpha() for s in self.sprite_paths]
+        for ally in self.allies:
+            ally.load()
+        
+    @property
+    def get_allies(self):
+        return self.allies
             
     
