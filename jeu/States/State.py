@@ -41,11 +41,11 @@ class State(ABC):
         """
         pass
 
-    def handle_events(self, events: list[pygame.event.Event]):
+    def handle_event(self, event: pygame.event.Event):
         """Optional method to handle events specific to the state.
 
         Args:
-            events (list): List of pygame events to handle.
+            event (pygame.event.Event): The pygame event to handle.
         """
         pass
     

@@ -91,7 +91,7 @@ class StateManager:
 
             else: 
                 if self.states:
-                    self.current_state.handle_events(event)
+                    self.current_state.handle_event(event)
 
         if self.states:
             self.current_state.update(dt)

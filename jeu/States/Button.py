@@ -6,8 +6,8 @@ from States.NextState import NextState
 
 
 class Button(ButtonMenu):
-    def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, sprite_hovered: pygame.image, scale: int, state_manager, state_name: str):
-        super().__init__(center_pos, sprite, scale, state_manager)
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, sprite_hovered: pygame.image, scale: int, state_name: str):
+        super().__init__(center_pos, sprite, scale)
 
         self.state_name = state_name
         self.button_game_is_hovered = False 
@@ -23,6 +23,7 @@ class Button(ButtonMenu):
 
 
     def update(self, dt: float) :
+
         if self.button_game_is_hovered == True :
             self.image = self.hovered
             self.rect = self.image.get_rect()
@@ -36,13 +37,18 @@ class Button(ButtonMenu):
             pygame.event.post(pygame.event.Event(STATE_PUSH, state=self.state_name))
             self.button_game_is_clicked = False
             
-    def handle_events(self, events: list[pygame.event.Event]):
-        """Optional method to handle events specific to the button."""
-        if events.type == pygame.MOUSEMOTION:
-            self.button_game_is_hovered = self.rect.collidepoint(events.pos)
+    def handle_event(self, event: pygame.event.Event):
+        """Optional method to handle events specific to the button.
+        
+        Args:
+            event (pygame.event.Event): An event to handle."""
+
+
+        if event.type == pygame.MOUSEMOTION:
+            self.button_game_is_hovered = self.rect.collidepoint(event.pos)
             
-        if events.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(events.pos):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
                 self.button_game_is_clicked = True
                 
 

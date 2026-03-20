@@ -9,8 +9,11 @@ class FirstMenu(State):
 
     def __init__(self, state_manager):
         super().__init__(state_manager)
-        """Initialize the FirstMenu state with a reference to the state manager."""
-
+        """Initialize the FirstMenu state with a reference to the state manager.
+        
+        Args:
+            state_manager: A reference to the state manager for handling state transitions.
+        """
 
         self.BUTTON1_POS = (266, 200)
         self.BUTTON2_POS = (100, 400)
@@ -22,6 +25,8 @@ class FirstMenu(State):
 
 
     def load(self):
+        """Load resources specific to the FirstMenu state."""
+
         # Load resources specific to the buttons.
         self.button_game = pygame.image.load("Design/button_background.png").convert_alpha()
         self.button_game_hovered = pygame.image.load("Design/button_background_1.png").convert_alpha()   
@@ -34,31 +39,32 @@ class FirstMenu(State):
                             self.button_game, 
                             self.button_game_hovered, 
                             self.BUTTON1_SCALE,
-                            self.manager,
                             "next_state")
         
         self.but_2 = ScrollButton(self.BUTTON2_POS,
                                   self.button_scroll_background,
                                   self.button_scroll,
                                   self.scroll_trail, 
-                                  self.BUTTON2_SCALE,
-                                  self.manager)
+                                  self.BUTTON2_SCALE)
 
         self.but_g2 = Button(self.BUTTON3_POS,
                              self.button_game,
                              self.button_game_hovered,
                              self.BUTTON3_SCALE,
-                             self.manager,
                              "title")
 
-    def handle_events(self, events: list[pygame.event.Event]):
-        """Handle events specific to the FirstMenu state."""
+    def handle_event(self, event: pygame.event.Event):
+        """Handle events specific to the FirstMenu state.
+        
+        Args!
+            event (pygame.event.Event): An event to handle.
+        """
         
         # Handle events for the buttons.
 
-        self.but_g.handle_events(events)
-        self.but_2.handle_events(events)
-        self.but_g2.handle_events(events)
+        self.but_g.handle_event(event)
+        self.but_2.handle_event(event)
+        self.but_g2.handle_event(event)
 
     def update(self, dt):
         """Handle the transition to the Menu state."""
@@ -69,12 +75,21 @@ class FirstMenu(State):
         self.but_g2.update(dt)
 
     def render(self, screen: pygame.Surface):
+
+        """Render the FirstMenu state on the screen.
+        
+        Args:
+            screen (pygame.Surface): The surface to render the state on.
+        """
+
         # Render the buttons on the screen.
         self.but_g.draw(screen)
         self.but_2.draw(screen)
         self.but_g2.draw(screen)
 
     def unload(self):
+        """Unload resources specific to the FirstMenu state."""
+
         # Unload resources specific to the buttons.
         self.button_game = None
         self.button_game_hovered = None
