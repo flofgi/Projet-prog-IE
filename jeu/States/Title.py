@@ -41,6 +41,10 @@ class Title(State):
             self.rect = self.image_render.get_rect()
             self.rect.center = self.title_pos
 
+    def handle_event(self, event: pygame.event.Event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pygame.event.post(pygame.event.Event(STATE_REPLACE, state="first_menu"))
+
 
     def render(self, screen: pygame.Surface):
         screen.fill((0, 0, 0))
