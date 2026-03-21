@@ -16,7 +16,7 @@ class FirstMenu(State):
             state_manager: A reference to the state manager for handling state transitions.
         """
 
-        screen_size: tuple[int, int] = pygame.display.get_window_size()
+        screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
 
         self.BUTTON1_POS = (screen_size[0] // 2, screen_size[1] // 4)
         self.BUTTON2_POS = (screen_size[0] // 2, screen_size[1] // 3)
