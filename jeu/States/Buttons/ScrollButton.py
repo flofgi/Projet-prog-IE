@@ -1,8 +1,8 @@
 import pygame
 
-from States.ButtonMenu import ButtonMenu
+from States.Buttons.Buttons import Buttons
 
-class ScrollButton(ButtonMenu):
+class ScrollButton(Buttons):
     def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.image, scroll_sprite: pygame.image, scroll_trail: pygame.image, scale: int):
         """ Initialize a button with a scrollable element that can be dragged within a defined area.
         
@@ -92,8 +92,7 @@ class ScrollButton(ButtonMenu):
     def draw(self, screen: pygame.Surface):
         screen.blit(self.background_image, self.background_rect)
         screen.blit(self.scroll_trail_image, self.scroll_trail_rect)
-        screen.blit(self.image, self.rect)
-
+        super().draw(screen)
     
 
 

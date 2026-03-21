@@ -1,8 +1,8 @@
 import pygame
 
-from States.ButtonMenu import ButtonMenu
+from States.Buttons.Buttons import Buttons
 
-class Button(ButtonMenu):
+class Button1(Buttons):
     def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, sprite_hovered: pygame.image, scale: int, state_name: str, state_action: pygame.event.EventType):
         super().__init__(center_pos, sprite, scale)
 

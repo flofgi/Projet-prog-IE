@@ -3,8 +3,9 @@ import pygame
 from States.State import State
 from EVENTS import STATE_PUSH, STATE_POP, STATE_REPLACE
 
-from States.Button import Button
-from States.ScrollButton import ScrollButton
+from States.Buttons.Button1 import Button1
+from States.Buttons.ScrollButton import ScrollButton
+from States.Buttons.TextButton import TextButton
 
 class FirstMenu(State):
 
@@ -21,10 +22,13 @@ class FirstMenu(State):
         self.BUTTON1_POS = (screen_size[0] // 2, screen_size[1] // 4)
         self.BUTTON2_POS = (screen_size[0] // 2, screen_size[1] // 3)
         self.BUTTON3_POS = (screen_size[0] // 2, screen_size[1] // 2)
+        self.BUTTON4_POS = (900, 200)
 
         self.BUTTON1_SCALE = 1
         self.BUTTON2_SCALE = 1
         self.BUTTON3_SCALE = 1
+
+    
 
 
     def load(self):
@@ -37,8 +41,12 @@ class FirstMenu(State):
         self.button_scroll = pygame.image.load("Design/scroll_button.png").convert_alpha()
         self.scroll_trail = pygame.image.load("Design/scroll_trail.png").convert_alpha()
 
+        self.button_text_font = pygame.font.Font("Fonts/Early_GameBoy.ttf", 24)
+        self.button_text_color = (255, 255, 255)
+        self.button_game_text = "start game"
+
         # Initialize buttons with their positions, sprites, and scale.
-        self.but_g = Button(self.BUTTON1_POS,
+        self.but_g = Button1(self.BUTTON1_POS,
                             self.button_game, 
                             self.button_game_hovered, 
                             self.BUTTON1_SCALE,
@@ -51,12 +59,19 @@ class FirstMenu(State):
                                   self.scroll_trail, 
                                   self.BUTTON2_SCALE)
 
-        self.but_g2 = Button(self.BUTTON3_POS,
+        self.but_g2 = Button1(self.BUTTON3_POS,
                              self.button_game,
                              self.button_game_hovered,
                              self.BUTTON3_SCALE,
                              "title",
                              STATE_REPLACE)
+
+        self.but_4 = TextButton(self.BUTTON4_POS,
+                                self.button_text_font,
+                                self.button_game_text,
+                                self.button_text_color,
+                                "next_state",
+                                STATE_PUSH)
 
     def handle_event(self, event: pygame.event.Event):
         """Handle events specific to the FirstMenu state.
@@ -70,6 +85,7 @@ class FirstMenu(State):
         self.but_g.handle_event(event)
         self.but_2.handle_event(event)
         self.but_g2.handle_event(event)
+        self.but_4.handle_event(event)
 
     def update(self, dt):
         """Handle the transition to the Menu state."""
@@ -78,6 +94,7 @@ class FirstMenu(State):
         self.but_g.update(dt)
         self.but_2.update(dt)
         self.but_g2.update(dt)
+        self.but_4.update(dt)
 
     def render(self, screen: pygame.Surface):
 
@@ -91,6 +108,7 @@ class FirstMenu(State):
         self.but_g.draw(screen)
         self.but_2.draw(screen)
         self.but_g2.draw(screen)
+        self.but_4.draw(screen)
 
     def unload(self):
         """Unload resources specific to the FirstMenu state."""
@@ -101,4 +119,7 @@ class FirstMenu(State):
         self.button_scroll_background = None
         self.button_scroll = None
         self.scroll_trail = None
-
+        self.button_text_font = None
+        self.button_text_color = None
+        self.button_game_text = None
+        self.but_4 = None

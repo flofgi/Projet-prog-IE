@@ -2,7 +2,7 @@ import pygame
 
 from abc import ABC, abstractmethod
 
-class ButtonMenu(ABC):
+class Buttons(ABC):
 
     def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, scale: int):
         """Initialize the button with its position and size.

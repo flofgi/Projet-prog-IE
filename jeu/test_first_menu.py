@@ -20,7 +20,7 @@ state_manager = StateManager()
 first_menu = FirstMenu(state_manager)
 next_state = NextState(state_manager)
 title = Title(state_manager)
-state_manager.push_state(title)
+state_manager.push_state(first_menu)
 
 state_manager.register_route("title", title)
 state_manager.register_route("first_menu", first_menu)
@@ -33,7 +33,7 @@ while run:
 
     dt = clock.tick(FPS) / 1000
 
-    screen.fill((115, 125, 135))
+    screen.fill((6, 6, 7))
 
     state_manager.update(dt)
     state_manager.render(screen)
