@@ -1,7 +1,6 @@
 import pygame
 
 from States.State import State
-from States.StateManager import StateManager
 
 class NextState(State):
     def __init__(self, state_manager):

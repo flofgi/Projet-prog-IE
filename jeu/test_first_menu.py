@@ -12,7 +12,8 @@ FPS = 60 # lire dans la sauvegarde, les fps indiqués, sachant que la sauvegarde
 SCREEN_WIDTH = 1280 # de même
 SCREEN_HEIGHT = 740 # de même
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+
 pygame.display.set_caption("demo button")
 
 state_manager = StateManager()

@@ -17,7 +17,7 @@ class ButtonMenu(ABC):
         
         self.image = pygame.transform.scale(sprite, self.BASESCALE)
         self.rect = self.image.get_rect()
-        self.rect.topleft = (center_pos[0] - self.BASESCALE[0] // 2, center_pos[1] - self.BASESCALE[1] // 2)
+        self.rect.center = center_pos
 
     @abstractmethod
     def update(self, dt: float): 

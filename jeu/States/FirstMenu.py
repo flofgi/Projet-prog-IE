@@ -1,6 +1,7 @@
 import pygame
 
 from States.State import State
+from EVENTS import STATE_PUSH, STATE_POP, STATE_REPLACE
 
 from States.Button import Button
 from States.ScrollButton import ScrollButton
@@ -15,9 +16,11 @@ class FirstMenu(State):
             state_manager: A reference to the state manager for handling state transitions.
         """
 
-        self.BUTTON1_POS = (266, 200)
-        self.BUTTON2_POS = (100, 400)
-        self.BUTTON3_POS = (500, 400)
+        screen_size: tuple[int, int] = pygame.display.get_window_size()
+
+        self.BUTTON1_POS = (screen_size[0] // 2, screen_size[1] // 4)
+        self.BUTTON2_POS = (screen_size[0] // 2, screen_size[1] // 3)
+        self.BUTTON3_POS = (screen_size[0] // 2, screen_size[1] // 2)
 
         self.BUTTON1_SCALE = 1
         self.BUTTON2_SCALE = 1
@@ -39,7 +42,8 @@ class FirstMenu(State):
                             self.button_game, 
                             self.button_game_hovered, 
                             self.BUTTON1_SCALE,
-                            "next_state")
+                            "next_state",
+                            STATE_PUSH)
         
         self.but_2 = ScrollButton(self.BUTTON2_POS,
                                   self.button_scroll_background,
@@ -51,7 +55,8 @@ class FirstMenu(State):
                              self.button_game,
                              self.button_game_hovered,
                              self.BUTTON3_SCALE,
-                             "title")
+                             "title",
+                             STATE_REPLACE)
 
     def handle_event(self, event: pygame.event.Event):
         """Handle events specific to the FirstMenu state.
