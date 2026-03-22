@@ -22,10 +22,10 @@ class TextButton(Buttons):
         if self.button_is_clicked:
             self.button_is_clicked = False
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
-            
-        
-            
 
+    def update_position(self, center_pos: tuple[int, int]):
+        self.text_rect.center = center_pos
+            
     def handle_event(self, event: pygame.event.Event):
         if event.type == pygame.MOUSEMOTION:
             self.button_is_hovered = self.text_rect.collidepoint(event.pos)
