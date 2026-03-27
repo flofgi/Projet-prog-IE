@@ -23,6 +23,12 @@ class Item(WorldElement):
     """
 
     def __init__(self, sprites : list[str], coordinates: pygame.Vector2, durability: int = None):
+        """Initialize an item with optional durability.
+        Args:
+            sprites (list[str]): List of sprite identifiers or paths for rendering the entity.
+            coordinates (pygame.Vector2): Position of the entity on the map.
+            durability (int, optional): Durability of the item. If None, the item has infinite durability. Defaults to None.
+        """
         super().__init__(sprites, coordinates)
         
         #Is None if the Item have infinity durability
@@ -33,6 +39,14 @@ class Item(WorldElement):
         pass
 
     def interact(self, player: Player) -> bool:
+        """Check if player is close enough to interact and post a RECUP_EVENT if so.
+        
+        Args:
+            player (Player): The player entity to check interaction with.
+        
+        Returns:
+            bool: True if interaction occurred, False otherwise.
+        """
         if self.coordinates is not None and player.get_coordinates.distance_to(self.coordinates) < 20:
             pygame.event.post(pygame.event.Event(RECUP_EVENT, {
                 "target": self

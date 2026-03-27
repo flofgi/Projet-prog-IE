@@ -84,3 +84,7 @@ class WorldElement(ABC):
 
     def __ge__(self, other: "WorldElement"):
         return self.get_rect.bottom >= other.get_rect.bottom
+    
+    def contains_point(self, point: pygame.Vector2) -> bool:
+        """Check if the given point is within the entity's collision rectangle."""
+        return self.get_rect.collidepoint(point.x, point.y)
