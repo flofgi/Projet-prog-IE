@@ -4,4 +4,6 @@ __pycache__/
 .env
 .vscode/
 formalisme.md
+jeu/test_map_2.py
+
 jeu/test.py
