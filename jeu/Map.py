@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     from Ally import Ally
     from jeu.Item import Item
     from Entity import Entity
+    from WorldElement import WorldElement
 
 
 #from sectors import sector
@@ -15,9 +16,9 @@ from WorldElement import WorldElement
 from events import RECUP_EVENT, ALLY_EVENT
 
 
+
 class Map :
-    def __init__(self,mapsize : tuple, tileset, mapset : np.array, rect=None): #, sectors: tuple
-      
+    def __init__(self,mapsize : tuple, tileset, mapset : np.array, rect=None, worldelements: list[WorldElement] = None): #, sectors: tuple, camera: caméra
         """initialize the map
         Args:
         mapsize(tuple) : the size of the map in tiles
@@ -25,16 +26,21 @@ class Map :
         mapset(np.array) : a table of numbers defining the position of the tiles on the map
         rect(pygame.Rect) : relative position of the window on the screen 
         """
+    
         self.mapsize = mapsize
-        self.mapset = mapset
+        self.mapset: np.array = mapset
         self.tileset = tileset
+        self.worldelements: list[WorldElement] = list(worldelements) if worldelements is not None else []
         #self.sectors = sectors
+
         h, w = self.mapsize
         self.image = pygame.Surface((32*w,32*h))
+        
         if rect :
             self.rect = pygame.Rect(rect)
         else :
             self.rect = self.image.get_rect()
+
       
 
     def draw(self):
