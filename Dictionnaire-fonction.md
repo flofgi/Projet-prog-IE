@@ -75,10 +75,9 @@ Abstract class managing different objects implemented independently.
 | Class | Attribute | Type | Description |
 | ------ | -------- | ---- | ----------- |
 | object | durability | int | variable holding an object's durability value, with a default for infinite durability |
-| object | sprites | list[image] | list of images to display if it is an entity or to select in the inventory |
-| object | use | method | use of an object (e.g., firing a gun) |
+| object | sprite | list[image] | list of images to display if it is an entity or to select in the inventory |
 | object | coordinates | pygame.Vector2 | position of the object |
-| object | is_drop | bool | if True : this object is drop to the coordinates.|
+| object | use | method | use of an object (e.g., firing a gun) |
 | object | interact | method | retrieve the object, interact with it (portal, merchant...)|
 | object | drop | method |
 

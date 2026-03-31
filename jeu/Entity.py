@@ -7,8 +7,10 @@ if TYPE_CHECKING:
 from abc import ABC, abstractmethod
 import pygame
 
+from WorldElement import WorldElement
 
-class Entity(ABC):
+
+class Entity(WorldElement):
     """Abstract base class for all game entities.
     
     This parent class provides a unified interface for managing entity lifecycle,
@@ -37,13 +39,8 @@ class Entity(ABC):
             current_frame (int) index of the current sprite load
             animation_timer (int) index of the fps to load the next sprite
         """
+        super().__init__(sprites, coordinates)
         self.hp = hp
-        self.sprite = [pygame.image.load(s).convert_alpha() for s in sprites]
-        self.coordinates = coordinates
-        if self.sprite:
-            self.rect = self.sprite[0].get_rect(topleft=(self.coordinates.x, self.coordinates.y))
-        else:
-            self.rect = pygame.Rect(coordinates.x, coordinates.y, 0, 0)
         self.velocity = pygame.Vector2(0, 0)
         self.name = name
         self.current_frame = 0
@@ -61,7 +58,6 @@ class Entity(ABC):
         self.coordinates += self.velocity * dt * self.BASE_FPS
         self.rect.topleft = (self.coordinates.x, self.coordinates.y)
 
-
     @abstractmethod
     def combat(self):
         """Execute combat logic for the entity.
@@ -69,23 +65,11 @@ class Entity(ABC):
         pass
 
 
-    @abstractmethod
-    def interact(self):
-        """Handle interaction with the entity (e.g. talking, using)."""
-        pass
-
-    @abstractmethod
-    def update(self, dt: float, target: "Player" = None):
-        """update position and animation of entity
-        Don't forget to change the animation timer. """
-        pass
-
-
-    def get_coordinates(self) -> pygame.Vector2:
-        """Return the current position of the entity as pygame.Vector2."""
-        return self.coordinates
-    
     def attack(self, attacked: "Entity"):
         """add the logic of the attack for entity"""
         pass
+
+    def draw(self, surface: pygame.surface, player: Player) -> None:
+        if self.sprite:
+            surface.blit(self.sprite[self.current_frame], self.rect)
 
