@@ -1,10 +1,7 @@
 import pygame
 
-from States.Buttons.Buttons import Buttons
 
-
-
-class TextButton(Buttons):
+class TextButton():
     def __init__(self, center_pos: tuple[int, int], myFont: pygame.font.Font, text: str, color: tuple[int, int, int], state_name: str, state_action: pygame.event.EventType):
 
         self.button_is_hovered = False 

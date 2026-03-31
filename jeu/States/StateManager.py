@@ -80,8 +80,7 @@ class StateManager:
         """
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                raise SystemExit
+                raise SystemExit 
             elif event.type == STATE_REPLACE:
                 self.change_state(self.routes[event.state])
             elif event.type == STATE_POP:

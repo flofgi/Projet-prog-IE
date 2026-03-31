@@ -3,7 +3,6 @@ import pygame
 from States.State import State
 from EVENTS import STATE_PUSH, STATE_POP, STATE_REPLACE
 
-from States.Buttons.Button1 import Button1
 from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.TextButton import TextButton
 
@@ -16,12 +15,9 @@ class FirstMenu(State):
         Args:
             state_manager: A reference to the state manager for handling state transitions.
         """
-
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
 
         self.screen_is_resized = False
-
-
 
         """ self.BUTTON1_POS = (screen_size[0] // 2, screen_size[1] // 4)
         self.BUTTON2_POS = (screen_size[0] // 2, screen_size[1] // 3)
@@ -80,8 +76,8 @@ class FirstMenu(State):
                              self.button_game_hovered,
                              self.BUTTON3_SCALE,
                              "title",
-                             STATE_REPLACE) """
-
+                             STATE_REPLACE)"""
+        
         self.Start_button = TextButton(self.START_POS,
                                        self.button_text_font,
                                        self.button_start_text,
@@ -93,8 +89,8 @@ class FirstMenu(State):
                                        self.button_text_font,
                                        self.button_param_text,
                                        self.button_text_color,
-                                       "title",
-                                       STATE_REPLACE)
+                                       "param_state",
+                                       STATE_PUSH)
         
         self.Leave_button = TextButton(self.LEAVE_POS,
                                        self.button_text_font,
@@ -151,8 +147,6 @@ class FirstMenu(State):
         self.Param_button.update(dt)
         self.Start_button.update(dt)
         self.Leave_button.update(dt)
-
-        
 
     def render(self, screen: pygame.Surface):
 
