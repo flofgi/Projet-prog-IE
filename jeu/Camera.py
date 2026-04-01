@@ -1,4 +1,5 @@
 import pygame
+from Player import Player
 
 class Camera :
   def __init__(self, mapsize, screensize, tilesize = (32,32)):
@@ -17,10 +18,10 @@ class Camera :
     self.max_x = mapsize[1] * tilesize[0] - screensize[0]
     self.max_y = mapsize[0] * tilesize[1] - screensize[1]
 
-  def update(self, player):
+  def update(self, player: Player):
     """update the position of the camera following the player's coordinates and the border of the map"""
-    self.x = player.getPosition()[0] - self.screensize[0]//2
-    self.y = player.getPosition()[1] - self.screensize[1]//2
+    self.x = player.getPosition.x - self.screensize[0]//2
+    self.y = player.getPosition.y - self.screensize[1]//2
     self.x = max(0, min(self.x, self.max_x))
     self.y = max(0, min(self.y, self.max_y))
   

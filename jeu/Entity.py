@@ -39,10 +39,9 @@ class Entity(WorldElement):
             current_frame (int) index of the current sprite load
             animation_timer (int) index of the fps to load the next sprite
         """
-        super().__init__(sprites, coordinates)
+        super().__init__(sprites, coordinates, name)
         self.hp = hp
         self.velocity = pygame.Vector2(0, 0)
-        self.name = name
         self.current_frame = 0
         self.animation_timer = 0
         self.max_speed = 1

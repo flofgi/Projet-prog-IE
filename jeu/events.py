@@ -1,10 +1,11 @@
 import pygame
 
-
+STATE_POP = pygame.event.custom_type()
+STATE_PUSH = pygame.event.custom_type()
+STATE_REPLACE = pygame.event.custom_type()
 RECUP_EVENT = pygame.event.custom_type()
 ALLY_EVENT = pygame.event.custom_type()
-OPEN_INVENTORY_EVENT = pygame.event.custom_type()
-CLOSE_INVENTORY_EVENT = pygame.event.custom_type()
+FULLSCREEN = pygame.event.custom_type()
 
 KEYS = {
     "interact": pygame.K_e,

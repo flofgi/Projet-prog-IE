@@ -22,20 +22,18 @@ class WorldElement(ABC):
     """
 
 
-    def __init__(self, sprites: list[str],  coordinates: pygame.Vector2):
+    def __init__(self, sprites: list[str],  coordinates: pygame.Vector2, name: str = " "):
         """
         Args:
             sprites (list[str]) : List of sprite identifiers or paths for rendering the entity.
             coordinates (pygame.Vector2) : position of the element on the map
             
         """
-        self.sprite_paths = list(sprites)
-        self.sprite = []
+        self.sprite_paths = sprites
+        self.sprite: list[pygame.Surface] = []
+        self.name = name
         self.coordinates = coordinates
-        if self.sprite:
-            self.rect = self.sprite[0].get_rect(topleft=(self.coordinates.x, self.coordinates.y))
-        else:
-            self.rect = pygame.Rect(coordinates.x, coordinates.y, 0, 0)
+        self.rect = pygame.Rect(coordinates.x, coordinates.y, 0, 0)
 
     @abstractmethod
     def update(self, dt: float, events: list[pygame.event.Event], target: "Player" = None):
@@ -58,14 +56,18 @@ class WorldElement(ABC):
     def draw(self, surface: pygame.surface, player: Player) -> None:
         pass
 
-    def load(self, sprites: list[str] | None = None):
+    def load(self):
         """Load sprites from disk.
 
         If sprites is provided, replace the stored sprite paths before loading.
         """
-        if sprites is not None:
-            self.sprite_paths = list(sprites)
         self.sprite = [pygame.image.load(s).convert_alpha() for s in self.sprite_paths]
+
+    
+    
+    def unload(self):
+        self.sprite = [None for s in self.sprite]
+
 
     def interact(self, player: Player) -> bool:
         """Handle interaction with the entity (e.g. talking, using).

@@ -21,14 +21,14 @@ class Mob(Entity):
         WANDERING_ZONE (int) radius of the wandering circle where the mob moves around
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = " ") -> None:
         """Initialize a mob with tracking and wandering parameters.
         Args:
             hp (int): Initial health points for the mob. Must be a positive integer.
             sprites (list[str]): List of sprite identifiers or paths for rendering the entity.
             coordinates (pygame.Vector2): Position of the entity on the map.
         """
-        Entity.__init__(self, hp, sprites, coordinates, " ")
+        Entity.__init__(self, hp, sprites, coordinates, name)
         self.wandering_point = pygame.Vector2(coordinates)
         self.is_paused = False
         self.target_coordinates = coordinates

@@ -22,7 +22,7 @@ class Item(WorldElement):
     
     """
 
-    def __init__(self, sprites : list[str], coordinates: pygame.Vector2, durability: int = None):
+    def __init__(self, sprites : list[str], coordinates: pygame.Vector2, durability: int = None, be_stackable: bool = None):
         """Initialize an item with optional durability.
         Args:
             sprites (list[str]): List of sprite identifiers or paths for rendering the entity.
@@ -33,6 +33,10 @@ class Item(WorldElement):
         
         #Is None if the Item have infinity durability
         self.durability = durability
+        if durability is not None or be_stackable == None:
+            self.be_stackable = False
+        else:
+            self.be_stackable = be_stackable
 
 
     def use(self):
@@ -47,7 +51,7 @@ class Item(WorldElement):
         Returns:
             bool: True if interaction occurred, False otherwise.
         """
-        if self.coordinates is not None and player.get_coordinates.distance_to(self.coordinates) < 20:
+        if self.coordinates is not None and player.get_coordinates.distance_to(self.coordinates) < 20 and player.inventory.number_slot < player.inventory.max_slot:
             pygame.event.post(pygame.event.Event(RECUP_EVENT, {
                 "target": self
             }))
@@ -61,3 +65,7 @@ class Item(WorldElement):
 
     def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
         pass
+
+
+    def __eq__(self, value: Item):
+        return self.be_stackable == True and value.be_stackable == True and self.name == value.name

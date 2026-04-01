@@ -10,3 +10,4 @@ jeu/test.py
 jeu/test_map.py
 Design/Texture/
 jeu/testdisgn.py
+jeu/teststate.py

@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from WorldElement import WorldElement
 
 
-from events import RECUP_EVENT, ALLY_EVENT, OPEN_INVENTORY_EVENT, CLOSE_INVENTORY_EVENT, KEYS
+from events import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH
 from Entity import Entity
 import pygame
 
@@ -139,7 +139,7 @@ class Player(Entity):
         """
         return ally in self.allies
     
-    def add_Item(self, item: Item):
+    def add_Item(self, item: Item) -> bool:
         """add an item to the player's inventory.
         Args:
             item (Item): The item to be added to the player's inventory.
@@ -148,11 +148,10 @@ class Player(Entity):
             bool: True if the item was successfully added to the inventory, False otherwise.
         """
         if item is not None:
-            self.inventory.add_item(item)
-            return True
-        else:
-            return False
-        
+            if self.inventory.add_item(item):
+                return True
+        return False
+
     def load(self, sprites = None):
         """Load sprites from disk.
 
@@ -168,8 +167,13 @@ class Player(Entity):
             ally.load()
         
     @property
-    def get_allies(self):
+    def get_allies(self) -> list[Ally]:
         return self.allies
+    
+    @property
+    def getPosition(self) -> pygame.Vector2:
+        """Return the current position of the player as pygame.Vector2."""
+        return self.coordinates
             
     
 class Inventory:
@@ -187,16 +191,49 @@ class Inventory:
             items (list[Item]): The initial list of items in the inventory.
         """
         self.items = items
+        self.max_slot = 15
         #Held item is the index of the item in the inventory, None if no item is held
-        self.held_item: int | None = 0
+        self.held_item: int | None = None
+        self.slot_size = 64
 
-    def add_item(self, item: Item):
+    def load(self):
+        """Load sprites for all items in the inventory."""
+        for item in self.items:
+            item.load()
+
+    @property
+    def number_slot(self) -> int:
+        """Return the number of occupied slots in the inventory.
+        Item can be stack by 10 objects, so the number of occupied slots is the sum of unique items in the inventory, not the total number of items.
+        
+        Returns:
+            int: The number of occupied slots in the inventory.
+        """
+        stackable_items: set[str] = set()
+        unique_items = 0
+
+        for item in self.items:
+            if item.be_stackable:
+                stackable_items.add(item.name)
+            else:
+                unique_items += 1
+        return len(stackable_items) + unique_items
+
+
+    def add_item(self, item: Item) -> bool:
         """Add an item to the inventory.
         
         Args:            
             item (Item): The item to be added to the inventory.
+        Returns:
+            bool: True if the item was successfully added to the inventory, False otherwise.
+        
         """
-        self.items.append(item)
+        if self.number_slot < self.max_slot:
+            self.items.append(item)
+            return True
+        else:
+            return False
 
     def remove_item(self, item: Item):
         """Remove an item from the inventory.
@@ -218,7 +255,8 @@ class Inventory:
         """
         self.held_item = item_id
     
-    def get_held_item(self):
+    @property
+    def get_held_item(self) -> Item:
         """Get the currently held item.
         
         Returns:
@@ -238,8 +276,8 @@ class Inventory:
 
     def open_inventory(self):
         """Transition into the inventory scene."""
-        pygame.event.post(pygame.event.Event(OPEN_INVENTORY_EVENT))
+        pygame.event.post(pygame.event.Event(STATE_PUSH, state="inventory"))
     
     def close_inventory(self):
         """Transition out of the inventory scene."""
-        pygame.event.post(pygame.event.Event(CLOSE_INVENTORY_EVENT))
+        pygame.event.post(pygame.event.Event(STATE_POP, state="inventory"))
