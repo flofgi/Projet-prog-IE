@@ -5,3 +5,5 @@ import pygame
 STATE_REPLACE = pygame.event.custom_type()
 STATE_POP = pygame.event.custom_type()
 STATE_PUSH = pygame.event.custom_type()
+
+FULLSCREEN = pygame.event.custom_type()

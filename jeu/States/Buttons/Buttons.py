@@ -3,7 +3,7 @@ import pygame
 from abc import ABC, abstractmethod
 
 class ClassicButtons(ABC):
-    def __init__(self, center_pos: tuple[int, int], sprite: pygame.image, scale: int):
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, scale: int):
         """Initialize the button with its position and size.
         
         Args: 
@@ -66,7 +66,7 @@ class ClassicButtons(ABC):
 
 class SpliteButtons(ABC):
 
-    def __init__(self, topleft_pos: tuple[int, int], sprite: pygame.image, button_width: int, button_height: int, corner_dim: tuple[int, int], top_side_width: int, left_side_height: int):
+    def __init__(self, topleft_pos: tuple[int, int], sprite: pygame.Surface, button_width: int, button_height: int, corner_dim: tuple[int, int], top_side_width: int, left_side_height: int):
         """Initialize the button with its position and size.
         
         Args: 

@@ -6,15 +6,16 @@ from States.StateManager import StateManager
 from States.Buttons.TextButton import TextButton
 from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.Button1 import ClassicButton1, SpliteButton1
+from States.Buttons.ClickButton import ClickButton
 
-from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE
+from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN
 
 
 class ParamState(State):
     def __init__(self, state_manager: StateManager):
         super().__init__(state_manager)
     
-        self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
+        self.screen_size: tuple[int, int] = pygame.display.get_window_size()
 
         self.screen_is_resized = False
         
@@ -70,9 +71,13 @@ class ParamState(State):
                                        self.button_GFV_trail,
                                        1)
         
-
-
-        
+        self.Button_fullscreen = ClickButton(self.Button_fullscreen_pos,
+                                            self.button_fullscreen_sprite,
+                                            self.button_fullscreen_sprite_clicked,
+                                            FULLSCREEN,
+                                            1)
+                                             
+    
         self.Button_back = ClassicButton1(self.Button_back_pos,
                                    self.button_BKL_sprite,
                                    self.button_BKL_sprite_hovered,
@@ -93,18 +98,6 @@ class ParamState(State):
                                     1,
                                     "language_state",
                                     STATE_PUSH)
-        
-        
-        
-
-        #self.button_fullscreen = ClickButton(self.Button_fullscreen_pos,
-        #                                    self.button_fullscreen_sprite,
-        #                                    self.button_fullscreen_sprite_clicked,
-        #                                    1)
-        
-        
-        
-
 
 
     def update(self, dt: float):
@@ -125,7 +118,7 @@ class ParamState(State):
             self.Button_soundvolume.update_position(self.Button_soundvolume_pos)
             self.Button_gamma.update_position(self.Button_gamma_pos)
             self.Button_fps.update_position(self.Button_fps_pos)
-            #self.Button_fullscreen.update_position(self.Button_fullscreen_pos)
+            self.Button_fullscreen.update_position(self.Button_fullscreen_pos)
 
             self.Button_key.update_position(self.Button_keys_pos)
             self.Button_language.update_position(self.Button_language_pos)            
@@ -136,7 +129,7 @@ class ParamState(State):
         self.Button_soundvolume.update(dt)
         self.Button_gamma.update(dt)
         self.Button_fps.update(dt)
-        #self.Button_fullscreen.update(dt)
+        self.Button_fullscreen.update(dt)
 
         self.Button_key.update(dt)
         self.Button_language.update(dt)
@@ -147,7 +140,7 @@ class ParamState(State):
         self.Button_soundvolume.handle_event(event)
         self.Button_gamma.handle_event(event)
         self.Button_fps.handle_event(event)
-        #self.Button_fullscreen.handle_event(event)
+        self.Button_fullscreen.handle_event(event)
 
         self.Button_key.handle_event(event)
         self.Button_language.handle_event(event)
@@ -161,7 +154,7 @@ class ParamState(State):
         self.Button_soundvolume.draw(screen)
         self.Button_gamma.draw(screen)    
         self.Button_fps.draw(screen)
-        #self.Button_fullscreen.draw(screen)
+        self.Button_fullscreen.draw(screen)
 
         self.Button_key.draw(screen)
         self.Button_language.draw(screen)

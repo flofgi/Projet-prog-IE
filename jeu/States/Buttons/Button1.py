@@ -3,7 +3,7 @@ import pygame
 from States.Buttons.Buttons import ClassicButtons, SpliteButtons
 
 class ClassicButton1(ClassicButtons):
-    def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.image, scale: int, state_name: str, state_action: pygame.event.EventType):
+    def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.Surface, scale: int, state_name: str, state_action: pygame.event.EventType):
         super().__init__(center_pos, sprite, scale)
 
         self.state_name = state_name
@@ -38,7 +38,7 @@ class ClassicButton1(ClassicButtons):
         self.TOP_LEFT_HOVERED = (self.TOP_LEFT_NOT_HOVERED[0] - (self.BASESCALE[0]*1.1 - self.BASESCALE[0])//2, self.TOP_LEFT_NOT_HOVERED[1] - (self.BASESCALE[1]*1.1 - self.BASESCALE[1])//2)
 
 class SpliteButton1(SpliteButtons):
-    def __init__(self, topleft_pos: tuple[int, int], sprite: pygame.image, button_width: int, button_height: int, corner_dim: tuple[int, int], top_side_width: int, side_side_height: int):
+    def __init__(self, topleft_pos: tuple[int, int], sprite: pygame.Surface, button_width: int, button_height: int, corner_dim: tuple[int, int], top_side_width: int, side_side_height: int):
         super().__init__(topleft_pos, sprite, button_width, button_height, corner_dim, top_side_width, side_side_height)
 
     def update(self, dt):

@@ -13,7 +13,7 @@ FPS = 60 # lire dans la sauvegarde, les fps indiqués, sachant que la sauvegarde
 SCREEN_WIDTH = 1280 # de même
 SCREEN_HEIGHT = 740 # de même
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE,pygame.SCALED)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
 
 pygame.display.set_caption("demo button")
 
@@ -36,7 +36,6 @@ clock = pygame.time.Clock()
 run = True
 while run:
 
-    
     dt = clock.tick(FPS) / 1000
 
     screen.fill((6, 6, 7))
@@ -45,7 +44,6 @@ while run:
     state_manager.render(screen)
 
     pygame.display.flip()
-
 
 pygame.quit()
 
