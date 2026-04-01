@@ -87,8 +87,6 @@ class StateManager:
                 self.pop_state()
             elif event.type == STATE_PUSH:
                 self.push_state(self.routes[event.state])
-            elif event.type == FULLSCREEN:
-                pygame.display.toggle_fullscreen()
             else: 
                 if self.states:
                     self.current_state.handle_event(event)
