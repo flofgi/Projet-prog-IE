@@ -12,6 +12,8 @@ KEYS = {
     "move_up": pygame.K_z,
     "move_down": pygame.K_s,
     "move_right": pygame.K_d,
-    "move_left": pygame.K_q
+    "move_left": pygame.K_q,
+    "inventory": pygame.K_i,
+    "escape": pygame.K_ESCAPE,
 
 }

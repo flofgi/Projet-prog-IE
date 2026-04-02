@@ -280,4 +280,4 @@ class Inventory:
     
     def close_inventory(self):
         """Transition out of the inventory scene."""
-        pygame.event.post(pygame.event.Event(STATE_POP, state="inventory"))
+        pygame.event.post(pygame.event.Event(STATE_POP))

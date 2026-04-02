@@ -1,58 +1,57 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from StateManager import StateManager
+
+
 import pygame
 
 from States.State import State
-from events import STATE_PUSH, STATE_POP, STATE_REPLACE
+from events import STATE_PUSH, STATE_POP, STATE_REPLACE, KEYS
 from Player import Player, Inventory
 
 
 class InventoryState(State):
 
-    def __init__(self, state_manager):
+    def __init__(self, state_manager: StateManager):
         super().__init__(state_manager)
         """Initialize the FirstMenu state with a reference to the state manager.
         
         Args:
             state_manager: A reference to the state manager for handling state transitions.
         """
-
+        self.cols = 5
+        self.slot_size = 32
+        self.gap = 14
+        self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
+        self.screen_is_resized = False
     
 
 
     def load(self):
-        self.player: Player = self.manager.routes["Gameplay"].player
+        self.player: Player = self.manager.routes["gameplay"].player
         self.inventory: Inventory = self.player.inventory
+        self.image = pygame.image.load("Design\Inventory.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.screen_size[0]//2, self.screen_size[1]//2)
 
                                        
 
-    def handle_event(self, event: pygame.event.Event):
+    def handle_events(self, event: pygame.event.Event):
         """Handle events specific to the Inventory state.
         
-        Args!
+        Args:
             event (pygame.event.Event): An event to handle.
         """
+        if event.type == pygame.KEYDOWN:
+            if event.key == KEYS["inventory"]:
+                self.inventory.close_inventory()
         
 
     def update(self, dt):
         """Handle the transition to the Menu state."""
-
-        if self.screen_is_resized:
-            self.START_POS = (self.screen_size[0] //2, self.screen_size[1] * ((1/16)+(1/2)))
-            self.PARAM_POS = (self.screen_size[0] //2, self.screen_size[1] * ((1/8)+(1/2)))
-            self.LEAVE_POS = (self.screen_size[0] //2, self.screen_size[1] * ((3/16)+(1/2)))
-
-            self.GAME_TITLE_POS = (self.screen_size[0] // 2, self.screen_size[1] // 4)
-
-            self.game_title_rect.center = self.GAME_TITLE_POS
-
-            self.Param_button.update_position(self.PARAM_POS)
-            self.Start_button.update_position(self.START_POS)
-            self.Leave_button.update_position(self.LEAVE_POS)
-
-            self.screen_is_resized = False
-
-        self.Param_button.update(dt)
-        self.Start_button.update(dt)
-        self.Leave_button.update(dt)
+        pass
 
     def render(self, screen: pygame.Surface):
 
@@ -61,6 +60,9 @@ class InventoryState(State):
         Args:
             screen (pygame.Surface): The surface to render the state on.
         """
+        self.manager.states[-2].render(screen)
+        screen.blit(self.image, self.rect)
+
 
 
     def unload(self):
