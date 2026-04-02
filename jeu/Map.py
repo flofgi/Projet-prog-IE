@@ -18,7 +18,7 @@ from events import RECUP_EVENT, ALLY_EVENT
 
 
 class Map :
-    def __init__(self,mapsize : tuple, tileset : Tileset, mapset : np.array, rect=None, worldelements: list[WorldElement] = None): #, sectors: tuple, camera: caméra
+    def __init__(self,mapsize : tuple, tileset : Tileset, mapset : np.array, worldelements: list[WorldElement] = None): #, sectors: tuple, camera: caméra
         """initialize the map
         Args:
         mapsize(tuple) : the size of the map in tiles
@@ -34,12 +34,8 @@ class Map :
         #self.sectors = sectors
 
         h, w = self.mapsize
-        self.image = pygame.Surface((32*w,32*h))
-        
-        if rect :
-            self.rect = pygame.Rect(rect)
-        else :
-            self.rect = self.image.get_rect()
+        self.image = pygame.Surface((self.tileset.getTileSize()[0]*w,self.tileset.getTileSize()[1]*h))
+    
 
       
 
@@ -49,7 +45,7 @@ class Map :
         for i in range (m):
             for j in range (n):
                 tile = self.tileset.tiles[self.mapset[i,j]]
-                self.image.blit(tile, (j*self.tileset.getSize()[0], i*self.tileset.getSize()[1]))
+                self.image.blit(tile, (j*self.tileset.getTileSize()[0], i*self.tileset.getTileSize()[1]))
         
     @property
     def get_worldelement(self) -> list[WorldElement]:
@@ -83,7 +79,7 @@ class Tileset:
       self.tiles = []
       self.load()
 
-    def getSize(self):
+    def getTileSize(self):
         return self.tilesize
 
     def load(self):
