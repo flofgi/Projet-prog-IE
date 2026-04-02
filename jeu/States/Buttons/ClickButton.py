@@ -6,7 +6,7 @@ from States.Buttons.Buttons import ClassicButtons
 
 class ClickButton(ClassicButtons):
 
-    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, click_sprite: pygame.Surface, action: pygame.event, scale: tuple[int, int]):
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, click_sprite: pygame.Surface, action: pygame.event, scale: tuple[int, int],id: int):
         super().__init__(center_pos, sprite, scale)
         self.click_sprite = click_sprite
 
@@ -22,6 +22,8 @@ class ClickButton(ClassicButtons):
         
         self.click_state = False
 
+        self.id = id 
+        
     def update(self, dt):   
         if self.button_is_clicked == True:
             if self.click_state == False:

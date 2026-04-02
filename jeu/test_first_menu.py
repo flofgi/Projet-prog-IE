@@ -26,7 +26,6 @@ paramState = ParamState(state_manager)
 state_manager.push_state(first_menu)
 
 state_manager.register_route("title", title)
-state_manager.register_route("first_menu", first_menu)
 state_manager.register_route("next_state", next_state)
 state_manager.register_route("param_state", paramState)
 

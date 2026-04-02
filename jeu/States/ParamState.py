@@ -1,5 +1,7 @@
 import pygame
 
+import json
+
 from States.State import State
 from States.StateManager import StateManager
 
@@ -18,7 +20,14 @@ class ParamState(State):
         self.screen_size: tuple[int, int] = pygame.display.get_window_size()
 
         self.screen_is_resized = False
-        
+
+        self.button_id = {
+            "sound_volume_id": 0,
+            "gamma_id": 1,
+            "fps_id": 2,
+            "fullscreen_id": 3
+        }
+
         # Pos -> centered
 
         # 5% de marge à gauche et à droite => 90% de la largeur de l'écran couper par 3 séparations (1/4...)
@@ -56,26 +65,30 @@ class ParamState(State):
                                                self.button_GFV_background, 
                                                self.button_GFV_sprite, 
                                                self.button_GFV_trail,
-                                               1)
+                                               1,
+                                               "sound_volume_id" )
         
     
         self.Button_gamma = ScrollButton(self.Button_gamma_pos, 
                                          self.button_GFV_background, 
                                          self.button_GFV_sprite, 
                                          self.button_GFV_trail, 
-                                         2)
+                                         2,
+                                         "gamma_id")
         
         self.Button_fps = ScrollButton(self.Button_fps_pos, 
                                        self.button_GFV_background, 
                                        self.button_GFV_sprite, 
                                        self.button_GFV_trail,
-                                       1)
+                                       1,
+                                       "fps_id")
         
         self.Button_fullscreen = ClickButton(self.Button_fullscreen_pos,
                                             self.button_fullscreen_sprite,
                                             self.button_fullscreen_sprite_clicked,
                                             FULLSCREEN,
-                                            1)
+                                            1,
+                                            "fullscreen_id")
                                              
     
         self.Button_back = ClassicButton1(self.Button_back_pos,
@@ -161,7 +174,14 @@ class ParamState(State):
         self.Button_back.draw(screen)
 
     def unload(self):
-        
+        savedParameter = {
+            self.Button_soundvolume.id: {"Pourcentage": self.Button_soundvolume.scroll_pourcent}
+        }
+
+        with open("jeu/options.json", "w", encoding="utf-8") as f:
+            json.dump(savedParameter, f)
+
+
         self.button_GammaFps_sprite = None
         self.button_GammaFps_background = None
         self.button_GammaFps_trail = None

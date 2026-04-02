@@ -1,10 +1,12 @@
 import pygame
 
+import json
+
 from States.Buttons.Buttons import ClassicButtons, SpliteButtons
 
 class ScrollButton(ClassicButtons):
 
-    def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.Surface, scroll_sprite: pygame.Surface, scroll_trail: pygame.Surface, scale: int):
+    def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.Surface, scroll_sprite: pygame.Surface, scroll_trail: pygame.Surface, scale: int, id: int):
         """ Initialize a button with a scrollable element that can be dragged within a defined area.
         
         Args:
@@ -15,6 +17,8 @@ class ScrollButton(ClassicButtons):
             scale (int): The scale factor for the button size.
         """
         super().__init__(center_pos, scroll_sprite, scale)
+        
+        self.id = id
 
         #////////////////// ////////////////// BASE VALUES FOR SIZE AND VALUE ////////////////// /////////////////
 
@@ -55,8 +59,7 @@ class ScrollButton(ClassicButtons):
         DELIMITATION_RATIO = 0.8
         OFFSET = self.background_image.get_width() - (self.background_image.get_width() * DELIMITATION_RATIO)
         self.scroll_leftdelimitation = self.background_rect.left + OFFSET//2
-        self.scroll_rightdelimitation = self.background_rect.right - OFFSET//2 - self.image.get_width()        
-
+        self.scroll_rightdelimitation = self.background_rect.right - OFFSET//2 - self.image.get_width()
 
     def update(self, dt: float):
         """Update the scroll button state based on mouse position and events.
