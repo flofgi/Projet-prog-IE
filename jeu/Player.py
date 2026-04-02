@@ -170,6 +170,11 @@ class Player(Entity):
     @property
     def get_allies(self):
         return self.allies
+
+    @property
+    def getPosition(self) -> pygame.Vector2:
+        """Return the current position of the player as pygame.Vector2."""
+        return self.coordinates
             
     
 class Inventory:
