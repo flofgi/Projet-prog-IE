@@ -34,7 +34,7 @@ class Map :
         #self.sectors = sectors
 
         h, w = self.mapsize
-        self.image = pygame.Surface((self.tileset.getTileSize()[0]*w,self.tileset.getTileSize()[1]*h))
+        self.image = pygame.Surface((self.tileset.getTileSize[0]*w,self.tileset.getTileSize[1]*h))
     
 
       
@@ -45,7 +45,7 @@ class Map :
         for i in range (m):
             for j in range (n):
                 tile = self.tileset.tiles[self.mapset[i,j]]
-                self.image.blit(tile, (j*self.tileset.getTileSize()[0], i*self.tileset.getTileSize()[1]))
+                self.image.blit(tile, (j*self.tileset.getTileSize[0], i*self.tileset.getTileSize[1]))
         
     @property
     def get_worldelement(self) -> list[WorldElement]:
@@ -79,6 +79,7 @@ class Tileset:
       self.tiles = []
       self.load()
 
+    @property
     def getTileSize(self):
         return self.tilesize
 
