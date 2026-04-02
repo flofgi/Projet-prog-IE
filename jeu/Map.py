@@ -18,7 +18,7 @@ from events import RECUP_EVENT, ALLY_EVENT
 
 
 class Map :
-    def __init__(self,mapsize : tuple, tileset, mapset : np.array, rect=None, worldelements: list[WorldElement] = None): #, sectors: tuple, camera: caméra
+    def __init__(self,mapsize : tuple, tileset : Tileset, mapset : np.array, rect=None, worldelements: list[WorldElement] = None): #, sectors: tuple, camera: caméra
         """initialize the map
         Args:
         mapsize(tuple) : the size of the map in tiles
@@ -49,7 +49,7 @@ class Map :
         for i in range (m):
             for j in range (n):
                 tile = self.tileset.tiles[self.mapset[i,j]]
-                self.image.blit(tile, (j*32,i*32))
+                self.image.blit(tile, (j*self.tileset.getSize()[0], i*self.tileset.getSize()[1]))
         
     @property
     def get_worldelement(self) -> list[WorldElement]:
@@ -74,28 +74,31 @@ class Map :
             element.load()
 
 class Tileset:
-    def __init__(self, file, tilesize=(32, 32), margin=1, spacing=1):
+    def __init__(self, file, tilesize : tuple, margin=1, spacing=1):
       self.file = file
       self.tilesize = tilesize
       self.margin = margin
       self.spacing = spacing
       self.image = pygame.image.load(file)
-      self.rect = self.image.get_rect()
       self.tiles = []
       self.load()
+
+    def getSize(self):
+        return self.tilesize
 
     def load(self):
       """cut the image containing the tiles into individual tiles in a list"""
       self.tiles = []
       x0 = y0 = self.margin
-      w, h = self.rect.size
+      w = self.image.width
+      h = self.image.height
       dx = self.tilesize[0] + self.spacing
       dy = self.tilesize[1] + self.spacing
       
       for x in range(x0, w, dx):
           for y in range(y0, h, dy):
               tile = pygame.Surface(self.tilesize)
-              tile.blit(self.image, (0, 0), (x, y, *self.tilesize))
+              tile.blit(self.image, (0, 0), (x, y, self.tilesize))
               self.tiles.append(tile)
 
     def unload(self):
