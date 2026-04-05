@@ -2,12 +2,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Player import Player
+    from WorldElement.Player import Player
 
 from abc import ABC, abstractmethod
 import pygame
 
-from WorldElement import WorldElement
+from WorldElement.WorldElement import WorldElement
+from events import DEAD
 
 
 class Entity(WorldElement):
@@ -63,12 +64,13 @@ class Entity(WorldElement):
         """
         pass
 
+    
+    def is_attack(self, dommage: float):
+        self.hp -= dommage
+        if self.hp <= 0:
+            pygame.event.post(pygame.event.Event(DEAD, target = self))
 
-    def attack(self, attacked: "Entity"):
-        """add the logic of the attack for entity"""
-        pass
-
-    def draw(self, surface: pygame.surface, player: Player) -> None:
+    def draw(self, surface: pygame.Surface, player: Player = None) -> None:
         if self.sprite:
             surface.blit(self.sprite[self.current_frame], self.rect)
 

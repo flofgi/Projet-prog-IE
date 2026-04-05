@@ -2,7 +2,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Player import Player
+    from Map import Map
+    from WorldElement.Mob import Mob
+    from WorldElement.Player import Player
 
 
 from events import RECUP_EVENT
@@ -10,7 +12,7 @@ from events import RECUP_EVENT
 
 
 import pygame
-from WorldElement import WorldElement
+from WorldElement.WorldElement import WorldElement
 
 
 class Item(WorldElement):
@@ -39,8 +41,13 @@ class Item(WorldElement):
             self.be_stackable = be_stackable
 
 
-    def use(self):
+    def use(self, player: Player, map: Map):
         pass
+
+    def get_mobs(self, player: Player, map: "Map", distance: float = None) -> list["Mob"]:
+        """Return mobs from map, optionally filtered by distance to player."""
+        from WorldElement.Mob import Mob
+        return map.get_worldelements(player=player, d=distance, type=Mob)
 
     def interact(self, player: Player) -> bool:
         """Check if player is close enough to interact and post a RECUP_EVENT if so.
@@ -60,12 +67,25 @@ class Item(WorldElement):
         return False
 
 
-    def draw(self, surface: pygame.surface, player: Player) -> None:
+    def draw(self, surface: pygame.Surface, player: Player = None) -> None:
         pass
 
-    def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
-        pass
+    def draw_inventory(self, surface: pygame.Surface, rect: pygame.Rect, scale: int):
+        self.sprite[0] = pygame.transform.smoothscale(self.sprite[0], (self.sprite_size[0][0]*scale, self.sprite_size[0][1]*scale))
+        
+        rect_img = self.sprite[0].get_rect()
+        rect_img.center = rect.center
+    
+        surface.blit(self.sprite[0], rect_img)
 
+    def update(self, dt: float, map: Map, target: Player = None):
+        pass
 
     def __eq__(self, value: Item):
         return self.be_stackable == True and value.be_stackable == True and self.name == value.name
+    
+    def __hash__(self):
+        if self.be_stackable:
+            return hash((self.name, True))  # Même hash pour tous les items stackables du même type
+        else:
+            return hash(id(self))

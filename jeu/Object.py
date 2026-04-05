@@ -1,4 +1,4 @@
-from WorldElement import WorldElement
+from WorldElement.WorldElement import WorldElement
 
 class Object(WorldElement):
     

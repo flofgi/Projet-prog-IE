@@ -2,19 +2,18 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Ally import Ally
-    from jeu.Item import Item
-    from Entity import Entity
-    from WorldElement import WorldElement
+    from WorldElement.Ally import Ally
+    from Item.Item import Item
+    from WorldElement.Entity import Entity
+    from WorldElement.WorldElement import WorldElement
 
 
 #from sectors import sector
 import pygame
 import numpy as np
-from Player import Player
-from WorldElement import WorldElement
-from events import RECUP_EVENT, ALLY_EVENT
-
+from WorldElement.Player import Player
+from WorldElement.WorldElement import WorldElement
+from events import RECUP_EVENT, ALLY_EVENT, DEAD
 
 
 class Map :
@@ -55,18 +54,49 @@ class Map :
     def get_worldelement(self) -> list[WorldElement]:
         return self.worldelements 
 
+
+    def get_worldelements(self, player: Player = None, d: float = None, type = None):
+        """Return world elements filtered by class and optionally by distance to player.
+
+        Args:
+            player (Player | None): reference player for distance filtering/sorting.
+            d (float | None): max distance from player. If None, no distance filter.
+            type (type | tuple[type, ...] | None): class filter used with isinstance.
+        """
+        elements = self.worldelements
+
+        if type is not None:
+            elements = [e for e in elements if isinstance(e, type)]
+
+        if d is None or player is None:
+            return elements
+
+        return sorted([e for e in elements if e.distance_to(player) < d],key=lambda e: e.distance_to(player))
+
+
     #def get_sectors():
     #def get_visible_tiles(): 
     #def transfer_entity():
 
-    def update(self, dt: float, events: list[pygame.event.Event], target: Player = None) -> None:
-        """Update the worldelements list and update all worldelement from the list"""
-        for event in events:
-            if event.type == ALLY_EVENT or event.type == RECUP_EVENT:
-                if event.dict["target"] in self.worldelements:
-                    self.worldelements.remove(event.dict["target"])
+    def handle_events(self, event: pygame.event.Event):
+        """Check for player-specific events such as item pickup or ally interaction.
+        Args:
+            events (pygame.event.Event):events to process for interactions.
+        """
         for worldelement in self.worldelements:
-            worldelement.update(dt, events, target)
+            worldelement.handle_events(event)
+
+        if event.type == ALLY_EVENT or event.type == RECUP_EVENT or event.type == DEAD:
+            if event.target in self.worldelements:
+                self.worldelements.remove(event.dict["target"])
+    
+
+
+    def update(self, dt: float, target: Player = None) -> None:
+        """Update the worldelements list and update all worldelement from the list"""
+            
+        for worldelement in self.worldelements:
+            worldelement.update(dt, self, target)
     
     def load(self) -> None:
         """load all worldelemets"""

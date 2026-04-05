@@ -1,8 +1,10 @@
-from Entity import Entity
-from Player import Player
+from WorldElement.Entity import Entity
+from WorldElement.Player import Player
+from Map import Map
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
+from events import BOSSFIGHT, DEAD
 
 
 class Mob(Entity):
@@ -21,7 +23,7 @@ class Mob(Entity):
         WANDERING_ZONE (int) radius of the wandering circle where the mob moves around
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = " ") -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = " ", is_boss: bool = False) -> None:
         """Initialize a mob with tracking and wandering parameters.
         Args:
             hp (int): Initial health points for the mob. Must be a positive integer.
@@ -35,8 +37,10 @@ class Mob(Entity):
         self.ALERT_ZONE = 200
         self.CONFORT_ZONE = 20
         self.WANDERING_ZONE = 200
-        self.max_speed = 0.7
+        self.max_speed= 0.7
         self.timer = 0
+        self.is_boss = is_boss
+        self.is_enemy = True
 
     def interact(self, player: Player) -> bool:
         """Check if player is close enough to interact and post a MOB_EVENT if so.
@@ -49,15 +53,11 @@ class Mob(Entity):
         """
         return False
 
-
-    def attack(self, attacked: "Entity"):
-        pass
-
     def combat(self):
         pass
 
 
-    def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
+    def update(self, dt: float, map: Map, target: Player = None):
         """Update mob behavior depending on distance to target.
         Args:
             dt (float): Time delta since last update, used for timing animations and movements.
@@ -142,3 +142,11 @@ class Mob(Entity):
         rayon = uniform(min_rayon_limite, max_rayon_limite)
         angle = uniform(0, pi*2)
         return pygame.Vector2(cos(angle)*rayon, sin(angle)*rayon)+target
+    
+    def is_attack(self, dommage: float):
+        self.hp -= dommage
+        if self.hp <= 0:
+            pygame.event.post(pygame.event.Event(DEAD, target = self))
+        elif self.is_boss:
+            pygame.event.post(pygame.event.Event(BOSSFIGHT, target = self))
+

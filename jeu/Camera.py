@@ -1,5 +1,5 @@
 import pygame
-from Player import Player
+from WorldElement.Player import Player
 
 class Camera :
   def __init__(self, mapsize, screensize, tilesize = (32,32)):

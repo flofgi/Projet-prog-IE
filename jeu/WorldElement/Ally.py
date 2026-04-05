@@ -2,10 +2,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Player import Player
+    from WorldElement.Player import Player
 
 
-from Entity import Entity
+from WorldElement.Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
@@ -37,10 +37,6 @@ class Ally(Entity):
     def interaction(self):
         pass
 
-
-    def attack(self, attacked: Entity):
-        pass
-
     def combat(self):
         pass
 
@@ -61,11 +57,10 @@ class Ally(Entity):
         return False
 
 
-    def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
+    def update(self, dt: float, map: Map, target: Player = None):
         """Update ally behavior to follow or wander around a target.
         Args:
             dt (float): Time delta since last update, used for timing animations and movements.
-            events (list[pygame.event.Event]): List of events to process for interactions.
             target (Player, optional): The player entity to follow or wander around. Defaults to None.
         """
         self.animation_timer += dt
@@ -80,7 +75,6 @@ class Ally(Entity):
             
             elif distance_player_ally > self.ALERT_ZONE:
                 self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+5, self.target_coordinates)
-                print(self.target_coordinates)
                 self.velocity = pygame.Vector2(0, 0)
                 
 
