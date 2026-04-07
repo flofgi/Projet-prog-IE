@@ -6,7 +6,7 @@ from States.Buttons.Buttons import ClassicButtons, SpliteButtons
 
 class ScrollButton(ClassicButtons):
 
-    def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.Surface, scroll_sprite: pygame.Surface, scroll_trail: pygame.Surface, scale: int, id: int):
+    def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.Surface, scroll_sprite: pygame.Surface, scroll_trail: pygame.Surface, scale: int, name: str = None):
         """ Initialize a button with a scrollable element that can be dragged within a defined area.
         
         Args:
@@ -16,14 +16,15 @@ class ScrollButton(ClassicButtons):
             scroll_trail (pygame.image): The image used to represent the scrollable area.
             scale (int): The scale factor for the button size.
         """
-        super().__init__(center_pos, scroll_sprite, scale)
-        
-        self.id = id
+        super().__init__(center_pos, scroll_sprite, scale, name)
 
         #////////////////// ////////////////// BASE VALUES FOR SIZE AND VALUE ////////////////// /////////////////
 
+        with open("jeu/options.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+
         DELIMITATION_RATIO = 0.8
-        self.scroll_pourcent = 1/2
+        self.scroll_percent = data[name]["Percentage"]
         self.scroll_trail = scroll_trail
 
         BG_BASESCALE = (int(background_sprite.get_width()*scale), int(background_sprite.get_height()*scale))
@@ -46,10 +47,10 @@ class ScrollButton(ClassicButtons):
         self.scroll_trail_rect = self.scroll_trail_image.get_rect()
         self.scroll_trail_rect.midleft = self.scroll_leftdelimitation ,self.rect.topleft[1] + self.image.get_height() // 2 
 
-        self.scroll_trail_image = pygame.transform.scale(self.scroll_trail, ((self.scroll_rightdelimitation - self.scroll_leftdelimitation) * self.scroll_pourcent, self.TR_BASESCALE[1]))
+        self.scroll_trail_image = pygame.transform.scale(self.scroll_trail, ((self.scroll_rightdelimitation - self.scroll_leftdelimitation) * self.scroll_percent, self.TR_BASESCALE[1]))
 
         # BUTTON FIRST POSITION    
-        self.rect.topleft = self.scroll_pourcent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
+        self.rect.topleft = self.scroll_percent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
 
     def _calculate_scroll_delimitations(self):
         """Calculate the left and right delimitations for the scrollable element based on the background image and a defined ratio.
@@ -74,9 +75,9 @@ class ScrollButton(ClassicButtons):
 
             self.rect.topleft = (min(max(mouse_pos[0] - self.image.get_width() // 2, self.scroll_leftdelimitation ), self.scroll_rightdelimitation), self.rect.topleft[1])
         
-            self.scroll_pourcent = float((self.rect.topleft[0] - self.scroll_leftdelimitation) / (self.scroll_rightdelimitation - self.scroll_leftdelimitation))
+            self.scroll_percent = float((self.rect.topleft[0] - self.scroll_leftdelimitation) / (self.scroll_rightdelimitation - self.scroll_leftdelimitation))
             
-            self.scroll_trail_image = pygame.transform.scale(self.scroll_trail, ((self.scroll_rightdelimitation - self.scroll_leftdelimitation) * self.scroll_pourcent, self.TR_BASESCALE[1]))
+            self.scroll_trail_image = pygame.transform.scale(self.scroll_trail, ((self.scroll_rightdelimitation - self.scroll_leftdelimitation) * self.scroll_percent, self.TR_BASESCALE[1]))
 
     def update_position(self, center_pos: tuple[int, int]):
         """Update the position of the button and its related elements based on a new center position.
@@ -92,7 +93,7 @@ class ScrollButton(ClassicButtons):
         
         self.scroll_trail_rect.midleft = self.scroll_leftdelimitation ,self.rect.topleft[1] + self.image.get_height() // 2
     
-        self.rect.topleft = self.scroll_pourcent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
+        self.rect.topleft = self.scroll_percent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
 
     def draw(self, screen: pygame.Surface):
         screen.blit(self.background_image, self.background_rect)

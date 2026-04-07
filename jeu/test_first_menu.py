@@ -10,10 +10,11 @@ pygame.font.init()
 
 FPS = 60 # lire dans la sauvegarde, les fps indiqués, sachant que la sauvegarde de cette ligne sera modifié dans la scène paramètre 
 
-SCREEN_WIDTH = 1280 # de même
-SCREEN_HEIGHT = 740 # de même
+SCREEN_WIDTH = 640 # de même
+SCREEN_HEIGHT = 370 # de même
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
+#screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
 
 pygame.display.set_caption("demo button")
 

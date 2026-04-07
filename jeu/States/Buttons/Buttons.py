@@ -3,7 +3,7 @@ import pygame
 from abc import ABC, abstractmethod
 
 class ClassicButtons(ABC):
-    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, scale: int):
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, scale: int, name: str = None):
         """Initialize the button with its position and size.
         
         Args: 
@@ -12,6 +12,8 @@ class ClassicButtons(ABC):
             scale (int): The scale factor for the button size.
         """
 
+        self.name = name
+
         self.button_is_clicked = False
         self.button_is_hovered = False
 
@@ -19,6 +21,7 @@ class ClassicButtons(ABC):
         
         self.image = pygame.transform.scale(sprite, self.BASESCALE)
         self.rect = self.image.get_rect()
+        print(self.rect.topleft)
         self.rect.center = center_pos
 
     @abstractmethod
@@ -171,7 +174,7 @@ class SpliteButtons(ABC):
     def draw(self, screen: pygame.Surface):
         """Draw the button on the screen.
         
-        Args: 
+        Args:
             screen (pygame.Surface): The surface to draw the button on.
         """
 
@@ -190,3 +193,5 @@ class SpliteButtons(ABC):
                         screen.blit(self.image, (self.list_of_sprite_pos[i][0] + k*self.top_side_width, self.list_of_sprite_pos[i][1] + j*self.left_side_height), self.list_of_sprite_rect[i])
             else:
                 screen.blit(self.image, self.list_of_sprite_pos[i], self.list_of_sprite_rect[i])
+
+            # screen.blit(image de toute les tiles (le .png en gros), la position sur l'écran de ta tile, la position et la dimension de ta tile sur l'image)

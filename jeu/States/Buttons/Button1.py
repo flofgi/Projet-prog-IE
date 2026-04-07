@@ -3,8 +3,8 @@ import pygame
 from States.Buttons.Buttons import ClassicButtons, SpliteButtons
 
 class ClassicButton1(ClassicButtons):
-    def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.Surface, scale: int, state_name: str, state_action: pygame.event.EventType):
-        super().__init__(center_pos, sprite, scale)
+    def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.Surface, scale: int, state_name: str, state_action: pygame.event.EventType, name: str = None):
+        super().__init__(center_pos, sprite, scale, name)
 
         self.state_name = state_name
         self.state_action = state_action

@@ -17,29 +17,14 @@ class ParamState(State):
     def __init__(self, state_manager: StateManager):
         super().__init__(state_manager)
     
-        self.screen_size: tuple[int, int] = pygame.display.get_window_size()
+        self.screen_size: tuple[int, int] = None
 
         self.screen_is_resized = False
-
-        self.button_id = {
-            "sound_volume_id": 0,
-            "gamma_id": 1,
-            "fps_id": 2,
-            "fullscreen_id": 3
-        }
 
         # Pos -> centered
 
         # 5% de marge à gauche et à droite => 90% de la largeur de l'écran couper par 3 séparations (1/4...)
         # Pour y, coupé en 7 pour 6 lignes de séparation
-        self.Button_soundvolume_pos = (self.screen_size[0] *(0.05 + 0.9 * (1/4)) , self.screen_size[1] * (1/7))
-        self.Button_gamma_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (2/7))
-        self.Button_fps_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (3/7))
-        self.Button_fullscreen_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (4/7))
-
-        self.Button_keys_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (6/7))
-        self.Button_language_pos = (self.screen_size[0] * (0.05 + 0.9 * (2/4)), self.screen_size[1] * (6/7))
-        self.Button_back_pos = (self.screen_size[0] * (0.05 + 0.9 * (3/4)), self.screen_size[1] * (6/7))
 
     def load(self):
         """Load resources specific to the ParamState state."""
@@ -61,34 +46,38 @@ class ParamState(State):
         self.button_splited_sprite = pygame.image.load("Design/PH_button_40_20_20.png").convert_alpha()
 
 
+        self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
+        
+        self._calculte_position(self.screen_size)
+
         self.Button_soundvolume = ScrollButton(self.Button_soundvolume_pos,
                                                self.button_GFV_background, 
                                                self.button_GFV_sprite, 
                                                self.button_GFV_trail,
                                                1,
-                                               "sound_volume_id" )
+                                               "sound_volume" )
         
     
         self.Button_gamma = ScrollButton(self.Button_gamma_pos, 
                                          self.button_GFV_background, 
                                          self.button_GFV_sprite, 
                                          self.button_GFV_trail, 
-                                         2,
-                                         "gamma_id")
+                                         1,
+                                         "gamma")
         
         self.Button_fps = ScrollButton(self.Button_fps_pos, 
                                        self.button_GFV_background, 
                                        self.button_GFV_sprite, 
                                        self.button_GFV_trail,
                                        1,
-                                       "fps_id")
+                                       "fps")
         
         self.Button_fullscreen = ClickButton(self.Button_fullscreen_pos,
                                             self.button_fullscreen_sprite,
                                             self.button_fullscreen_sprite_clicked,
                                             FULLSCREEN,
-                                            1,
-                                            "fullscreen_id")
+                                            1
+                                            )
                                              
     
         self.Button_back = ClassicButton1(self.Button_back_pos,
@@ -111,31 +100,16 @@ class ParamState(State):
                                     1,
                                     "language_state",
                                     STATE_PUSH)
-
+        
+        self._update_position()
 
     def update(self, dt: float):
         """Handle the transition to the Menu state."""
 
         if self.screen_is_resized == True:
 
-            self.Button_soundvolume_pos = (self.screen_size[0] *(0.05 + 0.9 * (1/4)) , self.screen_size[1] * (1/7))
-            self.Button_gamma_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (2/7))
-            self.Button_fps_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (3/7))
-            self.Button_fullscreen_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (4/7))
-
-            self.Button_keys_pos = (self.screen_size[0] * (0.05 + 0.9 * (1/4)), self.screen_size[1] * (6/7))
-            self.Button_language_pos = (self.screen_size[0] * (0.05 + 0.9 * (2/4)), self.screen_size[1] * (6/7))
-            self.Button_back_pos = (self.screen_size[0] * (0.05 + 0.9 * (3/4)), self.screen_size[1] * (6/7))
-
-
-            self.Button_soundvolume.update_position(self.Button_soundvolume_pos)
-            self.Button_gamma.update_position(self.Button_gamma_pos)
-            self.Button_fps.update_position(self.Button_fps_pos)
-            self.Button_fullscreen.update_position(self.Button_fullscreen_pos)
-
-            self.Button_key.update_position(self.Button_keys_pos)
-            self.Button_language.update_position(self.Button_language_pos)            
-            self.Button_back.update_position(self.Button_back_pos)
+            self._calculte_position(self.screen_size)
+            self._update_position()
             
             self.screen_is_resized = False
 
@@ -175,11 +149,13 @@ class ParamState(State):
 
     def unload(self):
         savedParameter = {
-            self.Button_soundvolume.id: {"Pourcentage": self.Button_soundvolume.scroll_pourcent}
+            self.Button_soundvolume.name: {"Percentage": self.Button_soundvolume.scroll_percent},
+            self.Button_fps.name: {"Percentage": self.Button_fps.scroll_percent},
+            self.Button_gamma.name: {"Percentage": self.Button_gamma.scroll_percent},
         }
 
         with open("jeu/options.json", "w", encoding="utf-8") as f:
-            json.dump(savedParameter, f)
+            json.dump(savedParameter, f, indent=5)
 
 
         self.button_GammaFps_sprite = None
@@ -194,3 +170,28 @@ class ParamState(State):
         self.Button_back = None
         self.Button_key = None
         self.Button_language = None
+
+
+
+
+    def _calculte_position(self, screen_size):
+        
+        self.Button_soundvolume_pos = (screen_size[0] *(0.05 + 0.9 * (1/4)) , screen_size[1] * (1/7))
+        self.Button_gamma_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (2/7))
+        self.Button_fps_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (3/7))
+        self.Button_fullscreen_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (4/7))
+
+        self.Button_keys_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (6/7))
+        self.Button_language_pos = (screen_size[0] * (0.05 + 0.9 * (2/4)), screen_size[1] * (6/7))
+        self.Button_back_pos = (screen_size[0] * (0.05 + 0.9 * (3/4)), screen_size[1] * (6/7))
+
+
+    def _update_position(self):
+        self.Button_soundvolume.update_position(self.Button_soundvolume_pos)
+        self.Button_gamma.update_position(self.Button_gamma_pos)
+        self.Button_fps.update_position(self.Button_fps_pos)
+        self.Button_fullscreen.update_position(self.Button_fullscreen_pos)
+
+        self.Button_key.update_position(self.Button_keys_pos)
+        self.Button_language.update_position(self.Button_language_pos)            
+        self.Button_back.update_position(self.Button_back_pos)        

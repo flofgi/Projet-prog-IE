@@ -24,9 +24,6 @@ class FirstMenu(State):
         self.BUTTON3_POS = (screen_size[0] // 2, screen_size[1] // 2) """
 
         # x = center of the screen, y = write at the 3/4 of the screen, splite in 3 layers for the 3 buttons.
-        self.START_POS = (self.screen_size[0] //2, self.screen_size[1] * ((1/16)+(1/2)))
-        self.PARAM_POS = (self.screen_size[0] //2, self.screen_size[1] * ((1/8)+(1/2)))
-        self.LEAVE_POS = (self.screen_size[0] //2, self.screen_size[1] * ((3/16)+(1/2)))
 
         self.GAME_TITLE_POS = (self.screen_size[0] // 2, self.screen_size[1] // 4)
 
@@ -78,6 +75,10 @@ class FirstMenu(State):
                              "title",
                              STATE_REPLACE)"""
         
+        self.screen_size = pygame.display.get_surface().get_size()
+        
+        self._calculte_position(self.screen_size)
+
         self.Start_button = TextButton(self.START_POS,
                                        self.button_text_font,
                                        self.button_start_text,
@@ -98,6 +99,8 @@ class FirstMenu(State):
                                        self.button_text_color,
                                        "quit",
                                        pygame.QUIT)
+        
+        self._update_position()
 
                                        
 
@@ -130,17 +133,8 @@ class FirstMenu(State):
         self.but_2.update(dt)
         self.but_g2.update(dt) """
         if self.screen_is_resized:
-            self.START_POS = (self.screen_size[0] //2, self.screen_size[1] * ((1/16)+(1/2)))
-            self.PARAM_POS = (self.screen_size[0] //2, self.screen_size[1] * ((1/8)+(1/2)))
-            self.LEAVE_POS = (self.screen_size[0] //2, self.screen_size[1] * ((3/16)+(1/2)))
-
-            self.GAME_TITLE_POS = (self.screen_size[0] // 2, self.screen_size[1] // 4)
-
-            self.game_title_rect.center = self.GAME_TITLE_POS
-
-            self.Param_button.update_position(self.PARAM_POS)
-            self.Start_button.update_position(self.START_POS)
-            self.Leave_button.update_position(self.LEAVE_POS)
+            self._calculte_position(self.screen_size)
+            self._update_position()
 
             self.screen_is_resized = False
 
@@ -179,4 +173,21 @@ class FirstMenu(State):
         self.button_start_text = None
         self.button_param_text = None
         self.button_leave_text = None
+
+
+
+    def _calculte_position(self, screen_size):
+        self.START_POS = (screen_size[0] //2, screen_size[1] * ((1/16)+(1/2)))
+        self.PARAM_POS = (screen_size[0] //2, screen_size[1] * ((1/8)+(1/2)))
+        self.LEAVE_POS = (screen_size[0] //2, screen_size[1] * ((3/16)+(1/2)))
+
+        self.GAME_TITLE_POS = (screen_size[0] // 2, screen_size[1] // 4)
+
+
+    def _update_position(self):
+        self.Start_button.update_position(self.START_POS)
+        self.Param_button.update_position(self.PARAM_POS)
+        self.Leave_button.update_position(self.LEAVE_POS)
+
+        self.game_title_rect.center = self.GAME_TITLE_POS   
         
