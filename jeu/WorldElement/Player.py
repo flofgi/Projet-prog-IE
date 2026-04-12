@@ -239,6 +239,9 @@ class Inventory:
 
     def get_count(self, item: Item) -> int:
         return self.items[item][self.COUNT_INDEX]
+    
+    def set_count(self, item: Item, value: int) -> int:
+         self.items[item][self.COUNT_INDEX] = value
 
     def get_slot(self, item: Item) -> int:
         return self.items[item][self.SLOT_INDEX]
@@ -336,9 +339,18 @@ class Inventory:
         held_item: Item = self.held_item
         if held_item is not None:
             held_item.use(player, map)
-            if held_item.durability is not None and held_item.durability <= 0:
-                self.remove_item(held_item)
+            if held_item.be_stackable:
+                if held_item is not None and self.get_count(held_item) > 1:
+                    self.set_count(held_item, self.get_count(held_item) - 1)
+                else:
+                    self.remove_item(held_item)
+            else:
+                if held_item.durability is not None:
+                    held_item.durability -= 1
+                    if held_item.durability < 1:
+                        self.remove_item(held_item)
 
+                        
     def open_inventory(self):
         """Transition into the inventory scene."""
         pygame.event.post(pygame.event.Event(STATE_PUSH, state="inventory"))

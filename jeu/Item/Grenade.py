@@ -16,6 +16,7 @@ from events import GRENADE_EXPLOSION_EVENT
 class Grenade(Item):
     def __init__(self, sprites: list[str], coordinates: pygame.Vector2, radius: int = 100, damage: int = 50):
         super().__init__(sprites, coordinates, durability=None, be_stackable=True)
+        self.be_stackable = True
         self.radius = radius
         self.damage = damage
         self.max_radius = 200

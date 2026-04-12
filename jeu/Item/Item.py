@@ -36,7 +36,7 @@ class Item(WorldElement):
         
         #Is None if the Item have infinity durability
         self.durability = durability
-        if durability is not None or be_stackable == None:
+        if (durability is not None and durability < 1) or be_stackable == None:
             self.be_stackable = False
         else:
             self.be_stackable = be_stackable
@@ -69,7 +69,6 @@ class Item(WorldElement):
     
     def inventory_add(self):
         self.coordinates = None
-
 
     def draw_inventory(self, surface: pygame.Surface, rect: pygame.Rect, scale: int, quantity: int) -> None:
         self.sprite[0] = pygame.transform.smoothscale(self.sprite[0], (self.sprite_size[0][0]*scale, self.sprite_size[0][1]*scale))
