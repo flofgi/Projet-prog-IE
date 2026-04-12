@@ -1,6 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from WorldElement.Player import Player
+    from Map import Map
+
 from WorldElement.Entity import Entity
-from WorldElement.Player import Player
-from Map import Map
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin

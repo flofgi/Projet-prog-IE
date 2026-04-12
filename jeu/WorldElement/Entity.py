@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from WorldElement.Player import Player
+    from Camera import Camera
 
 from abc import ABC, abstractmethod
 import pygame
@@ -56,7 +57,10 @@ class Entity(WorldElement):
         tuning where max_speed was effectively calibrated per frame at 60 FPS.
         """
         self.coordinates += self.velocity * dt * self.BASE_FPS
-        self.rect.topleft = (self.coordinates.x, self.coordinates.y)
+        self.rect.topleft = (
+            int(self.coordinates.x + self.hitbox_offset.x),
+            int(self.coordinates.y + self.hitbox_offset.y),
+        )
 
     @abstractmethod
     def combat(self):
@@ -70,7 +74,9 @@ class Entity(WorldElement):
         if self.hp <= 0:
             pygame.event.post(pygame.event.Event(DEAD, target = self))
 
-    def draw(self, surface: pygame.Surface, player: Player = None) -> None:
+    def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:
-            surface.blit(self.sprite[self.current_frame], self.rect)
+            frame = self.sprite[self.current_frame]
+            draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_position
+            surface.blit(frame, draw_pos)
 

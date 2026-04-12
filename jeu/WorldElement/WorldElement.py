@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from WorldElement.Player import Player
     from Map import Map
+    from Camera import Camera
 
 
 from abc import ABC, abstractmethod
@@ -33,9 +34,11 @@ class WorldElement(ABC):
         self.sprite_paths = sprites
         self.sprite: list[pygame.Surface] = []
         self.name = name
-        self.coordinates = coordinates
-        self.rect = pygame.Rect(coordinates.x, coordinates.y, 0, 0)
+        self.coordinates = pygame.Vector2(coordinates) if coordinates is not None else pygame.Vector2(0, 0)
+        self.rect = pygame.Rect(self.coordinates.x, self.coordinates.y, 0, 0)
+        self.hitbox_offset = pygame.Vector2(0, 0)
         self.is_enemy = False
+        self.scale = 1
 
     @abstractmethod
     def update(self, dt: float, map: Map, target: Player = None):
@@ -61,9 +64,11 @@ class WorldElement(ABC):
         """Return the current position of the entity as pygame.Vector2."""
         return self.rect
     
-    @abstractmethod
-    def draw(self, surface: pygame.Surface, player: Player = None) -> None:
-        pass
+    def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
+        """Draw the entity on the given surface, optionally using player information for relative positioning."""
+        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_position
+        surface.blit(self.sprite[0], draw_pos)
+
 
     def load(self):
         """Load sprites from disk.
@@ -72,6 +77,17 @@ class WorldElement(ABC):
         """
         self.sprite = [pygame.image.load(s).convert_alpha() for s in self.sprite_paths]
         self.sprite_size = [s.get_size() for s in self.sprite]
+        hitbox_rect = self.sprite[0].get_bounding_rect(min_alpha=1)
+        if hitbox_rect.width == 0 or hitbox_rect.height == 0:
+            hitbox_rect = self.sprite[0].get_rect()
+
+        self.hitbox_offset = pygame.Vector2(hitbox_rect.topleft)
+        self.rect = pygame.Rect(0, 0, hitbox_rect.width, hitbox_rect.height)
+        self.rect.topleft = (
+            int(self.coordinates.x + self.hitbox_offset.x),
+            int(self.coordinates.y + self.hitbox_offset.y),
+        )
+    
 
     def distance_to(self, target: WorldElement | pygame.Vector2) -> float:
         """Calculate the distance between this element and a target.

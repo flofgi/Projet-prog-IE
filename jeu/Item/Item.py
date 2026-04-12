@@ -5,6 +5,7 @@ if TYPE_CHECKING:
     from Map import Map
     from WorldElement.Mob import Mob
     from WorldElement.Player import Player
+    from Camera import Camera
 
 
 from events import RECUP_EVENT
@@ -39,6 +40,7 @@ class Item(WorldElement):
             self.be_stackable = False
         else:
             self.be_stackable = be_stackable
+        self.animation_time = 0
 
 
     def use(self, player: Player, map: Map):
@@ -58,19 +60,18 @@ class Item(WorldElement):
         Returns:
             bool: True if interaction occurred, False otherwise.
         """
-        if self.coordinates is not None and player.get_coordinates.distance_to(self.coordinates) < 20 and player.inventory.number_slot < player.inventory.max_slot:
+        if self.coordinates is not None and player.rect.colliderect(self.rect):
             pygame.event.post(pygame.event.Event(RECUP_EVENT, {
                 "target": self
             }))
-            self.coordinates = None
             return True
         return False
+    
+    def inventory_add(self):
+        self.coordinates = None
 
 
-    def draw(self, surface: pygame.Surface, player: Player = None) -> None:
-        pass
-
-    def draw_inventory(self, surface: pygame.Surface, rect: pygame.Rect, scale: int):
+    def draw_inventory(self, surface: pygame.Surface, rect: pygame.Rect, scale: int, quantity: int) -> None:
         self.sprite[0] = pygame.transform.smoothscale(self.sprite[0], (self.sprite_size[0][0]*scale, self.sprite_size[0][1]*scale))
         
         rect_img = self.sprite[0].get_rect()
@@ -78,10 +79,22 @@ class Item(WorldElement):
     
         surface.blit(self.sprite[0], rect_img)
 
-    def update(self, dt: float, map: Map, target: Player = None):
+        if quantity > 1:
+            image = pygame.font.Font("Fonts/TLOZ.ttf", 18).render(str(quantity), True, (255, 255, 255))
+            image_rect = image.get_rect()
+            image_rect.bottomright = rect.bottomright
+            surface.blit(image, image_rect)
+    
+    def draw_equip(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         pass
 
+
+    def update(self, dt: float, map: Map, target: Player = None):
+        self.animation_time += dt
+
     def __eq__(self, value: Item):
+        if not isinstance(value, Item):
+            return False
         return self.be_stackable == True and value.be_stackable == True and self.name == value.name
     
     def __hash__(self):

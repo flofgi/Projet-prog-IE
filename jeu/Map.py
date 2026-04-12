@@ -6,14 +6,16 @@ if TYPE_CHECKING:
     from Item.Item import Item
     from WorldElement.Entity import Entity
     from WorldElement.WorldElement import WorldElement
+    from WorldElement.Player import Player
+    from Camera import Camera
+    from WorldElement.Mob import Mob
 
 
 #from sectors import sector
 import pygame
 import numpy as np
-from WorldElement.Player import Player
 from WorldElement.WorldElement import WorldElement
-from events import RECUP_EVENT, ALLY_EVENT, DEAD
+from events import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
 
 
 class Map :
@@ -89,6 +91,11 @@ class Map :
         if event.type == ALLY_EVENT or event.type == RECUP_EVENT or event.type == DEAD:
             if event.target in self.worldelements:
                 self.worldelements.remove(event.dict["target"])
+
+        if event.type == GRENADE_EXPLOSION_EVENT:
+            for worldelement in self.worldelements:
+                if worldelement.is_enemy and worldelement.get_coordinates.distance_to(event.position) < event.radius:
+                    worldelement.is_attack(event.damage)
     
 
 
@@ -97,7 +104,8 @@ class Map :
             
         for worldelement in self.worldelements:
             worldelement.update(dt, self, target)
-    
+
+
     def load(self) -> None:
         """load all worldelemets"""
         for element in self.worldelements:

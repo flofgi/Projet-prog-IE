@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from WorldElement.Player import Player
+    from Map import Map
 
 
 from WorldElement.Entity import Entity

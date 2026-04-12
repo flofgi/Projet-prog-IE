@@ -9,6 +9,7 @@ FULLSCREEN = pygame.event.custom_type()
 ATTACK = pygame.event.custom_type()
 DEAD = pygame.event.custom_type()
 BOSSFIGHT = pygame.event.custom_type()
+GRENADE_EXPLOSION_EVENT = pygame.event.custom_type()
 
 KEYS= {
     "interact": pygame.K_e,

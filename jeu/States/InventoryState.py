@@ -83,6 +83,7 @@ class InventoryState(State):
             self.scale = 0.8*self.screen_size[0]//295
         
 
+            self.image = pygame.transform.smoothscale(self.image, (self.scale*295, self.scale*138))
             self.rect = self.image.get_rect()
             self.rect.center = (self.screen_size[0]//2, self.screen_size[1]//2)
             
@@ -117,12 +118,13 @@ class InventoryState(State):
         screen.blit(self.hover_surface, self.rects[self.cursor])
         for item in self.inventory.items:
             if item is not self.select:
-                item.draw_inventory(screen, self.rects[self.inventory.items[item][1]], self.scale)
+                item.draw_inventory(screen, self.rects[self.inventory.items[item][1]], self.scale, self.inventory.get_count(item))
         
+
         if self.select is not None:
             rect = pygame.Rect(0, 0, 32*self.scale, 32*self.scale)
             rect.center = pygame.mouse.get_pos()
-            self.select.draw_inventory(screen, rect, self.scale)
+            self.select.draw_inventory(screen, rect, self.scale, self.inventory.get_count(self.select))
 
     def unload(self):
         """Unload resources specific to the FirstMenu state."""
@@ -143,7 +145,7 @@ class InventoryState(State):
 
     def select_item(self):
         """Select the item at the current cursor position or pose the item in the slot"""
-        if self.cursor == 15:
+        if self.cursor == self.inventory.max_slot:
             if self.select is not None:
                 self.select.unload()
                 self.inventory.remove_item(self.select)

@@ -1,18 +1,22 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from Item.Sword import sword
+
 if TYPE_CHECKING:
     from WorldElement.Ally import Ally
     from Map import Map
     from Item.Item import Item
     from Camera import Camera
     from WorldElement.Mob import Mob
-
-
-from events import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE
+    
+    from WorldElement.WorldElement import WorldElement
 from WorldElement.Entity import Entity
+
+from Item.Item import Item
+from events import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE
+
 import pygame
-from WorldElement.WorldElement import WorldElement
 
 
 class Player(Entity):
@@ -50,7 +54,7 @@ class Player(Entity):
         self.camera = camera
         self.shot_distance = 20
         self.shot_angle = 100
-        self.domage = 1
+        self.damage = 1
 
         
     def combat(self):
@@ -95,6 +99,11 @@ class Player(Entity):
         for ally in self.allies:
             ally.update(dt, self)
 
+        if self.inventory.held_item is not None:
+            self.inventory.held_item.update(dt, map, self)
+        else:
+            self.hand.update(dt, map, self)
+
     def handle_events(self, event: pygame.event.Event):
         """Check for player-specific events such as item pickup or ally interaction.
         Args:
@@ -104,6 +113,7 @@ class Player(Entity):
             self.add_ally(event.dict["target"])
         if event.type == RECUP_EVENT:
             self.add_Item(event.dict["target"])
+            event.dict["target"].inventory_add()
         
         
         if event.type == pygame.KEYDOWN:
@@ -111,11 +121,8 @@ class Player(Entity):
                 pass
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == MOUSE["use_item"]:
-                if self.inventory.get_held_item is None:
-                    mobs: list[Mob] = self.map.get_worldelement
-                    for mob in mobs:
-                        if self.in_cone(mob) and mob.is_enemy:
-                            mob.is_attack(self.domage)
+                if self.inventory.held_item is None:
+                    self.hand.use(self, self.map)
                 else:
                     self.inventory.use_held_item(self, self.map)
             
@@ -170,22 +177,24 @@ class Player(Entity):
         self.map = map
         if sprites is not None:
             self.sprite_paths = list(sprites)
-        self.sprite = [pygame.image.load(s).convert_alpha() for s in self.sprite_paths]
+        super().load()
+        self.hand = sword.hand()
+
+        
         for ally in self.allies:
             ally.load()
+        
+        if self.inventory.held_item is not None:
+            self.inventory.held_item.load()
         
     @property
     def get_allies(self) -> list[Ally]:
         return self.allies
-    
-    @property
-    def getPosition(self) -> pygame.Vector2:
-        """Return the current position of the player as pygame.Vector2."""
-        return self.coordinates
+
     
     def in_cone(self, target: pygame.Vector2 | WorldElement):
         """Check if a target is within the sword's attack cone."""
-        mouse = pygame.Vector2(pygame.mouse.get_pos())
+        mouse = pygame.Vector2(pygame.mouse.get_pos()) + self.camera.get_position
         if isinstance(target, WorldElement):
             target = target.get_coordinates
         position = self.get_coordinates
@@ -193,8 +202,17 @@ class Player(Entity):
         normalised_target = target + pygame.Vector2(self.camera.x, self.camera.y) - position
         mouse_target_angle = normalised_target.angle_to(mouse - position)
         return abs(mouse_target_angle) < self.shot_angle/2 and target.distance_to(position) < self.shot_distance
-            
-    
+
+
+    def draw(self, surface: pygame.Surface, camera: Camera, player = None):
+        frame = self.sprite[self.current_frame]
+        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_position
+        surface.blit(frame, draw_pos)
+        if self.inventory.held_item is not None:
+            self.inventory.held_item.draw_equip(surface, camera, player)
+        else:
+            self.hand.draw_equip(surface, camera, player)
+        
 class Inventory:
     """Class to manage the player's inventory, including item storage and usage.
     
@@ -228,9 +246,21 @@ class Inventory:
     def set_slot(self, item: Item, slot: int) -> None:
         self.items[item][self.SLOT_INDEX] = slot
 
-    def swap_slots(self, first: Item, second: Item) -> None:
-        first_slot = self.get_slot(first)
-        self.set_slot(first, self.get_slot(second))
+    def swap_slots(self, first: Item | None, second: Item | None) -> None:
+        """Swap the inventory slots of two items. If one item is None, 
+        it means that the other item is being moved to an empty slot."""
+        if first is None and second is None:
+            return
+        elif first is None:
+            first_slot = self.first_empty_slot
+            second_slot = self.get_slot(second)
+        elif second is None:
+            first_slot = self.get_slot(first)
+            second_slot = self.first_empty_slot
+        else:
+            first_slot = self.get_slot(first)
+            second_slot = self.get_slot(second)
+        self.set_slot(first, second_slot)
         self.set_slot(second, first_slot)
 
     def load(self):
@@ -257,12 +287,12 @@ class Inventory:
             bool: True if the item was successfully added to the inventory, False otherwise.
         
         """
-        if self.number_slot < self.max_slot:
+        if (item in self.items and self.get_count(item) < self.max_stack) or self.first_empty_slot is not None:
             if item in self.items:
                 if self.get_count(item) < self.max_stack:
                     self.items[item][self.COUNT_INDEX] += 1
             else:
-                self.items[item] = [1, self.first_empty_slot()]
+                self.items[item] = [1, self.first_empty_slot]
             return True
         return False
 
@@ -277,7 +307,7 @@ class Inventory:
             self.items.pop(item, None)
     
     @property
-    def get_held_item(self) -> Item:
+    def held_item(self) -> Item:
         """Get the currently held item.
         
         Returns:
@@ -287,11 +317,23 @@ class Inventory:
             if self.get_slot(item) == 0:
                 return item
         return None
+    
+    @held_item.setter
+    def held_item(self, value: Item | None) -> None:
+        """Set the currently held item.
         
+        Args:
+            value (Item | None): The item to be held, or None if no item is to be held.
+        """
+        if self.held_item is not None:
+            self.swap_slots(self.held_item, value)
+        elif self.held_item is None:
+            self.set_slot(value, 0)
+
     def use_held_item(self, player, map):
         """Use the currently held item, if any.
         This method calls the use() method of the currently held item, if it exists."""
-        held_item: Item = self.get_held_item
+        held_item: Item = self.held_item
         if held_item is not None:
             held_item.use(player, map)
             if held_item.durability is not None and held_item.durability <= 0:
@@ -305,6 +347,7 @@ class Inventory:
         """Transition out of the inventory scene."""
         pygame.event.post(pygame.event.Event(STATE_POP))
 
+    @property
     def first_empty_slot(self) -> int | None:
         """return the first empty slot in the inventory"""
         used = {v[self.SLOT_INDEX] for v in self.items.values()}
@@ -329,3 +372,47 @@ class Inventory:
             if self.get_slot(item) == id:
                 return item
         return None
+    
+    def __contains__(self, item: Item) -> bool:
+        """Check if an item is in the inventory.
+        
+        Args:
+            item (Item): The item to check for in the inventory.
+        
+        Returns:
+            bool: True if the item is in the inventory, False otherwise.
+        """
+        return item in self.items
+
+    def __getitem__(self, key: Item) -> int:
+        """Get the count of a specific item in the inventory.
+        
+        Args:
+            key (Item): The item for which to get the count.
+        
+        Returns:
+            int: The count of the specified item in the inventory.
+        """
+        return self.get_count(key)
+    
+    def __setitem__(self, key: Item, value: int) -> None:
+        """Set the count of a specific item in the inventory.
+        
+        Args:
+            key (Item): The item for which to set the count.
+            value (int): The new count for the specified item.
+        """
+        if key in self.items:
+            self.items[key][self.COUNT_INDEX] = value
+
+    def __len__(self):
+        """Return the number of unique items in the inventory."""
+        return len(self.items)
+    
+    def __bool__(self):
+        """Return True if the inventory has any items, False otherwise."""
+        return len(self.items) > 0
+    
+    def __iter__(self):
+        """Return an iterator over the items in the inventory."""
+        return iter(self.items)
