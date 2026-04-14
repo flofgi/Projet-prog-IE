@@ -1,11 +1,11 @@
 {
      "sound_volume": {
-          "Percentage": 0.05
+          "Percentage": 1.0
      },
      "fps": {
-          "Percentage": 0.975
+          "Percentage": 1.0
      },
      "gamma": {
-          "Percentage": 0.4875
+          "Percentage": 1.0
      }
 }

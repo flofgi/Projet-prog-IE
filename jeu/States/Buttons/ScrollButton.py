@@ -36,7 +36,7 @@ class ScrollButton(ClassicButtons):
         self.background_image = pygame.transform.scale(background_sprite, BG_BASESCALE)
 
         self.background_rect = self.background_image.get_rect()
-        self.background_rect.center = ((self.rect.topleft[0] - self.image.get_width() // 2), self.rect.topleft[1] + self.image.get_height() // 2)   
+        self.background_rect.center = center_pos  
 
         # SCROLLABLE LIMITIATION
         self._calculate_scroll_delimitations()
@@ -57,6 +57,7 @@ class ScrollButton(ClassicButtons):
         
         This method updates the `scroll_leftdelimitation` and `scroll_rightdelimitation` attributes based on the current position of the background image and a predefined ratio that determines how much of the background is used for scrolling.
         """
+
         DELIMITATION_RATIO = 0.8
         OFFSET = self.background_image.get_width() - (self.background_image.get_width() * DELIMITATION_RATIO)
         self.scroll_leftdelimitation = self.background_rect.left + OFFSET//2
@@ -79,15 +80,16 @@ class ScrollButton(ClassicButtons):
             
             self.scroll_trail_image = pygame.transform.scale(self.scroll_trail, ((self.scroll_rightdelimitation - self.scroll_leftdelimitation) * self.scroll_percent, self.TR_BASESCALE[1]))
 
+
     def update_position(self, center_pos: tuple[int, int]):
         """Update the position of the button and its related elements based on a new center position.
         
         Args:
             center_pos (tuple[int, int]): The new center position for the button.
         """
-        self.rect.center = center_pos
+        super().update_position(center_pos)
         
-        self.background_rect.center = ((self.rect.topleft[0] - self.image.get_width() // 2), self.rect.topleft[1] + self.image.get_height() // 2)   
+        self.background_rect.center = center_pos
         
         self._calculate_scroll_delimitations()
         

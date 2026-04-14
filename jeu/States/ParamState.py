@@ -23,7 +23,7 @@ class ParamState(State):
 
         # Pos -> centered
 
-        # 5% de marge à gauche et à droite => 90% de la largeur de l'écran couper par 3 séparations (1/4...)
+        # 5% de marge à gauche et à droite => 90% de la largeur de l'écran couper par 3 séparations (COLUMNS...)
         # Pour y, coupé en 7 pour 6 lignes de séparation
 
     def load(self):
@@ -176,14 +176,21 @@ class ParamState(State):
 
     def _calculte_position(self, screen_size):
         
-        self.Button_soundvolume_pos = (screen_size[0] *(0.05 + 0.9 * (1/4)) , screen_size[1] * (1/7))
-        self.Button_gamma_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (2/7))
-        self.Button_fps_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (3/7))
-        self.Button_fullscreen_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (4/7))
+        # Nombre réel de lignes / collones est : chiffre dénominateur - 1
+        COLUMNS = 1/4
+        ROWS = 1/7
 
-        self.Button_keys_pos = (screen_size[0] * (0.05 + 0.9 * (1/4)), screen_size[1] * (6/7))
-        self.Button_language_pos = (screen_size[0] * (0.05 + 0.9 * (2/4)), screen_size[1] * (6/7))
-        self.Button_back_pos = (screen_size[0] * (0.05 + 0.9 * (3/4)), screen_size[1] * (6/7))
+        MARGE = 0.05
+        DISPLAY_POURCENT = 0.9
+
+        self.Button_soundvolume_pos = (screen_size[0] *(MARGE + DISPLAY_POURCENT * (COLUMNS)) , screen_size[1] * (2*ROWS))
+        self.Button_gamma_pos = (screen_size[0] * (MARGE + DISPLAY_POURCENT * (COLUMNS)), screen_size[1] * (3*ROWS))
+        self.Button_fps_pos = (screen_size[0] * (MARGE + DISPLAY_POURCENT * (COLUMNS)), screen_size[1] * (4*ROWS))
+        self.Button_fullscreen_pos = (screen_size[0] * (MARGE + DISPLAY_POURCENT * (COLUMNS)), screen_size[1] * (5*ROWS))
+
+        self.Button_keys_pos = (screen_size[0] * (MARGE + DISPLAY_POURCENT * (COLUMNS)), screen_size[1] * (6*ROWS))
+        self.Button_language_pos = (screen_size[0] * (MARGE + DISPLAY_POURCENT * (2*COLUMNS)), screen_size[1] * (6*ROWS))
+        self.Button_back_pos = (screen_size[0] * (MARGE + DISPLAY_POURCENT * (3*COLUMNS)), screen_size[1] * (6*ROWS))
 
 
     def _update_position(self):

@@ -3,7 +3,7 @@ import pygame
 from abc import ABC, abstractmethod
 
 class ClassicButtons(ABC):
-    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, scale: int, name: str = None):
+    def __init__(self, center_pos: tuple[int, int], sprite: pygame.Surface, scale: int, name: str = None, rect_pos: tuple[int, int] = None):
         """Initialize the button with its position and size.
         
         Args: 
@@ -13,16 +13,24 @@ class ClassicButtons(ABC):
         """
 
         self.name = name
+        self.rect_pos = rect_pos
 
         self.button_is_clicked = False
         self.button_is_hovered = False
 
         self.BASESCALE = (int(sprite.get_width()*scale), int(sprite.get_height()*scale))
-        
+
         self.image = pygame.transform.scale(sprite, self.BASESCALE)
         self.rect = self.image.get_rect()
-        print(self.rect.topleft)
+        
         self.rect.center = center_pos
+
+        if rect_pos:
+            self.hitbox_rect = self.rect
+            self.hitbox_rect.center = rect_pos
+
+        
+
 
     @abstractmethod
     def update(self, dt: float): 
@@ -33,29 +41,46 @@ class ClassicButtons(ABC):
         """
         pass
 
-    def update_position(self, new_center_pos: tuple[int, int]):
+    def update_position(self, new_center_pos: tuple[int, int], new_rect_pos: tuple[int, int] = None):
         """Update the button position based on the new center position.
         
         Args:
             new_center_pos (tuple[int, int]): The new center position of the button.
+
         """
         self.rect.center = new_center_pos
+        if self.rect_pos:
+            self.hitbox_rect.center = new_rect_pos
+
+    
     
     def handle_event(self, event: pygame.event.Event):
         """Optional method to handle events specific to the button.
         
         Args:
             event (pygame.event.Event): An event to handle."""
-        
-        if event.type == pygame.MOUSEMOTION:
-            self.button_is_hovered = self.rect.collidepoint(event.pos)
+
+        if self.rect_pos:
+            if event.type == pygame.MOUSEMOTION:
+                self.button_is_hovered = self.hitbox_rect.collidepoint(event.pos)
             
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
-                self.button_is_clicked = True
-        elif event.type == pygame.MOUSEBUTTONUP:
-            self.button_is_clicked = False
-    
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.hitbox_rect.collidepoint(event.pos):
+                    self.button_is_clicked = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.button_is_clicked = False
+        else:
+            if event.type == pygame.MOUSEMOTION:
+                self.button_is_hovered = self.rect.collidepoint(event.pos)
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.rect.collidepoint(event.pos):
+                    self.button_is_clicked = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.button_is_clicked = False   
+
+
+
     def draw(self, screen: pygame.Surface):
         """Draw the button on the screen.
         
@@ -64,6 +89,7 @@ class ClassicButtons(ABC):
         """
         
         screen.blit(self.image, self.rect)
+
     
 
 

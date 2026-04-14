@@ -7,3 +7,8 @@ STATE_POP = pygame.event.custom_type()
 STATE_PUSH = pygame.event.custom_type()
 
 FULLSCREEN = pygame.event.custom_type()
+
+KEY_CHANGE = pygame.event.custom_type()
+
+
+# keys' map

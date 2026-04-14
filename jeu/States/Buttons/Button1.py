@@ -3,8 +3,8 @@ import pygame
 from States.Buttons.Buttons import ClassicButtons, SpliteButtons
 
 class ClassicButton1(ClassicButtons):
-    def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.Surface, scale: int, state_name: str, state_action: pygame.event.EventType, name: str = None):
-        super().__init__(center_pos, sprite, scale, name)
+    def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.Surface, scale: int, state_name: str, state_action: pygame.event.EventType, name: str = None, rect_pos: tuple[int, int] = None):
+        super().__init__(center_pos, sprite, scale, name, rect_pos)
 
         self.state_name = state_name
         self.state_action = state_action
@@ -17,8 +17,8 @@ class ClassicButton1(ClassicButtons):
         self.nhovered = pygame.transform.scale(sprite, self.BASESCALE)
         self.hovered = pygame.transform.scale(sprite_hovered, (int(self.BASESCALE[0]*ZOOM_HOVERED), int(self.BASESCALE[1]*ZOOM_HOVERED)))
 
-
     def update(self, dt: float) :
+        
 
         if self.button_is_hovered == True :
             self.image = self.hovered
@@ -33,9 +33,14 @@ class ClassicButton1(ClassicButtons):
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
             self.button_is_clicked = False
 
-    def update_position(self, center_pos: tuple[int, int]):
+    def update_position(self, center_pos: tuple[int, int], new_rect_pos: tuple[int, int] = None):
+        super().update_position(center_pos, new_rect_pos)
+        
         self.TOP_LEFT_NOT_HOVERED = (center_pos[0] - self.BASESCALE[0] // 2, center_pos[1] - self.BASESCALE[1] // 2)
         self.TOP_LEFT_HOVERED = (self.TOP_LEFT_NOT_HOVERED[0] - (self.BASESCALE[0]*1.1 - self.BASESCALE[0])//2, self.TOP_LEFT_NOT_HOVERED[1] - (self.BASESCALE[1]*1.1 - self.BASESCALE[1])//2)
+
+
+
 
 class SpliteButton1(SpliteButtons):
     def __init__(self, topleft_pos: tuple[int, int], sprite: pygame.Surface, button_width: int, button_height: int, corner_dim: tuple[int, int], top_side_width: int, side_side_height: int):

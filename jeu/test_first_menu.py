@@ -5,6 +5,7 @@ from States.StateManager import StateManager
 from States.NextState import NextState
 from States.Title import Title
 from States.ParamState import ParamState
+from States.KeyMenuState import KeyState 
 
 pygame.font.init()
 
@@ -14,7 +15,7 @@ SCREEN_WIDTH = 640 # de même
 SCREEN_HEIGHT = 370 # de même
 
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.DOUBLEBUF)
 
 pygame.display.set_caption("demo button")
 
@@ -23,12 +24,14 @@ first_menu = FirstMenu(state_manager)
 next_state = NextState(state_manager)
 title = Title(state_manager)
 paramState = ParamState(state_manager)
+key_state = KeyState(state_manager)
 
 state_manager.push_state(first_menu)
 
 state_manager.register_route("title", title)
 state_manager.register_route("next_state", next_state)
 state_manager.register_route("param_state", paramState)
+state_manager.register_route("key_state", key_state)
 
 
 clock = pygame.time.Clock()
