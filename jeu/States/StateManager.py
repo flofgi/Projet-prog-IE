@@ -79,6 +79,10 @@ class StateManager:
             for 'delta time'
         """
         for event in pygame.event.get():
+            if event.type != pygame.MOUSEMOTION:
+                print(event)
+                print("////////////////////")
+
             if event.type == pygame.QUIT:
                 self.current_state.unload()
                 raise SystemExit 

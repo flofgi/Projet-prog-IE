@@ -15,8 +15,10 @@ class ClassicButtons(ABC):
         self.name = name
         self.rect_pos = rect_pos
 
-        self.button_is_clicked = False
+        self.button_was_clicked = False
         self.button_is_hovered = False
+
+        self.button_is_click = False
 
         self.BASESCALE = (int(sprite.get_width()*scale), int(sprite.get_height()*scale))
 
@@ -65,20 +67,27 @@ class ClassicButtons(ABC):
                 self.button_is_hovered = self.hitbox_rect.collidepoint(event.pos)
             
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.hitbox_rect.collidepoint(event.pos):
-                    self.button_is_clicked = True
+                if event.button != 1:
+                    pass
+                elif self.hitbox_rect.collidepoint(event.pos):
+                    self.button_is_click = True
             elif event.type == pygame.MOUSEBUTTONUP:
-                self.button_is_clicked = False
+                if self.button_is_click:
+                    self.button_was_clicked = True  
+                    self.button_is_click = False
         else:
             if event.type == pygame.MOUSEMOTION:
                 self.button_is_hovered = self.rect.collidepoint(event.pos)
             
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button != 1:
+                    pass
                 if self.rect.collidepoint(event.pos):
-                    self.button_is_clicked = True
+                    self.button_is_click = True
             elif event.type == pygame.MOUSEBUTTONUP:
-                self.button_is_clicked = False   
-
+                if self.button_is_click:
+                    self.button_was_clicked = True  
+                    self.button_is_click = False
 
 
     def draw(self, screen: pygame.Surface):
@@ -89,7 +98,15 @@ class ClassicButtons(ABC):
         """
         
         screen.blit(self.image, self.rect)
+        
 
+    def get_rect(self) -> pygame.Rect:
+        value = None
+        if self.rect_pos:
+            value = self.hitbox_rect
+        else:
+            value = self.rect
+        return value
     
 
 
@@ -105,7 +122,7 @@ class SpliteButtons(ABC):
         """
 
         self.button_is_hovered = False   
-        self.button_is_clicked = False
+        self.button_was_clicked = False
 
         # Same order as reading order (left to right, top to bottom)
     
@@ -193,9 +210,9 @@ class SpliteButtons(ABC):
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.button_collision.collidepoint(event.pos):
-                self.button_is_clicked = True
+                self.button_was_clicked = True
         elif event.type == pygame.MOUSEBUTTONUP:
-            self.button_is_clicked = False
+            self.button_was_clicked = False
     
     def draw(self, screen: pygame.Surface):
         """Draw the button on the screen.

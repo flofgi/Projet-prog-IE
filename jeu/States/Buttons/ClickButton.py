@@ -23,7 +23,7 @@ class ClickButton(ClassicButtons):
         self.click_state = False
 
     def update(self, dt):   
-        if self.button_is_clicked == True:
+        if self.button_was_clicked == True:
             if self.click_state == False:
                 self.image = self.clicked_image
                 self.rect = self.clicked_image_rect
@@ -41,7 +41,7 @@ class ClickButton(ClassicButtons):
             else: 
                 pygame.event.post(pygame.event.Event(self.event))
             
-            self.button_is_clicked = False
+            self.button_was_clicked = False
         
     def update_position(self, center_pos: tuple[int, int]):
         super().update_position(center_pos)

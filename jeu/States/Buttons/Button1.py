@@ -29,9 +29,10 @@ class ClassicButton1(ClassicButtons):
             self.rect = self.image.get_rect()
             self.rect.topleft = self.TOP_LEFT_NOT_HOVERED
             
-        if self.button_is_clicked == True : 
+        if self.button_was_clicked == True : 
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
-            self.button_is_clicked = False
+            self.button_was_clicked = False
+
 
     def update_position(self, center_pos: tuple[int, int], new_rect_pos: tuple[int, int] = None):
         super().update_position(center_pos, new_rect_pos)

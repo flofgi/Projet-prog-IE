@@ -5,7 +5,7 @@ class TextButton():
     def __init__(self, center_pos: tuple[int, int], myFont: pygame.font.Font, text: str, color: tuple[int, int, int], state_name: str, state_action: pygame.event.EventType):
 
         self.button_is_hovered = False 
-        self.button_is_clicked = False
+        self.button_was_clicked = False
 
         self.text_image = myFont.render(text, True, color)
         self.text_rect = self.text_image.get_rect()
@@ -16,8 +16,8 @@ class TextButton():
 
 
     def update(self, dt: float) :
-        if self.button_is_clicked:
-            self.button_is_clicked = False
+        if self.button_was_clicked:
+            self.button_was_clicked = False
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
 
     def update_position(self, center_pos: tuple[int, int]):
@@ -29,7 +29,7 @@ class TextButton():
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.text_rect.collidepoint(event.pos):
-                self.button_is_clicked = True
+                self.button_was_clicked = True
 
     def draw(self, screen):
         if self.button_is_hovered == True :        

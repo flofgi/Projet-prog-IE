@@ -70,7 +70,7 @@ class ScrollButton(ClassicButtons):
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' for 'delta time'
         """
 
-        if self.button_is_clicked == True:
+        if self.button_was_clicked == True:
 
             mouse_pos = pygame.mouse.get_pos()
 

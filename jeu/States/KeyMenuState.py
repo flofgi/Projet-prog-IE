@@ -26,6 +26,7 @@ class KeyState(State):
 
 
     def load(self):
+
         self.image = pygame.image.load("Design/Placeholder.png").convert_alpha()
         self.hovered_image = pygame.image.load("Design/Placeholder2.png").convert_alpha()
 
@@ -44,9 +45,9 @@ class KeyState(State):
         self._calculte_screen_position()
 
         self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Z_pos)
-        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_keys_state", STATE_PUSH, None, self.rect_Q_pos)
-        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_keys_state", STATE_PUSH, None, self.rect_S_pos)
-        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_keys_state", STATE_PUSH, None, self.rect_D_pos)
+        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Q_pos)
+        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_S_pos)
+        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_D_pos)
         
         self.Button_back_pos = (0, 0)
 
@@ -59,9 +60,8 @@ class KeyState(State):
         
         self.Button_back_pos = (self.scroll_screen_rect.bottomleft[0] + self.Button_back.rect.size[0] / 2, (self.screen_size[1] - self.scroll_screen_rect.bottomleft[1])*(3/2) + self.scroll_screen_rect.size[1] )
         self._update_position()
-        
+
     def handle_event(self, event):
-    
 
         # sert pour faire bouger l'écran en fonction de la molette
         TOP_LIMIT = 0
@@ -75,16 +75,6 @@ class KeyState(State):
                 self.scroll_y = BOTTOM_LIMIT 
             if self.scroll_y < TOP_LIMIT:
                 self.scroll_y = TOP_LIMIT 
-
-        # Changement de touche, gérer par le state suivant
-        if self.button_z.button_is_clicked == True:
-            pygame.event.post(pygame.event.Event(KEY_CHANGE, key=pygame.K_z))
-        if self.button_d.button_is_clicked == True:
-            pygame.event.post(pygame.event.Event(KEY_CHANGE, key=pygame.K_d))
-        if self.button_s.button_is_clicked == True:
-            pygame.event.post(pygame.event.Event(KEY_CHANGE, key=pygame.K_s))
-        if self.button_q.button_is_clicked == True:
-            pygame.event.post(pygame.event.Event(KEY_CHANGE, key=pygame.K_q))
 
         # Les boutons qui gèrent leur event
         self.button_z.handle_event(event)
@@ -117,13 +107,43 @@ class KeyState(State):
             self._calculte_screen_position()
             self._update_position()
             self.screen_is_resized == False
-             
+
+        # Fait aussi carl a détéction se fait ici, et l'action doit se faire après les update des boutons
+        # Tout ça pas beau, à corriger en rendant fonctionnel une fonction "is_click/is_hovered" pour les boutons
+        z_post = False
+        q_post = False
+        s_post = False
+        d_post = False
+        if self.button_z.button_was_clicked == True:
+            z_post = True
+        elif self.button_d.button_was_clicked == True:
+            s_post = True
+        elif self.button_s.button_was_clicked == True:
+            s_post = True
+        elif self.button_q.button_was_clicked == True:
+            q_post = True
 
         self.button_z.update(dt)
         self.button_q.update(dt)
         self.button_s.update(dt)
         self.button_d.update(dt)
         self.Button_back.update(dt)
+
+
+        # Pas beau bis
+        if z_post:
+            z_post = False
+            pygame.event.post(pygame.event.Event(KEY_CHANGE, key="UP"))
+        elif q_post:
+            q_post = False
+            pygame.event.post(pygame.event.Event(KEY_CHANGE, key="LEFT"))
+        elif s_post:    
+            s_post = False
+            pygame.event.post(pygame.event.Event(KEY_CHANGE, key="DOWN"))
+        elif d_post:    
+            d_post = False
+            pygame.event.post(pygame.event.Event(KEY_CHANGE, key="RIGHT"))
+    
 
     def render(self, screen: pygame.Surface):
         self.scroll_screen.fill((20, 20, 20))
@@ -136,7 +156,8 @@ class KeyState(State):
 
 
     def unload(self):
-        pass
+        self.Button_back = None
+        self.button_z = None
         
 
     def _calculte_position(self):
