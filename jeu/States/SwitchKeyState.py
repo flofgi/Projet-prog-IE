@@ -3,7 +3,7 @@ import pygame
 from States.State import State
 
 from States.Buttons.Button1 import ClassicButton1
-from utilitary import KEY_CHANGE, STATE_REPLACE, update_json
+from utilitary import KEY_CHANGE, STATE_POP, update_json
 
 from States.keys_dictionary import keys_dictionary
 
@@ -28,7 +28,9 @@ class SwitchKeyState(State):
     def load(self):
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
         
-        self.background_image = pygame.image.load("Design/Placeholder.png").convert_alpha()
+        self.background_image = pygame.image.load("Design/switch_key_background.png").convert_alpha()
+
+        self.background_image = pygame.transform.scale(self.background_image, (self.background_image.get_size()[0]*3,self.background_image.get_size()[1]*3) )
 
         self.background_pos = self.background_image.get_rect()
 
@@ -36,15 +38,28 @@ class SwitchKeyState(State):
 
         self.new_key = None
 
+        self.myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
+        self.color = (255, 255, 255)
+
+        self.key_is_press = False
+
+        self.text_image = self.myFont.render(None, True, self.color)
+        self.text_image_rect = self.text_image.get_rect()
+
     def update(self, dt):
         if self.exit_key == True:
             self.exit_key = False
             keys_dictionary[self.changed_key] = self.new_key
-            pygame.event.post(pygame.event.Event(STATE_REPLACE, state="key_state"))
+            pygame.event.post(pygame.event.Event(STATE_POP, state="key_state"))
 
         if self.screen_is_resized == True:
             self._calculte_position()
             self.screen_is_resized = False
+
+        if self.key_is_press:
+            self.text_image = self.myFont.render(pygame.key.name(self.new_key), True, self.color)
+            self.text_image_rect = self.text_image.get_rect()
+            self.text_image_rect.center = (self.screen_size[0]//2,self.screen_size[1]//2 + 10)
     
     def handle_event(self, event):
         if event.type == KEY_CHANGE:
@@ -55,6 +70,7 @@ class SwitchKeyState(State):
                 self.exit_key = True
             elif event.key not in self.forbidden_keys:
                 self.new_key = event.key
+                self.key_is_press = True
             else:
                 print("Enter a key/a valid key first")
 
@@ -66,8 +82,17 @@ class SwitchKeyState(State):
         
     
     def render(self, screen):
-        screen.blit(self.background_image, self.background_pos)
+        # pour assombri le fond
+        tr_screen = pygame.surface.Surface(screen.get_size(), pygame.SRCALPHA)
+        
+        self.manager.states[-2].render(screen)
+        tr_screen.fill((0,0,0,128))
+        screen.blit(tr_screen, (0,0))
 
+        screen.blit(self.background_image, self.background_pos)
+        screen.blit(self.text_image, self.text_image_rect)
+
+        
 
     def unload(self):
         #json save touche modifier, ainsi, lorsqu'on fermera le jeu, on pourra garder les touches modifier. On doit sauvegarder chaque un tuple (str, pygame.key)

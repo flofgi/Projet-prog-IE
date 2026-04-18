@@ -15,7 +15,7 @@ def load_key(file_path: str = None):
     if file_path:
         f_path = file_path
     else:
-        f_path = "jeu/options.json"
+        f_path = "assets/options.json"
 
     data = read_json(f_path)
     section = "Saved_keys"

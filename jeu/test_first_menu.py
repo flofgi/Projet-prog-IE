@@ -7,8 +7,6 @@ from States.Title import Title
 from States.ParamState import ParamState
 from States.KeyMenuState import KeyState 
 from States.SwitchKeyState import SwitchKeyState
-from States.keys_dictionary import keys_dictionary
-
 pygame.font.init()
 
 FPS = 60 # lire dans la sauvegarde, les fps indiqués, sachant que la sauvegarde de cette ligne sera modifié dans la scène paramètre 
@@ -28,6 +26,7 @@ title = Title(state_manager)
 paramState = ParamState(state_manager)
 key_state = KeyState(state_manager)
 switch_key_state = SwitchKeyState(state_manager)
+
 
 state_manager.push_state(first_menu)
 

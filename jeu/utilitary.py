@@ -14,7 +14,7 @@ def update_json(section, new_data, file_path: str = None):
     if file_path:
         f_path = file_path
     else:
-        f_path = "jeu/options.json"
+        f_path = "assets/options.json"
 
     data = read_json(f_path)
 

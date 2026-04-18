@@ -11,9 +11,9 @@
         }
     },
     "Saved_keys": {
-        "UP": 113,
+        "UP": 122,
         "DOWN": 100,
-        "LEFT": 113,
+        "LEFT": 107,
         "RIGHT": 100,
         "INVENTORY": 101
     }

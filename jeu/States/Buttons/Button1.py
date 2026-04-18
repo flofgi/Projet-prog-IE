@@ -32,6 +32,7 @@ class ClassicButton1(ClassicButtons):
         if self.button_was_clicked == True : 
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
             self.button_was_clicked = False
+            self.button_is_hovered = False
 
 
     def update_position(self, center_pos: tuple[int, int], new_rect_pos: tuple[int, int] = None):

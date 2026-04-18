@@ -21,7 +21,7 @@ class ScrollButton(ClassicButtons):
 
         #////////////////// ////////////////// BASE VALUES FOR SIZE AND VALUE ////////////////// /////////////////
 
-        data = read_json("jeu/options.json")
+        data = read_json("assets/options.json")
         section = "Sound_option"
         DELIMITATION_RATIO = 0.8
         self.scroll_percent = data.get(section, {}).get(name, {}).get("Percentage", 1/2)

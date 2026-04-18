@@ -43,10 +43,10 @@ class KeyState(State):
 
         self._calculte_screen_position()
 
-        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_Z_pos)
-        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_Q_pos)
-        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_S_pos)
-        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_D_pos)
+        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Z_pos)
+        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Q_pos)
+        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_S_pos)
+        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_D_pos)
         
         self.Button_back_pos = (0, 0)
 
