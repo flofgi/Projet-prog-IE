@@ -10,14 +10,12 @@ from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.Button1 import ClassicButton1, SpliteButton1
 from States.Buttons.ClickButton import ClickButton
 
-from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN
+from utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN, update_json
 
 
 class ParamState(State):
     def __init__(self, state_manager: StateManager):
         super().__init__(state_manager)
-    
-        self.screen_size: tuple[int, int] = None
 
         self.screen_is_resized = False
 
@@ -84,22 +82,22 @@ class ParamState(State):
                                    self.button_BKL_sprite,
                                    self.button_BKL_sprite_hovered,
                                    1,
-                                   "",
-                                   STATE_POP)
+                                   "first_menu",
+                                   STATE_REPLACE)
         
         self.Button_key = ClassicButton1(self.Button_keys_pos,
                                   self.button_BKL_sprite,
                                   self.button_BKL_sprite_hovered,
                                   1,
                                   "key_state",
-                                  STATE_PUSH)
+                                  STATE_REPLACE)
         
         self.Button_language = ClassicButton1(self.Button_language_pos,
                                     self.button_BKL_sprite,
                                     self.button_BKL_sprite_hovered,
                                     1,
                                     "language_state",
-                                    STATE_PUSH)
+                                    STATE_REPLACE)
         
         self._update_position()
 
@@ -148,15 +146,14 @@ class ParamState(State):
         self.Button_back.draw(screen)
 
     def unload(self):
+        
         savedParameter = {
             self.Button_soundvolume.name: {"Percentage": self.Button_soundvolume.scroll_percent},
             self.Button_fps.name: {"Percentage": self.Button_fps.scroll_percent},
             self.Button_gamma.name: {"Percentage": self.Button_gamma.scroll_percent},
         }
 
-        with open("jeu/options.json", "w", encoding="utf-8") as f:
-            json.dump(savedParameter, f, indent=5)
-
+        update_json("Sound_option", savedParameter)
 
         self.button_GammaFps_sprite = None
         self.button_GammaFps_background = None

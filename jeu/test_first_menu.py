@@ -7,13 +7,14 @@ from States.Title import Title
 from States.ParamState import ParamState
 from States.KeyMenuState import KeyState 
 from States.SwitchKeyState import SwitchKeyState
+from States.keys_dictionary import keys_dictionary
 
 pygame.font.init()
 
 FPS = 60 # lire dans la sauvegarde, les fps indiqués, sachant que la sauvegarde de cette ligne sera modifié dans la scène paramètre 
 
-SCREEN_WIDTH = 800 # de même
-SCREEN_HEIGHT = 740 # de même
+SCREEN_WIDTH = 640 # de même
+SCREEN_HEIGHT = 360 # de même
 
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.DOUBLEBUF)
@@ -28,7 +29,7 @@ paramState = ParamState(state_manager)
 key_state = KeyState(state_manager)
 switch_key_state = SwitchKeyState(state_manager)
 
-state_manager.push_state(key_state)
+state_manager.push_state(first_menu)
 
 state_manager.register_route("title", title)
 state_manager.register_route("first_menu", first_menu)
@@ -52,6 +53,4 @@ while run:
     pygame.display.flip()
 
 pygame.quit()
-
-
-
+    

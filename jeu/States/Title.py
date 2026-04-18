@@ -1,7 +1,7 @@
 import pygame
 
 
-from EVENTS import STATE_REPLACE
+from utilitary import STATE_REPLACE
 
 from States.State import State
 

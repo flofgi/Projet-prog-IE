@@ -3,7 +3,7 @@ import pygame
 from States.State import State
 
 from States.Buttons.Button1 import ClassicButton1
-from EVENTS import KEY_CHANGE, STATE_POP
+from utilitary import KEY_CHANGE, STATE_REPLACE, update_json
 
 from States.keys_dictionary import keys_dictionary
 
@@ -27,10 +27,12 @@ class SwitchKeyState(State):
 
     def load(self):
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
-
+        
         self.background_image = pygame.image.load("Design/Placeholder.png").convert_alpha()
 
-        self.background_pos = self.screen_size[0] // 2, self.screen_size[1] // 2
+        self.background_pos = self.background_image.get_rect()
+
+        self.background_pos.center = self.screen_size[0] // 2, self.screen_size[1] // 2
 
         self.new_key = None
 
@@ -38,7 +40,11 @@ class SwitchKeyState(State):
         if self.exit_key == True:
             self.exit_key = False
             keys_dictionary[self.changed_key] = self.new_key
-            pygame.event.post(pygame.event.Event(STATE_POP))
+            pygame.event.post(pygame.event.Event(STATE_REPLACE, state="key_state"))
+
+        if self.screen_is_resized == True:
+            self._calculte_position()
+            self.screen_is_resized = False
     
     def handle_event(self, event):
         if event.type == KEY_CHANGE:
@@ -51,6 +57,10 @@ class SwitchKeyState(State):
                 self.new_key = event.key
             else:
                 print("Enter a key/a valid key first")
+
+        if event.type == pygame.VIDEORESIZE:
+            self.screen_size = event.size
+            self.screen_is_resized = True
         
         
         
@@ -58,8 +68,14 @@ class SwitchKeyState(State):
     def render(self, screen):
         screen.blit(self.background_image, self.background_pos)
 
+
     def unload(self):
         #json save touche modifier, ainsi, lorsqu'on fermera le jeu, on pourra garder les touches modifier. On doit sauvegarder chaque un tuple (str, pygame.key)
         
+        update_json("Saved_keys", keys_dictionary)
+
         pass
     
+
+    def _calculte_position(self):
+        self.background_pos.center = self.screen_size[0] // 2, self.screen_size[1] // 2

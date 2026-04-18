@@ -1,6 +1,6 @@
 import pygame
 
-from EVENTS import FULLSCREEN
+from utilitary import FULLSCREEN
 
 from States.Buttons.Buttons import ClassicButtons
 

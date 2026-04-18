@@ -3,7 +3,7 @@ import pygame
 from States.State import State
 
 from States.Buttons.Button1 import ClassicButton1
-from EVENTS import STATE_PUSH, KEY_CHANGE, STATE_POP
+from utilitary import STATE_PUSH, KEY_CHANGE, STATE_REPLACE
 
 
 
@@ -11,7 +11,6 @@ class KeyState(State):
     def __init__(self, state_manager):
         super().__init__(state_manager)
     
-        self.screen_size: tuple[int, int] = None
         self.screen_is_resized = False
 
         self.scroll_y = 0 # > 0 => vers le haut, negatif vers le bas.
@@ -44,10 +43,10 @@ class KeyState(State):
 
         self._calculte_screen_position()
 
-        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Z_pos)
-        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Q_pos)
-        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_S_pos)
-        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_D_pos)
+        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_Z_pos)
+        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_Q_pos)
+        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_S_pos)
+        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_REPLACE, None, self.rect_D_pos)
         
         self.Button_back_pos = (0, 0)
 
@@ -55,8 +54,8 @@ class KeyState(State):
                                    self.button_back_sprite,
                                    self.button_back_sprite_hovered,
                                    1,
-                                   "",
-                                   STATE_POP)
+                                   "param_state",
+                                   STATE_REPLACE)
         
         self.Button_back_pos = (self.scroll_screen_rect.bottomleft[0] + self.Button_back.rect.size[0] / 2, (self.screen_size[1] - self.scroll_screen_rect.bottomleft[1])*(3/2) + self.scroll_screen_rect.size[1] )
         self._update_position()

@@ -1,6 +1,6 @@
 import pygame
 
-from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN
+from utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE
 
 from States.State import State
 
@@ -79,10 +79,6 @@ class StateManager:
             for 'delta time'
         """
         for event in pygame.event.get():
-            if event.type != pygame.MOUSEMOTION:
-                print(event)
-                print("////////////////////")
-
             if event.type == pygame.QUIT:
                 self.current_state.unload()
                 raise SystemExit 

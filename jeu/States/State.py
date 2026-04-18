@@ -22,6 +22,7 @@ class State(ABC):
         """
 
         self.manager = state_manager
+        self.screen_size = None
 
     def load(self):
         """Load resources or initialize variables specific to the state here."""

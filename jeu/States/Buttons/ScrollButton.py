@@ -3,6 +3,7 @@ import pygame
 import json
 
 from States.Buttons.Buttons import ClassicButtons, SpliteButtons
+from utilitary import read_json
 
 class ScrollButton(ClassicButtons):
 
@@ -20,12 +21,12 @@ class ScrollButton(ClassicButtons):
 
         #////////////////// ////////////////// BASE VALUES FOR SIZE AND VALUE ////////////////// /////////////////
 
-        with open("jeu/options.json", "r", encoding="utf-8") as f:
-            data = json.load(f)
-
+        data = read_json("jeu/options.json")
+        section = "Sound_option"
         DELIMITATION_RATIO = 0.8
-        self.scroll_percent = data[name]["Percentage"]
+        self.scroll_percent = data.get(section, {}).get(name, {}).get("Percentage", 1/2)
         self.scroll_trail = scroll_trail
+
 
         BG_BASESCALE = (int(background_sprite.get_width()*scale), int(background_sprite.get_height()*scale))
         self.TR_BASESCALE = (int(scroll_trail.get_width()*scale), int(scroll_trail.get_height()*scale))
@@ -70,7 +71,7 @@ class ScrollButton(ClassicButtons):
             dt (float): Time elapsed since the last update, in seconds. Named 'dt' for 'delta time'
         """
 
-        if self.button_was_clicked == True:
+        if self.button_is_click == True:
 
             mouse_pos = pygame.mouse.get_pos()
 

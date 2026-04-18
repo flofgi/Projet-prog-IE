@@ -1,7 +1,8 @@
 import pygame
 
 from States.State import State
-from EVENTS import STATE_PUSH, STATE_POP, STATE_REPLACE
+from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE
+from States.keys_dictionary import load_key
 
 from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.TextButton import TextButton
@@ -15,13 +16,14 @@ class FirstMenu(State):
         Args:
             state_manager: A reference to the state manager for handling state transitions.
         """
-        self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
-
         self.screen_is_resized = False
 
         # x = center of the screen, y = write at the 3*COLUMNS of the screen, splite in 3 layers for the 3 buttons.
 
+        self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
         self.GAME_TITLE_POS = (self.screen_size[0] // 2, self.screen_size[1] // 4)
+
+        load_key()
 
     def load(self):
         """Load resources specific to the FirstMenu state."""
@@ -49,14 +51,14 @@ class FirstMenu(State):
                                        self.button_start_text,
                                        self.button_text_color,
                                        "next_state",
-                                       STATE_PUSH)
+                                       STATE_REPLACE)
         
         self.Param_button = TextButton(self.PARAM_POS,
                                        self.button_text_font,
                                        self.button_param_text,
                                        self.button_text_color,
                                        "param_state",
-                                       STATE_PUSH)
+                                       STATE_REPLACE)
         
         self.Leave_button = TextButton(self.LEAVE_POS,
                                        self.button_text_font,
