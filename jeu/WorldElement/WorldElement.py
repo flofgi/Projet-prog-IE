@@ -59,6 +59,13 @@ class WorldElement(ABC):
         """Return the current position of the entity as pygame.Vector2."""
         return pygame.Vector2(self.rect.centerx ,self.rect.bottom)
     
+    @get_coordinates.setter
+    def get_coordinates(self, new_coordinates: pygame.Vector2):
+        """Set the entity's position to the given coordinates."""
+        self.rect.centerx = int(new_coordinates.x)
+        self.rect.bottom = int(new_coordinates.y)
+
+
     @property
     def get_rect(self) -> pygame.Rect:
         """Return the current position of the entity as pygame.Vector2."""
