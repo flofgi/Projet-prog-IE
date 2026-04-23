@@ -74,11 +74,9 @@ while running:
 
 
 
-
-    cam.update(player)
     player.update(dt, map_obj)
-    cam.render(map_obj, window)
-    player.draw(window, cam)
+    cam.update(player)
+    cam.render(map_obj, window, player)
     pygame.display.flip()
     clock.tick(60)
 

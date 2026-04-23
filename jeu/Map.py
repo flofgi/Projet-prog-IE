@@ -48,7 +48,7 @@ class Map :
         start_x = max(0, camera.x//tile_w)
         end_x = min(self.mapsize[1], (surface.get_width()+ camera.x)//tile_w+1)
         start_y = max(0, camera.y//tile_h)
-        end_y = min(self.mapsize[1], (surface.get_height()+ camera.y)//tile_h+1)
+        end_y = min(self.mapsize[0], (surface.get_height()+ camera.y)//tile_h+1)
         
         for i in range (int(start_y), int(end_y)):
             for j in range (int(start_x), int(end_x)):
