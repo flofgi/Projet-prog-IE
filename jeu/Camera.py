@@ -1,5 +1,4 @@
 import pygame
-import Map
 from Player import Player
 
 
