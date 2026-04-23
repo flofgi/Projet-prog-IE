@@ -27,12 +27,10 @@ class Camera :
     self.max_x = mapsize[1] * tilesize[0] - windowsize[0]
     self.max_y = mapsize[0] * tilesize[1] - windowsize[1]
 
-  def update(self, player):
+  def update(self, player: Player):
     """update the position of the camera following the player's coordinates and the border of the map"""
-    #self.x = player.getPosition[0] - self.screensize[0]//(2*self.coefscale)
-    #self.y = player.getPosition[1] - self.screensize[1]//(2*self.coefscale)
-    self.x = player[0] - self.scaled_window.get_width()// 2
-    self.y = player[1] - self.scaled_window.get_height()// 2
+    self.x = player.get_coordinates[0] - self.scaled_window.get_width()// 2
+    self.y = player.get_coordinates[1] - self.scaled_window.get_height()// 2
     self.x = max(0, min(self.x, self.max_x))
     self.y = max(0, min(self.y, self.max_y))
   
@@ -50,4 +48,6 @@ class Camera :
     scaled = pygame.transform.scale(self.scaled_window, self.windowsize)
     window.blit(scaled,(0,0))
   
-  
+  @property
+  def get_position(self):
+    return pygame.Vector2(self.x, self.y)
