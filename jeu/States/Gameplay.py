@@ -29,7 +29,7 @@ class Gameplay(State):
                 self.player.open_inventory()
             
             elif event.key == KEYS["escape"]:
-                pygame.event.post(pygame.event.Event(STATE_POP))
+                pygame.event.post(pygame.event.Event(pygame.QUIT, state = "quit"))
             
             elif event.key == KEYS["interact"]:
                 for element in self.map.get_worldelements(self.player, 50):
