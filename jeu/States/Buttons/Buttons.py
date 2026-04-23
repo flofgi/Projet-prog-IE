@@ -63,31 +63,28 @@ class ClassicButtons(ABC):
             event (pygame.event.Event): An event to handle."""
 
         if self.rect_pos:
-            if event.type == pygame.MOUSEMOTION:
-                self.button_is_hovered = self.hitbox_rect.collidepoint(event.pos)
-            
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button != 1:
-                    pass
-                elif self.hitbox_rect.collidepoint(event.pos):
-                    self.button_is_click = True
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if self.button_is_click:
-                    self.button_was_clicked = True  
-                    self.button_is_click = False
+            box = self.hitbox_rect
         else:
-            if event.type == pygame.MOUSEMOTION:
-                self.button_is_hovered = self.rect.collidepoint(event.pos)
+            box = self.rect
+        
+        if event.type == pygame.MOUSEMOTION:
+            self.button_is_hovered = box.collidepoint(event.pos)
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button != 1:
-                    pass
-                if self.rect.collidepoint(event.pos):
-                    self.button_is_click = True
-            elif event.type == pygame.MOUSEBUTTONUP:
-                if self.button_is_click:
-                    self.button_was_clicked = True  
-                    self.button_is_click = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if box.collidepoint(event.pos) is True and event.button is 1:
+                self.button_is_click = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if self.button_is_click:
+                self.button_was_clicked = True  
+                self.button_is_click = False
+
+    def is_hovered(self,event):
+        if self.rect_pos:
+            box = self.hitbox_rect
+        else:
+            box = self.rect
+        return box.collidepoint(event.pos)
+    
 
 
     def draw(self, screen: pygame.Surface):

@@ -1,22 +1,32 @@
 import pygame
 
+from utilitary import read_json
 
 class TextButton():
-    def __init__(self, center_pos: tuple[int, int], myFont: pygame.font.Font, text: str, color: tuple[int, int, int], state_name: str, state_action: pygame.event.EventType):
+    def __init__(self, center_pos: tuple[int, int], state_name: str, state_action: pygame.event.EventType, myFont: pygame.font.Font, color: tuple[int, int, int] = (255, 255, 255), name: str = "error"):
 
         self.button_is_hovered = False 
         self.button_was_clicked = False
 
-        self.text_image = myFont.render(text, True, color)
+
+        data = read_json("assets/options.json")
+        lang = data.get("Language").get("Name")
+        data = read_json("assets/text.json")
+        Text = data.get(lang).get(name, "error")
+
+    
+        self.text_image = myFont.render(Text, True, color)
         self.text_rect = self.text_image.get_rect()
         self.text_rect.center = center_pos
 
         self.state_action = state_action
         self.state_name = state_name
 
+        
+
 
     def update(self, dt: float) :
-        if self.button_was_clicked:
+        if self.button_was_clicked is True and self.state_action is not None:
             self.button_was_clicked = False
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
 
@@ -31,8 +41,15 @@ class TextButton():
             if self.text_rect.collidepoint(event.pos):
                 self.button_was_clicked = True
 
+    def is_hovered(self,event):
+            return self.text_rect.collidepoint(event.pos)
+    
+
     def draw(self, screen):
         if self.button_is_hovered == True :        
             pygame.draw.rect(screen, (33,33,33), self.text_rect.inflate(20, 10))
         screen.blit(self.text_image, self.text_rect)
+
+
+
 

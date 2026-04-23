@@ -55,13 +55,14 @@ class SwitchKeyState(State):
         if self.screen_is_resized == True:
             self._calculte_position()
             self.screen_is_resized = False
-
+        
         if self.key_is_press:
             self.text_image = self.myFont.render(pygame.key.name(self.new_key), True, self.color)
             self.text_image_rect = self.text_image.get_rect()
             self.text_image_rect.center = (self.screen_size[0]//2,self.screen_size[1]//2 + 10)
     
     def handle_event(self, event):
+        
         if event.type == KEY_CHANGE:
             self.changed_key = event.key
         

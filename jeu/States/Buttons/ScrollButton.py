@@ -7,7 +7,8 @@ from utilitary import read_json
 
 class ScrollButton(ClassicButtons):
 
-    def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.Surface, scroll_sprite: pygame.Surface, scroll_trail: pygame.Surface, scale: int, name: str = None):
+    def __init__(self, center_pos: tuple[int, int], background_sprite: pygame.Surface, scroll_sprite: pygame.Surface, scroll_trail: pygame.Surface, myFont: pygame.font.Font = None ,text_pos: tuple[int, int] = None, name: str = "Error" ,text_color = (255, 255, 255) ,rect_pos: tuple[int, int] = None,  scale: int = 1):
+        super().__init__(center_pos, scroll_sprite, scale, name, rect_pos)
         """ Initialize a button with a scrollable element that can be dragged within a defined area.
         
         Args:
@@ -19,10 +20,13 @@ class ScrollButton(ClassicButtons):
         """
         super().__init__(center_pos, scroll_sprite, scale, name)
 
+        self.myFont = myFont
+        self.text_color = text_color
+
         #////////////////// ////////////////// BASE VALUES FOR SIZE AND VALUE ////////////////// /////////////////
 
         data = read_json("assets/options.json")
-        section = "Sound_option"
+        section = "Options"
         DELIMITATION_RATIO = 0.8
         self.scroll_percent = data.get(section, {}).get(name, {}).get("Percentage", 1/2)
         self.scroll_trail = scroll_trail
@@ -40,7 +44,7 @@ class ScrollButton(ClassicButtons):
         self.background_rect.center = center_pos  
 
         # SCROLLABLE LIMITIATION
-        self._calculate_scroll_delimitations()
+        self._calculate_scroll_delimitations() # transistor (nommé Corentin) (c'est un g au debut)
         
         # SCROLL TRAIL
 
@@ -52,6 +56,30 @@ class ScrollButton(ClassicButtons):
 
         # BUTTON FIRST POSITION    
         self.rect.topleft = self.scroll_percent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
+
+        # TEXT
+
+        self.name = name
+        self.text_pos = text_pos
+        self.Text = None
+        if myFont is not None:
+            if text_pos is None:
+                self.text_pos = center_pos
+
+            data = read_json("assets/options.json")
+            lang = data.get("Language").get("Name")
+            data = read_json("assets/text.json")
+            Text = data.get(lang).get(name, "error")
+
+            self.Text = myFont.render(Text, True, text_color)
+            self.Text_rect = self.Text.get_rect()
+            self.Text_rect.center = self.text_pos # transistor (nommé Ehodryquess)
+
+            if name is "button_fps":
+                textfps = str(int(self.scroll_percent*240))
+                self.Fps_surface = myFont.render(textfps, True, text_color)
+                self.fps_rect = self.Fps_surface.get_rect()
+                self.fps_rect.midleft = self.Text_rect.midright[0] + 10, self.Text_rect.midright[1]
 
     def _calculate_scroll_delimitations(self):
         """Calculate the left and right delimitations for the scrollable element based on the background image and a defined ratio.
@@ -81,8 +109,7 @@ class ScrollButton(ClassicButtons):
             
             self.scroll_trail_image = pygame.transform.scale(self.scroll_trail, ((self.scroll_rightdelimitation - self.scroll_leftdelimitation) * self.scroll_percent, self.TR_BASESCALE[1]))
 
-
-    def update_position(self, center_pos: tuple[int, int]):
+    def update_position(self, center_pos: tuple[int, int], text_center_pos = None):
         """Update the position of the button and its related elements based on a new center position.
         
         Args:
@@ -97,8 +124,21 @@ class ScrollButton(ClassicButtons):
         self.scroll_trail_rect.midleft = self.scroll_leftdelimitation ,self.rect.topleft[1] + self.image.get_height() // 2
     
         self.rect.topleft = self.scroll_percent * (self.scroll_rightdelimitation - self.scroll_leftdelimitation) + self.scroll_leftdelimitation, self.rect.topleft[1]
+        
+        if self.Text is not None and text_center_pos is not None:
+            self.Text_rect.center = text_center_pos
+            if self.name is "button_fps":
+                textfps = str(int(self.scroll_percent*240))
+                self.Fps_surface = self.myFont.render(textfps, True, self.text_color)
+                self.fps_rect.midleft = self.Text_rect.midright[0] + 10, self.Text_rect.midright[1]
 
     def draw(self, screen: pygame.Surface):
         screen.blit(self.background_image, self.background_rect)
         screen.blit(self.scroll_trail_image, self.scroll_trail_rect)
         super().draw(screen)
+
+        if self.Text:
+            screen.blit(self.Text, self.Text_rect)
+            if self.name is "button_fps":
+                screen.blit(self.Fps_surface, self.fps_rect)
+

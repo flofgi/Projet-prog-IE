@@ -23,6 +23,11 @@ class KeyState(State):
         self.init_S_pos = (64, 320)
         self.init_D_pos = (64, 448)
 
+        self.z_post = None
+        self.q_post = None
+        self.s_post = None
+        self.d_post = None
+
 
     def load(self):
 
@@ -31,6 +36,8 @@ class KeyState(State):
 
         self.button_back_sprite = pygame.image.load("Design/button_background.png").convert_alpha()
         self.button_back_sprite_hovered = pygame.image.load("Design/button_background_1.png").convert_alpha()
+
+        myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
     
 
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
@@ -43,19 +50,37 @@ class KeyState(State):
 
         self._calculte_screen_position()
 
-        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Z_pos)
-        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_Q_pos)
-        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_S_pos)
-        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, 1, "Switch_key_state", STATE_PUSH, None, self.rect_D_pos)
+        myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
+
+        self.text_Z_pos =  (0,0)
+        self.text_Q_pos =  (0,0)
+        self.text_S_pos = (0,0) 
+        self.text_D_pos = (0,0)
+
+        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Z_pos, "button_up" , rect_pos=self.rect_Z_pos, hovered_scale=1.1)
+        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Q_pos, "button_left" , rect_pos=self.rect_Q_pos, hovered_scale=1.1)
+        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_S_pos, "button_down" , rect_pos=self.rect_S_pos, hovered_scale=1.1)
+        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_D_pos, "button_right" , rect_pos=self.rect_D_pos, hovered_scale=1.1)
+
+        SEPARATION = 38
+
+
+
+        self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
+        self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
+        self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
+        self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
         
         self.Button_back_pos = (0, 0)
 
         self.Button_back = ClassicButton1(self.Button_back_pos,
                                    self.button_back_sprite,
                                    self.button_back_sprite_hovered,
-                                   1,
                                    "param_state",
-                                   STATE_REPLACE)
+                                   STATE_REPLACE,
+                                   myFont,
+                                   name="button_back",
+                                   hovered_scale=1.1)
         
         self.Button_back_pos = (self.scroll_screen_rect.bottomleft[0] + self.Button_back.rect.size[0] / 2, (self.screen_size[1] - self.scroll_screen_rect.bottomleft[1])*(3/2) + self.scroll_screen_rect.size[1] )
         self._update_position()
@@ -82,6 +107,16 @@ class KeyState(State):
         self.button_d.handle_event(event)
         self.Button_back.handle_event(event)
 
+        if event.type == pygame.MOUSEBUTTONUP:
+            if self.button_z.is_hovered(event) is True and self.button_z.button_was_clicked is True:
+                self.z_post = True
+            elif self.button_q.is_hovered(event):
+                self.q_post = True
+            elif self.button_s.is_hovered(event):
+                self.s_post = True
+            elif self.button_d.is_hovered(event):
+                self.d_post = True
+
 
         # Gérer le redimensionnement de l'écran
         if event.type == pygame.VIDEORESIZE:
@@ -92,10 +127,18 @@ class KeyState(State):
     def update(self, dt: float):
         """Handle the transition to the Menu state."""
 
+        SEPARATION = 38
+
         # sert pour faire bouger l'écran en fonction de la molette
         if self.MOUSEWHEEL_ON == True:
             self._calculte_position()
             self._calculte_screen_position()
+
+            self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
+            self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
+            self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
+            self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
+
             self._update_position()
             self.MOUSEWHEEL_ON = False
 
@@ -103,25 +146,17 @@ class KeyState(State):
         if self.screen_is_resized == True:
             self._calculte_position()
             self.Button_back_pos = (self.scroll_screen_rect.bottomleft[0] + self.Button_back.rect.size[0] / 2, (self.screen_size[1] - self.scroll_screen_rect.bottomleft[1])*(3/2) + self.scroll_screen_rect.size[1] )
+            self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
+            self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
+            self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
+            self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
             self._calculte_screen_position()
             self._update_position()
             self.screen_is_resized == False
 
         # Fait aussi carl a détéction se fait ici, et l'action doit se faire après les update des boutons
+        
         # Tout ça pas beau, à corriger en rendant fonctionnel une fonction "is_click/is_hovered" pour les boutons
-        z_post = False
-        q_post = False
-        s_post = False
-        d_post = False
-        if self.button_z.button_was_clicked == True:
-            z_post = True
-        elif self.button_d.button_was_clicked == True:
-            s_post = True
-        elif self.button_s.button_was_clicked == True:
-            s_post = True
-        elif self.button_q.button_was_clicked == True:
-            q_post = True
-
         self.button_z.update(dt)
         self.button_q.update(dt)
         self.button_s.update(dt)
@@ -130,17 +165,17 @@ class KeyState(State):
 
 
         # Pas beau bis
-        if z_post:
-            z_post = False
+        if self.z_post:
+            self.z_post = False
             pygame.event.post(pygame.event.Event(KEY_CHANGE, key="UP"))
-        elif q_post:
-            q_post = False
+        elif self.q_post:
+            self.q_post = False
             pygame.event.post(pygame.event.Event(KEY_CHANGE, key="LEFT"))
-        elif s_post:    
-            s_post = False
+        elif self.s_post:    
+            self.s_post = False
             pygame.event.post(pygame.event.Event(KEY_CHANGE, key="DOWN"))
-        elif d_post:    
-            d_post = False
+        elif self.d_post:    
+            self.d_post = False
             pygame.event.post(pygame.event.Event(KEY_CHANGE, key="RIGHT"))
     
 
@@ -157,7 +192,6 @@ class KeyState(State):
     def unload(self):
         self.Button_back = None
         self.button_z = None
-        
 
     def _calculte_position(self):
 
@@ -169,10 +203,10 @@ class KeyState(State):
         self.D_pos = self.init_D_pos[0], self.init_D_pos[1] - self.scroll_y * self.sp
 
     def _update_position(self):
-        self.button_z.update_position(self.Z_pos, self.rect_Z_pos)
-        self.button_q.update_position(self.Q_pos, self.rect_Q_pos)
-        self.button_s.update_position(self.S_pos, self.rect_S_pos)
-        self.button_d.update_position(self.D_pos, self.rect_D_pos)
+        self.button_z.update_position(self.Z_pos, self.rect_Z_pos, self.text_Z_pos)
+        self.button_q.update_position(self.Q_pos, self.rect_Q_pos, self.text_Q_pos)
+        self.button_s.update_position(self.S_pos, self.rect_S_pos, self.text_S_pos)
+        self.button_d.update_position(self.D_pos, self.rect_D_pos, self.text_D_pos)
 
         self.scroll_screen = pygame.transform.scale(self.scroll_screen, self.scroll_size)
         self.scroll_screen_rect = self.scroll_screen.get_rect()
@@ -183,10 +217,12 @@ class KeyState(State):
         
     def _calculte_screen_position(self):
         ORIGIN = self.scroll_screen_rect.topleft
+
         self.rect_Z_pos = ORIGIN[0] + self.Z_pos[0], ORIGIN[1] + self.Z_pos[1]
         self.rect_Q_pos = ORIGIN[0] + self.Q_pos[0], ORIGIN[1] + self.Q_pos[1]
         self.rect_S_pos = ORIGIN[0] + self.S_pos[0], ORIGIN[1] + self.S_pos[1]
         self.rect_D_pos = ORIGIN[0] + self.D_pos[0], ORIGIN[1] + self.D_pos[1]
+
         
 
         

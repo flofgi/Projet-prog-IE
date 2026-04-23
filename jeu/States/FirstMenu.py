@@ -36,9 +36,6 @@ class FirstMenu(State):
 
         self.button_text_font = pygame.font.Font("Fonts/TLOZ.ttf", 18)
         self.button_text_color = (255, 255, 255)
-        self.button_start_text = "start game"
-        self.button_param_text = "parameters"
-        self.button_leave_text = "leave"
 
         # Initialize buttons with their positions, sprites, and scale.
         
@@ -47,25 +44,22 @@ class FirstMenu(State):
         self._calculte_position(self.screen_size)
 
         self.Start_button = TextButton(self.START_POS,
-                                       self.button_text_font,
-                                       self.button_start_text,
-                                       self.button_text_color,
                                        "next_state",
-                                       STATE_REPLACE)
+                                       STATE_REPLACE,
+                                       self.button_text_font,
+                                       name="button_game")
         
         self.Param_button = TextButton(self.PARAM_POS,
-                                       self.button_text_font,
-                                       self.button_param_text,
-                                       self.button_text_color,
                                        "param_state",
-                                       STATE_REPLACE)
+                                       STATE_REPLACE,
+                                       self.button_text_font,
+                                       name="button_param")
         
         self.Leave_button = TextButton(self.LEAVE_POS,
-                                       self.button_text_font,
-                                       self.button_leave_text,
-                                       self.button_text_color,
                                        "quit",
-                                       pygame.QUIT)
+                                       pygame.QUIT,
+                                       self.button_text_font,
+                                       name="button_quit")
         
         self._update_position()
 

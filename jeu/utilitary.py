@@ -8,6 +8,7 @@ STATE_POP = pygame.event.custom_type()
 STATE_PUSH = pygame.event.custom_type()
 FULLSCREEN = pygame.event.custom_type()
 KEY_CHANGE = pygame.event.custom_type()
+CHANGE_FPS = pygame.event.custom_type()
     
 
 def update_json(section, new_data, file_path: str = None):

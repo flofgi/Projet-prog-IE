@@ -1,20 +1,23 @@
 {
-    "Sound_option": {
-        "sound_volume": {
-            "Percentage": 0.1875
+    "Options": {
+        "button_sound": {
+            "Percentage": 0.5125
         },
-        "fps": {
-            "Percentage": 0.7
+        "button_fps": {
+            "Percentage": 0.2375
         },
-        "gamma": {
+        "button_gamma": {
             "Percentage": 0.0
         }
     },
     "Saved_keys": {
-        "UP": 122,
+        "UP": 107,
         "DOWN": 100,
-        "LEFT": 107,
+        "LEFT": 113,
         "RIGHT": 100,
         "INVENTORY": 101
+    },
+    "Language": {
+        "Name": "en"
     }
 }
