@@ -39,23 +39,16 @@ class Camera :
     self.coefscale = max(self.min_scale, min(self.max_scale, newscale))
     self.zoomsize = (int(self.windowsize[0] * self.coefscale), int(self.windowsize[1] * self.coefscale))
     self.scaled_window = pygame.Surface(self.zoomsize)
-
-  def render(self, map_obj: Map, window, player):
     self.scaled_window.fill((0,0,50))
-    map_obj.draw(self)
 
-    player.draw(self.scaled_window, self)
 
+  def render(self, window):
     scaled = pygame.transform.scale(self.scaled_window, self.windowsize)
     window.blit(scaled,(0,0))
   
   @property
-  def get_position(self):
+  def get_coordinates(self):
     return pygame.Vector2(self.x, self.y)
-  
-  @property
-  def offset(self):
-    return (-self.x, -self.y)
   
   @property
   def rect(self):
