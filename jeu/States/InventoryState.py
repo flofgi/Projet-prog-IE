@@ -9,7 +9,8 @@ import pygame
 
 from States.State import State
 from events import STATE_PUSH, STATE_POP, STATE_REPLACE, KEYS, MOUSE
-from WorldElement.Player import Player, Inventory
+from WorldElement.Player import Player
+from Inventory import Inventory
 from Item.Item import Item
 
 
