@@ -8,8 +8,6 @@ from States.StateManager import StateManager
 from States.InventoryState import InventoryState
 from States.Gameplay import Gameplay
 
-from abc import ABC, abstractmethod
-
 
 pygame.font.init()
 

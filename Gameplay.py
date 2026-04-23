@@ -3,13 +3,13 @@ from __future__ import annotations
 import numpy as np
 import pygame
 
-from Camera import Camera
-from Map import Map, Tileset
-from States.State import State
-from States.StateManager import StateManager
-from WorldElement.Player import Player
-from Item import gun, sword
-from events import KEYS, NEW_MAP, STATE_PUSH, STATE_POP, STATE_REPLACE
+from jeu.Camera import Camera
+from jeu.Map import Map, Tileset
+from jeu.States.State import State
+from jeu.States.StateManager import StateManager
+from jeu.WorldElement.Player import Player
+from jeu.Item import gun, sword
+from jeu.events import KEYS, NEW_MAP, STATE_PUSH, STATE_POP, STATE_REPLACE
 
 
 
