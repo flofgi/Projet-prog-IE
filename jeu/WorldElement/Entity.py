@@ -77,6 +77,6 @@ class Entity(WorldElement):
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:
             frame = self.sprite[self.current_frame]
-            draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_position
+            draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
             surface.blit(frame, draw_pos)
 

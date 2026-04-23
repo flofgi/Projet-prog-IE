@@ -73,7 +73,7 @@ class WorldElement(ABC):
     
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         """Draw the entity on the given surface, optionally using player information for relative positioning."""
-        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_position
+        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
         surface.blit(self.sprite[0], draw_pos)
 
 

@@ -28,7 +28,7 @@ class Grenade(Item):
             player (Player): The player using the grenade.
             map (Map): The map on which the grenade is used.
         """
-        mouse_pos = pygame.mouse.get_pos() + player.camera.get_position
+        mouse_pos = pygame.mouse.get_pos() + player.camera.get_coordinates
 
         affected_mobs: list[Mob] = self.get_mobs(player, map, distance=self.radius+self.max_radius)
         

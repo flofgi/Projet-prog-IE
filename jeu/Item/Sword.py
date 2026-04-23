@@ -50,7 +50,7 @@ class sword(Item):
 
     def in_cone(self, player: Player, target: pygame.Vector2 | WorldElement):
         """Check if a target is within the sword's attack cone."""
-        self.mouse_position = pygame.Vector2(pygame.mouse.get_pos()) + player.camera.get_position
+        self.mouse_position = pygame.Vector2(pygame.mouse.get_pos()) + player.camera.get_coordinates
         if isinstance(target, WorldElement):
             target = target.get_coordinates
         position = player.get_coordinates
@@ -73,8 +73,8 @@ class sword(Item):
         start_mouse_pos = normalised_mouse.rotate(-self.shot_angle/2)
         end_point = position + start_mouse_pos.rotate(self.shot_angle/self.animation*self.animation_time)
 
-        screen_start = position - camera.get_position
-        screen_end = end_point - camera.get_position
+        screen_start = position - camera.get_coordinates
+        screen_end = end_point - camera.get_coordinates
         pygame.draw.line(surface, (200, 200, 200), screen_start, screen_end, 2)
 
     def update(self, dt, map, target = None):

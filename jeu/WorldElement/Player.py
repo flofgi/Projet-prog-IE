@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from Item.Sword import sword
 
 if TYPE_CHECKING:
-    from WorldElement.Ally import Ally
+    from jeu.WorldElement.Ally import Ally
     from Map import Map
     from Item.Item import Item
     from Camera import Camera
@@ -194,7 +194,7 @@ class Player(Entity):
     
     def in_cone(self, target: pygame.Vector2 | WorldElement):
         """Check if a target is within the sword's attack cone."""
-        mouse = pygame.Vector2(pygame.mouse.get_pos()) + self.camera.get_position
+        mouse = pygame.Vector2(pygame.mouse.get_pos()) + self.camera.get_coordinates
         if isinstance(target, WorldElement):
             target = target.get_coordinates
         position = self.get_coordinates
@@ -206,7 +206,7 @@ class Player(Entity):
 
     def draw(self, surface: pygame.Surface, camera: Camera, player = None):
         frame = self.sprite[self.current_frame]
-        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_position
+        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
         surface.blit(frame, draw_pos)
         if self.inventory.held_item is not None:
             self.inventory.held_item.draw_equip(surface, camera, player)

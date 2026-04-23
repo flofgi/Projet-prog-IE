@@ -23,7 +23,7 @@ class gun(Item):
         if self.list_shots and self.animation_time - self.list_shots[-1][0] < 0.3:
             return
         mobs: list[Mob] = map.get_worldelements(player, 60, Mob)
-        mouse = pygame.Vector2(pygame.mouse.get_pos()) + player.camera.get_position
+        mouse = pygame.Vector2(pygame.mouse.get_pos()) + player.camera.get_coordinates
         shot =  mouse - player.get_coordinates
         shot.normalize_ip()
         shot.scale_to_length(self.shot_distance)
@@ -31,7 +31,8 @@ class gun(Item):
         for mob in mobs:
             if self.point_in_segment(mob.get_coordinates, mouse, player.get_coordinates):
                 mob.is_attack(self.damage)
-        self.durability -= 1
+        if self.durability is not None:
+            self.durability -= 1
     
     def point_in_segment(self, point: pygame.Vector2, mouse_point: pygame.Vector2, player_position: pygame.Vector2) -> bool:
         """Check if a point is within a certain distance from the line segment defined by the player's position and the mouse position.
@@ -55,7 +56,7 @@ class gun(Item):
                 self.list_shots.remove(shot_parameter)
             else:
                 end_point = player_position + shot
-                pygame.draw.line(screen, (255, 0, 0), player_position - camera.get_position, end_point - camera.get_position, 2)    
+                pygame.draw.line(screen, (255, 0, 0), player_position - camera.get_coordinates, end_point - camera.get_coordinates, 2)    
 
     def update(self, dt, map, target = None):
         self.animation_time += dt

@@ -31,7 +31,7 @@ class Camera :
     self.y = max(0, min(self.y, self.max_y))
   
   @property
-  def get_position(self) -> pygame.Vector2:
+  def get_coordinates(self) -> pygame.Vector2:
     """return the position of the camera as a pygame.Vector2"""
     return pygame.Vector2(self.x, self.y)
   

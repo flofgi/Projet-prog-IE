@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from WorldElement.Ally import Ally
+    from jeu.WorldElement.Ally import Ally
     from Item.Item import Item
     from WorldElement.Entity import Entity
     from WorldElement.WorldElement import WorldElement

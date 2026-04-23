@@ -4,11 +4,8 @@ __pycache__/
 .env
 .vscode/
 formalisme.md
-jeu/test_map_2.py
 
-jeu/test.py
-jeu/test_map.py
-Design/Texture/
-jeu/testdisgn.py
-jeu/teststate.py
 .github/
+jeu/teststate.py
+jeu/test/test_map.py
+jeu/test/test.py
