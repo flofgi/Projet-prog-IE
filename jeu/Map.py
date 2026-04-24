@@ -19,6 +19,8 @@ from utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
 from WorldElement import WorldElement
 from Tileset import Tileset
 
+DEFAULTS_PAWN_POINT = pygame.Vector2(250, 250)
+
 
 class Map :
     def __init__(self,mapsize : tuple, tileset : Tileset, mapset : np.array, worldelements: list[WorldElement] = None, rect=None): #, sectors: tuple, camera: caméra
@@ -33,7 +35,8 @@ class Map :
         self.mapsize = mapsize
         self.mapset = mapset
         self.tileset = tileset
-        self.worldelements = list(worldelements) if worldelements is not None else []
+        self.spawn_point = DEFAULTS_PAWN_POINT
+        self.worldelements: list[WorldElement] = list(worldelements) if worldelements is not None else []
         #self.sectors = sectors
 
         h, w = self.mapsize

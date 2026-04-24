@@ -1,0 +1,28 @@
+{
+ "Map_test": {
+        "map_path": "Design/Map1.png",
+        "spawn_points": [100, 100],
+        "Tileset": {
+            "tileset_path": "Design/Tileset.png",
+            "tile_size": 32,
+            "mapset": "assets/mapset_test.txt"},
+        "worldelement": {
+            "ally": {
+                "ally1": {
+                    "hp": 50,
+                    "sprites": ["Design/Hunter_Stand_DB_1.png"],
+                    "spawn": [150, 150]
+                }
+            },
+            "mob": {
+            },
+            "item": {
+            }
+            
+    }
+ }
+
+
+
+
+}

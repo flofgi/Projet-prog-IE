@@ -1,0 +1,9 @@
+{
+        "player": {
+        "hp": 100,
+        "sprites": ["Design/Hunter_Stand_DB_1.png"],
+        "spawn": [100, 100]
+    },
+    "ally": {
+    }
+}

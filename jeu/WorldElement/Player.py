@@ -48,7 +48,7 @@ class Player(Entity):
         inventory (list): List of items owned by the player.
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, camera:Camera, allies: list[Ally] = None, inventory = None) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
         """Initialize a player with allies and inventory state.
         
         Args:
@@ -59,9 +59,6 @@ class Player(Entity):
             inventory (dict, optional): List of items to initialize the inventory with. Defaults to None.
         """
         super().__init__(hp, sprites, coordinates, DEFAULT_NAME)
-        self.allies: list["Ally"] = list(allies) if allies is not None else []
-        self.inventory: Inventory = Inventory(dict(inventory)) if inventory is not None else Inventory({})
-        self.camera = camera
         self.shot_distance = DEFAULT_SHOT_DISTANCE
         self.shot_angle = DEFAULT_SHOT_ANGLE
         self.damage = DEFAULT_DAMAGE
@@ -176,7 +173,7 @@ class Player(Entity):
                 return True
         return False
 
-    def load(self,map: Map ,sprites = None):
+    def load(self,map: Map , camera: Camera, allies: list[Ally] = None, inventory = None):
         """Load sprites from disk.
 
         If sprites is provided, replace the stored sprite paths before loading.
@@ -185,8 +182,10 @@ class Player(Entity):
             sprites (list[str], optional): List of sprite identifiers or paths to load. If None, uses existing sprite paths. Defaults to None.
         """
         self.map = map
-        if sprites is not None:
-            self.sprite_paths = list(sprites)
+        self.camera = camera
+        self.allies: list["Ally"] = list(allies) if allies is not None else []
+        self.inventory: Inventory = Inventory(dict(inventory)) if inventory is not None else Inventory({})
+
         super().load()
         self.hand = sword.hand()
 
@@ -196,7 +195,15 @@ class Player(Entity):
         
         if self.inventory.held_item is not None:
             self.inventory.held_item.load()
-        
+
+    
+    def load_new_map(self, new_map: Map, new_camera: Camera):
+        """Update the player's map reference when transitioning to a new map."""
+        self.map = new_map
+        self.camera = new_camera
+
+
+
     @property
     def get_allies(self) -> list[Ally]:
         return self.allies

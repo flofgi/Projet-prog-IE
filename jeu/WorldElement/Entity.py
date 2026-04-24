@@ -57,13 +57,15 @@ class Entity(WorldElement):
         self.BASE_FPS = BASE_FPS
 
 
-    def move(self, dt: float) -> None:
+    def move(self, dt: float, mouvement: pygame.Vector2 = None) -> None:
         """Handle entity movement with a given speed in self.velocity.
 
         dt is expected in seconds. Multiplying by BASE_FPS preserves legacy
         tuning where max_speed was effectively calibrated per frame at 60 FPS.
         """
-        self.coordinates += self.velocity * dt * self.BASE_FPS
+        if mouvement is not None:
+            self.velocity = mouvement
+        self.coordinates += mouvement * dt * self.BASE_FPS
         self.rect.topleft = (
             int(self.coordinates.x + self.hitbox_offset.x),
             int(self.coordinates.y + self.hitbox_offset.y),
