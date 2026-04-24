@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 import pygame
 
 from WorldElement.WorldElement import WorldElement
-from events import DEAD, FPS
+from jeu.utilitary import DEAD, FPS
 
 
 DEFAULT_VELOCITY = pygame.Vector2(0, 0)

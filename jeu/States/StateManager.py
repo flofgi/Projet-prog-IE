@@ -1,6 +1,6 @@
 import pygame
 
-from events import STATE_POP, STATE_PUSH, STATE_REPLACE
+from jeu.utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE
 
 from States.State import State
 

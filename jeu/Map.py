@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 import pygame
 import numpy as np
 from WorldElement.WorldElement import WorldElement
-from events import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
+from jeu.utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
 
 
 class Map :

@@ -9,7 +9,7 @@ from WorldElement.Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
-from events import BOSSFIGHT, DEAD
+from jeu.utilitary import BOSSFIGHT, DEAD
 
 
 DEFAULT_NAME = " "

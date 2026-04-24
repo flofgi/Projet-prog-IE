@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 import pygame
 from Item.Item import Item
-from events import GRENADE_EXPLOSION_EVENT
+from jeu.utilitary import GRENADE_EXPLOSION_EVENT
 
 
 DEFAULT_GRENADE_RADIUS = 100

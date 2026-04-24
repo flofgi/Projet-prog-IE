@@ -3,7 +3,7 @@ import pygame
 import numpy as np
 
 
-from events import STATE_POP, STATE_PUSH, STATE_REPLACE, KEYS, RECUP_EVENT, ALLY_EVENT, FULLSCREEN
+from jeu.utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE, KEYS, RECUP_EVENT, ALLY_EVENT, FULLSCREEN
 from States.StateManager import StateManager
 from States.InventoryState import InventoryState
 from States.Gameplay import Gameplay

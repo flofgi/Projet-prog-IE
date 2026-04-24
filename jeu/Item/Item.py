@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from Camera import Camera
 
 
-from events import RECUP_EVENT
+from jeu.utilitary import RECUP_EVENT
 
 
 
