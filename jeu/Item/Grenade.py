@@ -13,13 +13,18 @@ from Item.Item import Item
 from events import GRENADE_EXPLOSION_EVENT
 
 
+DEFAULT_GRENADE_RADIUS = 100
+DEFAULT_GRENADE_DAMAGE = 50
+DEFAULT_MAX_EXPLOSION_RADIUS = 200
+
+
 class Grenade(Item):
-    def __init__(self, sprites: list[str], coordinates: pygame.Vector2, radius: int = 100, damage: int = 50):
+    def __init__(self, sprites: list[str], coordinates: pygame.Vector2, radius: int = DEFAULT_GRENADE_RADIUS, damage: int = DEFAULT_GRENADE_DAMAGE):
         super().__init__(sprites, coordinates, durability=None, be_stackable=True)
         self.be_stackable = True
         self.radius = radius
         self.damage = damage
-        self.max_radius = 200
+        self.max_radius = DEFAULT_MAX_EXPLOSION_RADIUS
 
     def use(self, player: Player, map: Map):
         """Use the grenade, affecting nearby mobs and posting a RECUP_EVENT.

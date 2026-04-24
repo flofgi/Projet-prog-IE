@@ -3,6 +3,17 @@ from events import STATE_POP, STATE_PUSH
 import pygame
 
 
+MAX_SLOT = 15
+SLOT_SIZE = 64
+INVENTORY_MARGIN = pygame.Vector2(9, 12)
+SLOT_MARGIN = pygame.Vector2(11, 14)
+MAX_STACK = 10
+COUNT_INDEX = 0
+SLOT_INDEX = 1
+HELD_ITEM_SLOT = 0
+ONE_ITEM = 1
+
+
 
 
 class Inventory:
@@ -21,13 +32,13 @@ class Inventory:
             the first int is for the number of item store and seconde is for the position in the inventory.
         """
         self.items: dict[Item, list[int]] = {item: [info[0], info[1]] for item, info in items.items()}
-        self.max_slot = 15
-        self.slot_size = 64
-        self.margin = (9, 12)
-        self.slot_margin = (11, 14)
-        self.max_stack = 10
-        self.COUNT_INDEX = 0
-        self.SLOT_INDEX = 1
+        self.max_slot = MAX_SLOT
+        self.slot_size = SLOT_SIZE
+        self.margin = INVENTORY_MARGIN
+        self.slot_margin = SLOT_MARGIN
+        self.max_stack = MAX_STACK
+        self.COUNT_INDEX = COUNT_INDEX
+        self.SLOT_INDEX = SLOT_INDEX
 
     def get_count(self, item: Item) -> int:
         return self.items[item][self.COUNT_INDEX]
@@ -109,7 +120,7 @@ class Inventory:
             Item | None: The currently held item, or None if no item is held.
         """
         for item in self.items:
-            if self.get_slot(item) == 0:
+            if self.get_slot(item) == HELD_ITEM_SLOT:
                 return item
         return None
     
@@ -123,7 +134,7 @@ class Inventory:
         if self.held_item is not None:
             self.swap_slots(self.held_item, value)
         elif self.held_item is None:
-            self.set_slot(value, 0)
+            self.set_slot(value, HELD_ITEM_SLOT)
 
     def use_held_item(self, player, map):
         """Use the currently held item, if any.
@@ -132,14 +143,14 @@ class Inventory:
         if held_item is not None:
             held_item.use(player, map)
             if held_item.be_stackable:
-                if held_item is not None and self.get_count(held_item) > 1:
-                    self.set_count(held_item, self.get_count(held_item) - 1)
+                if held_item is not None and self.get_count(held_item) > ONE_ITEM:
+                    self.set_count(held_item, self.get_count(held_item) - ONE_ITEM)
                 else:
                     self.remove_item(held_item)
             else:
                 if held_item.durability is not None:
-                    held_item.durability -= 1
-                    if held_item.durability < 1:
+                    held_item.durability -= ONE_ITEM
+                    if held_item.durability < ONE_ITEM:
                         self.remove_item(held_item)
 
                         

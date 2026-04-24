@@ -14,22 +14,33 @@ from Camera import Camera
 import math
 
 
+DEFAULT_SWORD_DAMAGE = 3
+DEFAULT_SWORD_DURABILITY = 50
+DEFAULT_MOUSE_POSITION = pygame.Vector2(0, 0)
+DEFAULT_SWING_DURATION = 0.4
+HAND_SWORD_SPRITES = ["hand"]
+HAND_SWORD_ANGLE = 45
+HAND_SWORD_DISTANCE = 64
+SWING_COLOR = (200, 200, 200)
+SWING_LINE_WIDTH = 2
+
+
 class sword(Item):
 
-    def __init__(self, sprites, coordinates, shot_angle: float, shot_distance: float, damage: float = 3, durability = 50, be_stackable = False):
+    def __init__(self, sprites, coordinates, shot_angle: float, shot_distance: float, damage: float = DEFAULT_SWORD_DAMAGE, durability = DEFAULT_SWORD_DURABILITY, be_stackable = False):
         super().__init__(sprites, coordinates, durability, be_stackable)
         self.shot_angle = shot_angle
         self.shot_distance = shot_distance
         self.damage = damage
         self.animation_time = 0
         self.is_used = False
-        self.mouse_position = pygame.Vector2(0, 0)
-        self.animation = 0.4
+        self.mouse_position = DEFAULT_MOUSE_POSITION.copy()
+        self.animation = DEFAULT_SWING_DURATION
 
     @staticmethod
     def hand():
         """Return a default hand item for the player when no item is equipped."""
-        return sword(["hand"], None, 45, 64, durability=None, be_stackable=False)
+        return sword(HAND_SWORD_SPRITES, None, HAND_SWORD_ANGLE, HAND_SWORD_DISTANCE, durability=None, be_stackable=False)
 
 
     def use(self, player: Player, map: Map):
@@ -75,7 +86,7 @@ class sword(Item):
 
         screen_start = position - camera.get_coordinates
         screen_end = end_point - camera.get_coordinates
-        pygame.draw.line(surface, (200, 200, 200), screen_start, screen_end, 2)
+        pygame.draw.line(surface, SWING_COLOR, screen_start, screen_end, SWING_LINE_WIDTH)
 
     def update(self, dt, map, target = None):
         self.animation_time += dt

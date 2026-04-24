@@ -11,8 +11,8 @@ from States.Gameplay import Gameplay
 
 pygame.font.init()
 
-FPS = 60 
-SCREEN_WIDTH = 1280 
+FPS = 60
+SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 740
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)

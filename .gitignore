@@ -8,4 +8,4 @@ formalisme.md
 .github/
 jeu/teststate.py
 jeu/test/test_map.py
-jeu/test/test.py
+jeu/test/teststate.py

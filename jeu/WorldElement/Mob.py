@@ -12,6 +12,22 @@ from math import pi, cos, sin
 from events import BOSSFIGHT, DEAD
 
 
+DEFAULT_NAME = " "
+DEFAULT_ALERT_ZONE = 200
+DEFAULT_CONFORT_ZONE = 20
+DEFAULT_WANDERING_ZONE = 200
+DEFAULT_MAX_SPEED = 0.7
+DEFAULT_TIMER = 0
+DECISION_INTERVAL_TICKS = 15
+PAUSE_CHECK_SECONDS = 100
+HALF_SPEED_FACTOR = 0.5
+RANDOM_BOOL_MIN = 0
+RANDOM_BOOL_MAX = 1
+TAU = pi * 2
+ZERO_VECTOR = pygame.Vector2(0, 0)
+MIN_HP = 0
+
+
 class Mob(Entity):
     """class for mob.
     
@@ -28,7 +44,7 @@ class Mob(Entity):
         WANDERING_ZONE (int) radius of the wandering circle where the mob moves around
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = " ", is_boss: bool = False) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = DEFAULT_NAME, is_boss: bool = False) -> None:
         """Initialize a mob with tracking and wandering parameters.
         Args:
             hp (int): Initial health points for the mob. Must be a positive integer.
@@ -39,11 +55,11 @@ class Mob(Entity):
         self.wandering_point = pygame.Vector2(coordinates)
         self.is_paused = False
         self.target_coordinates = coordinates
-        self.ALERT_ZONE = 200
-        self.CONFORT_ZONE = 20
-        self.WANDERING_ZONE = 200
-        self.max_speed= 0.7
-        self.timer = 0
+        self.ALERT_ZONE = DEFAULT_ALERT_ZONE
+        self.CONFORT_ZONE = DEFAULT_CONFORT_ZONE
+        self.WANDERING_ZONE = DEFAULT_WANDERING_ZONE
+        self.max_speed = DEFAULT_MAX_SPEED
+        self.timer = DEFAULT_TIMER
         self.is_boss = is_boss
         self.is_enemy = True
 
@@ -71,14 +87,14 @@ class Mob(Entity):
         """
         self.animation_timer += dt
         self.timer += 1
-        if self.timer % 15 == 0:
+        if self.timer % DECISION_INTERVAL_TICKS == 0:
             if target is not None:
                 self.target_coordinates = target.get_coordinates
 
                 distance_player_mob = self.target_coordinates.distance_to(self.coordinates) 
                 
                 if distance_player_mob < self.CONFORT_ZONE:
-                    self.velocity = pygame.Vector2(0, 0)
+                    self.velocity = ZERO_VECTOR.copy()
 
                 elif distance_player_mob > self.ALERT_ZONE:
                     self.wandering(self.target_coordinates)
@@ -88,7 +104,7 @@ class Mob(Entity):
                     if direction.length_squared() > 0:
                         self.velocity = direction.normalize() * self.max_speed
                     else:
-                        self.velocity = pygame.Vector2(0, 0)
+                        self.velocity = ZERO_VECTOR.copy()
             else:
                 self.wandering(self.target_coordinates)
         self.move(dt)
@@ -104,25 +120,25 @@ class Mob(Entity):
           Args:
             target (pygame.Vector2): The position to wander around.
         """
-        if self.animation_timer > 100 / self.BASE_FPS:
+        if self.animation_timer > PAUSE_CHECK_SECONDS / self.BASE_FPS:
             self.animation_timer = 0
-            self.is_paused = randint(0, 1) == 0
+            self.is_paused = randint(RANDOM_BOOL_MIN, RANDOM_BOOL_MAX) == RANDOM_BOOL_MIN
             if not self.is_paused:
-                self.wandering_point = self.target_random_point(0, self.WANDERING_ZONE, target)
+                self.wandering_point = self.target_random_point(RANDOM_BOOL_MIN, self.WANDERING_ZONE, target)
 
         if self.is_paused:
-            self.velocity = pygame.Vector2(0, 0)
+            self.velocity = ZERO_VECTOR.copy()
             return
 
         direction = self.wandering_point - self.coordinates
         if direction.length_squared() > 0:
-            self.velocity = direction.normalize() * (self.max_speed * 0.5)
+            self.velocity = direction.normalize() * (self.max_speed * HALF_SPEED_FACTOR)
         else:
-            self.velocity = pygame.Vector2(0, 0)
+            self.velocity = ZERO_VECTOR.copy()
 
 
 
-    def modifie_zone(self, ALERT_ZONE = 200, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
+    def modifie_zone(self, ALERT_ZONE = DEFAULT_ALERT_ZONE, CONFORT_ZONE = DEFAULT_CONFORT_ZONE, WANDERING_ZONE = DEFAULT_WANDERING_ZONE):
         """Update mob distance thresholds for follow and wandering zones.
         Args:
             ALERT_ZONE (int, optional): Distance at which mob starts following the target. Defaults to 200.
@@ -145,12 +161,12 @@ class Mob(Entity):
             target = self.coordinates
         
         rayon = uniform(min_rayon_limite, max_rayon_limite)
-        angle = uniform(0, pi*2)
+        angle = uniform(RANDOM_BOOL_MIN, TAU)
         return pygame.Vector2(cos(angle)*rayon, sin(angle)*rayon)+target
     
     def is_attack(self, dommage: float):
         self.hp -= dommage
-        if self.hp <= 0:
+        if self.hp <= MIN_HP:
             pygame.event.post(pygame.event.Event(DEAD, target = self))
         elif self.is_boss:
             pygame.event.post(pygame.event.Event(BOSSFIGHT, target = self))

@@ -17,6 +17,32 @@ from Item import Item
 from random import randint
 
 
+INTERACT_RANGE = 50
+PLAYER_HP = 100
+PLAYER_SPAWN = pygame.Vector2(250, 250)
+ALLY_COUNT = 10
+MOB_COUNT = 10
+ITEM_SPAWN_COUNT = 20
+RANDOM_SPAWN_MIN = pygame.Vector2(100, 100)
+RANDOM_SPAWN_MAX = pygame.Vector2(150, 150)
+SWORD_ANGLE = 90
+SWORD_RANGE = 50
+BACKGROUND_COLOR = (25, 30, 40)
+
+TILESIZE = pygame.Vector2(32, 32)
+MAPSIZE = pygame.Vector2(30, 40)
+WINDOWSIZE = pygame.Vector2(800, 800)
+SPEED = 3
+TILESET = "Design/Tileset/MAP1_tileset.png"
+
+
+def random_spawn_position() -> pygame.Vector2:
+    return pygame.Vector2(
+        randint(int(RANDOM_SPAWN_MIN.x), int(RANDOM_SPAWN_MAX.x)),
+        randint(int(RANDOM_SPAWN_MIN.y), int(RANDOM_SPAWN_MAX.y)),
+    )
+
+
 class Gameplay(State):
     """Playable state with two simple test maps."""
 
@@ -32,7 +58,7 @@ class Gameplay(State):
                 pygame.event.post(pygame.event.Event(pygame.QUIT, state = "quit"))
             
             elif event.key == KEYS["interact"]:
-                for element in self.map.get_worldelements(self.player, 50):
+                for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
 
@@ -43,21 +69,32 @@ class Gameplay(State):
     def load(self):
         screen_size = pygame.display.get_surface().get_size()
 
-        self.camera = Camera(MAPSIZE, screen_size, TILESIZE)
+        self.camera = Camera((int(MAPSIZE.x), int(MAPSIZE.y)), screen_size, TILESIZE)
 
         self.player = Player(
-            100,
+            PLAYER_HP,
             ["Design/Hunter_Stand_DB_1.png"],
-            pygame.Vector2(250, 250),
+            PLAYER_SPAWN,
             self.camera,
         )
 
-        allies = [Ally(10, ["Design\Hunter_Stand_DB_2.png"],pygame.Vector2(randint(100, 150), randint(100, 150))) for ally in range(10)]
-        mobs = [Mob(10, ["Design\Hunter_Walk_GB_3.png"], pygame.Vector2(randint(100, 150), randint(100, 150))) for ally in range(10)]
+        allies = [Ally(10, ["Design\\Hunter_Stand_DB_2.png"], random_spawn_position()) for _ in range(ALLY_COUNT)]
+        mobs = [Mob(10, ["Design\\Hunter_Walk_GB_3.png"], random_spawn_position()) for _ in range(MOB_COUNT)]
 
-        items : Item = [sword(["Design\sword.png"], pygame.Vector2(randint(100, 150), randint(100, 150)), 90, 50) for _ in range(20)] + [gun(["Design\gun.png"], pygame.Vector2(randint(100, 150), randint(100, 150))) for _ in range(20)]
+        items : Item = [
+            sword(["Design\\sword.png"], random_spawn_position(), SWORD_ANGLE, SWORD_RANGE)
+            for _ in range(ITEM_SPAWN_COUNT)
+        ] + [
+            gun(["Design\\gun.png"], random_spawn_position())
+            for _ in range(ITEM_SPAWN_COUNT)
+        ]
 
-        self.map: Map = Map(mapsize=MAPSIZE, tileset=tileset, mapset=mapset, worldelements=allies+mobs+items)
+        self.map: Map = Map(
+            mapsize=(int(MAPSIZE.x), int(MAPSIZE.y)),
+            tileset=tileset,
+            mapset=mapset,
+            worldelements=allies + mobs + items,
+        )
         self.map.load()
         self.player.load(self.map)
 
@@ -67,7 +104,7 @@ class Gameplay(State):
         self.camera.update(self.player)
 
     def render(self, screen: pygame.Surface):
-        screen.fill((25, 30, 40))
+        screen.fill(BACKGROUND_COLOR)
 
         self.map.draw()
         screen.blit(
@@ -110,41 +147,7 @@ class Gameplay(State):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-TILESIZE = (32, 32)
-MAPSIZE = (30, 40)
-WINDOWSIZE = (800, 800)
-SPEED = 3
-TILESET ="Design/Tileset/MAP1_tileset.png"
-
-
-tileset = Tileset(TILESET, tilesize=TILESIZE, margin=1, spacing=1)
+tileset = Tileset(TILESET, tilesize=TILESIZE)
 mapset = np.array([
     [1, 6, 2, 4, 1, 6, 2, 4, 1, 5, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 3, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6],
     [4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 3, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 1, 4, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1],

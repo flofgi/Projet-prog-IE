@@ -21,6 +21,14 @@ from events import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STAT
 import pygame
 
 
+DEFAULT_NAME = " "
+DEFAULT_SHOT_DISTANCE = 20
+DEFAULT_SHOT_ANGLE = 100
+DEFAULT_DAMAGE = 1
+ZERO_VELOCITY = pygame.Vector2(0, 0)
+HALF_ANGLE_DIVISOR = 2
+
+
 class Player(Entity):
     """Class for player entity.
 
@@ -50,13 +58,13 @@ class Player(Entity):
             allies (list[Ally], optional): List of allies to initialize with. Defaults to None.
             inventory (dict, optional): List of items to initialize the inventory with. Defaults to None.
         """
-        super().__init__(hp, sprites, coordinates, " ")
+        super().__init__(hp, sprites, coordinates, DEFAULT_NAME)
         self.allies: list["Ally"] = list(allies) if allies is not None else []
         self.inventory: Inventory = Inventory(dict(inventory)) if inventory is not None else Inventory({})
         self.camera = camera
-        self.shot_distance = 20
-        self.shot_angle = 100
-        self.damage = 1
+        self.shot_distance = DEFAULT_SHOT_DISTANCE
+        self.shot_angle = DEFAULT_SHOT_ANGLE
+        self.damage = DEFAULT_DAMAGE
 
         
     def combat(self):
@@ -142,7 +150,7 @@ class Player(Entity):
         if self.velocity.length() != 0:
             self.velocity = self.velocity.normalize() * self.max_speed
         else:
-            self.velocity = pygame.Vector2(0, 0)
+            self.velocity = ZERO_VELOCITY.copy()
 
     def is_ally(self, ally: Ally):
         """check if an ally is a player's ally

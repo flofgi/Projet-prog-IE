@@ -9,7 +9,14 @@ from abc import ABC, abstractmethod
 import pygame
 
 from WorldElement.WorldElement import WorldElement
-from events import DEAD
+from events import DEAD, FPS
+
+
+DEFAULT_VELOCITY = pygame.Vector2(0, 0)
+DEFAULT_FRAME = 0
+DEFAULT_ANIMATION_TIMER = 0
+DEFAULT_MAX_SPEED = 1
+MIN_HP = 0
 
 
 class Entity(WorldElement):
@@ -29,7 +36,7 @@ class Entity(WorldElement):
         name (string) name of entity
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = 60) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = FPS) -> None:
         """
         Args:
             hp (int): Initial health points for the entity. Must be a positive integer.
@@ -43,10 +50,10 @@ class Entity(WorldElement):
         """
         super().__init__(sprites, coordinates, name)
         self.hp = hp
-        self.velocity = pygame.Vector2(0, 0)
-        self.current_frame = 0
-        self.animation_timer = 0
-        self.max_speed = 1
+        self.velocity = DEFAULT_VELOCITY.copy()
+        self.current_frame = DEFAULT_FRAME
+        self.animation_timer = DEFAULT_ANIMATION_TIMER
+        self.max_speed = DEFAULT_MAX_SPEED
         self.BASE_FPS = BASE_FPS
 
 
@@ -71,7 +78,7 @@ class Entity(WorldElement):
     
     def is_attack(self, dommage: float):
         self.hp -= dommage
-        if self.hp <= 0:
+        if self.hp <= MIN_HP:
             pygame.event.post(pygame.event.Event(DEAD, target = self))
 
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:

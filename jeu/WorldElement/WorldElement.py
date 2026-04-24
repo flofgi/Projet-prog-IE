@@ -12,6 +12,14 @@ from abc import ABC, abstractmethod
 import pygame
 
 
+DEFAULT_NAME = " "
+DEFAULT_COORDINATES = pygame.Vector2(0, 0)
+DEFAULT_RECT_SIZE = pygame.Vector2(0, 0)
+DEFAULT_HITBOX_OFFSET = pygame.Vector2(0, 0)
+DEFAULT_SCALE = 1
+BOUNDING_RECT_MIN_ALPHA = 1
+
+
 
 
 class WorldElement(ABC):
@@ -24,7 +32,7 @@ class WorldElement(ABC):
     """
 
 
-    def __init__(self, sprites: list[str],  coordinates: pygame.Vector2, name: str = " "):
+    def __init__(self, sprites: list[str],  coordinates: pygame.Vector2, name: str = DEFAULT_NAME):
         """
         Args:
             sprites (list[str]) : List of sprite identifiers or paths for rendering the entity.
@@ -34,11 +42,11 @@ class WorldElement(ABC):
         self.sprite_paths = sprites
         self.sprite: list[pygame.Surface] = []
         self.name = name
-        self.coordinates = pygame.Vector2(coordinates) if coordinates is not None else pygame.Vector2(0, 0)
-        self.rect = pygame.Rect(self.coordinates.x, self.coordinates.y, 0, 0)
-        self.hitbox_offset = pygame.Vector2(0, 0)
+        self.coordinates = pygame.Vector2(coordinates) if coordinates is not None else DEFAULT_COORDINATES.copy()
+        self.rect = pygame.Rect(self.coordinates.x, self.coordinates.y, DEFAULT_RECT_SIZE.x, DEFAULT_RECT_SIZE.y)
+        self.hitbox_offset = DEFAULT_HITBOX_OFFSET.copy()
         self.is_enemy = False
-        self.scale = 1
+        self.scale = DEFAULT_SCALE
 
     @abstractmethod
     def update(self, dt: float, map: Map, target: Player = None):
@@ -84,8 +92,8 @@ class WorldElement(ABC):
         """
         self.sprite = [pygame.image.load(s).convert_alpha() for s in self.sprite_paths]
         self.sprite_size = [s.get_size() for s in self.sprite]
-        hitbox_rect = self.sprite[0].get_bounding_rect(min_alpha=1)
-        if hitbox_rect.width == 0 or hitbox_rect.height == 0:
+        hitbox_rect = self.sprite[0].get_bounding_rect(min_alpha=BOUNDING_RECT_MIN_ALPHA)
+        if hitbox_rect.width == DEFAULT_RECT_SIZE.x or hitbox_rect.height == DEFAULT_RECT_SIZE.y:
             hitbox_rect = self.sprite[0].get_rect()
 
         self.hitbox_offset = pygame.Vector2(hitbox_rect.topleft)

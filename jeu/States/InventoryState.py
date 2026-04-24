@@ -14,6 +14,17 @@ from Inventory import Inventory
 from Item.Item import Item
 
 
+INVENTORY_COLS = 5
+INVENTORY_SCALE_RATIO = 0.8
+INVENTORY_IMAGE_PATH = r"Design\Inventory.png"
+INVENTORY_IMAGE_SIZE = pygame.Vector2(295, 138)
+INVENTORY_SLOT_SIZE = pygame.Vector2(32, 32)
+INVENTORY_GRID_ORIGIN_OFFSET = pygame.Vector2(14, 41)
+INVENTORY_GRID_STEP = pygame.Vector2(48, 43)
+INVENTORY_HAND_SLOT_OFFSET = pygame.Vector2(48, 0)
+HOVER_ALPHA = 100
+
+
 class InventoryState(State):
 
     def __init__(self, state_manager: StateManager):
@@ -23,9 +34,9 @@ class InventoryState(State):
         Args:
             state_manager: A reference to the state manager for handling state transitions.
         """
-        self.cols = 5
-        self.slot_size = 32
-        self.gap = 14
+        self.cols = INVENTORY_COLS
+        self.slot_size = int(INVENTORY_SLOT_SIZE.x)
+        self.gap = int(INVENTORY_GRID_ORIGIN_OFFSET.x)
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
         self.cursor: int = 0
         self.select: Item = None
@@ -35,18 +46,47 @@ class InventoryState(State):
     def load(self):
         self.player: Player = self.manager.routes["gameplay"].player
         self.inventory: Inventory = self.player.inventory
-        self.scale = 0.8*self.screen_size[0]//295
-        
-        self.image = pygame.transform.smoothscale(pygame.image.load("Design\Inventory.png").convert_alpha(), (self.scale*295, self.scale*138))
+        self.scale = int(INVENTORY_SCALE_RATIO * self.screen_size[0] // INVENTORY_IMAGE_SIZE.x)
+
+        self.base_image = pygame.image.load(INVENTORY_IMAGE_PATH).convert_alpha()
+        self.image = pygame.transform.smoothscale(
+            self.base_image,
+            (
+                int(self.scale * INVENTORY_IMAGE_SIZE.x),
+                int(self.scale * INVENTORY_IMAGE_SIZE.y),
+            ),
+        )
         self.rect = self.image.get_rect()
         self.rect.center = (self.screen_size[0]//2, self.screen_size[1]//2)
-        
-        self.rects = [pygame.rect.Rect(self.rect.left + (14+x*48)*self.scale, self.rect.bottom - (41 + y*43)*self.scale, 32*self.scale, 32*self.scale) for y in range(self.inventory.max_slot // self.cols) for x in range(self.cols)]
-        self.rects.append(pygame.rect.Rect(self.rects[4].left+ 48*self.scale, self.rects[4].top, 32*self.scale, 32*self.scale))
+
+        self.rects = [
+            pygame.rect.Rect(
+                int(self.rect.left + (INVENTORY_GRID_ORIGIN_OFFSET.x + x * INVENTORY_GRID_STEP.x) * self.scale),
+                int(self.rect.bottom - (INVENTORY_GRID_ORIGIN_OFFSET.y + y * INVENTORY_GRID_STEP.y) * self.scale),
+                int(INVENTORY_SLOT_SIZE.x * self.scale),
+                int(INVENTORY_SLOT_SIZE.y * self.scale),
+            )
+            for y in range(self.inventory.max_slot // self.cols)
+            for x in range(self.cols)
+        ]
+        self.rects.append(
+            pygame.rect.Rect(
+                int(self.rects[self.cols - 1].left + INVENTORY_HAND_SLOT_OFFSET.x * self.scale),
+                self.rects[self.cols - 1].top,
+                int(INVENTORY_SLOT_SIZE.x * self.scale),
+                int(INVENTORY_SLOT_SIZE.y * self.scale),
+            )
+        )
         self.select: Item = None
-        
-        self.hover_surface = pygame.Surface((32*self.scale, 32*self.scale), pygame.SRCALPHA)
-        self.hover_surface.fill((255, 255, 255, 100))
+
+        self.hover_surface = pygame.Surface(
+            (
+                int(INVENTORY_SLOT_SIZE.x * self.scale),
+                int(INVENTORY_SLOT_SIZE.y * self.scale),
+            ),
+            pygame.SRCALPHA,
+        )
+        self.hover_surface.fill((255, 255, 255, HOVER_ALPHA))
 
                                        
 
@@ -81,19 +121,45 @@ class InventoryState(State):
         
         if event.type == pygame.VIDEORESIZE:
             self.screen_size: tuple[int, int] = event.size
-            self.scale = 0.8*self.screen_size[0]//295
-        
+            self.scale = int(INVENTORY_SCALE_RATIO * self.screen_size[0] // INVENTORY_IMAGE_SIZE.x)
 
-            self.image = pygame.transform.smoothscale(self.image, (self.scale*295, self.scale*138))
+            self.image = pygame.transform.smoothscale(
+                self.base_image,
+                (
+                    int(self.scale * INVENTORY_IMAGE_SIZE.x),
+                    int(self.scale * INVENTORY_IMAGE_SIZE.y),
+                ),
+            )
             self.rect = self.image.get_rect()
             self.rect.center = (self.screen_size[0]//2, self.screen_size[1]//2)
-            
-            self.rects = [pygame.rect.Rect(self.rect.left + (14+x*48)*self.scale, self.rect.bottom - (41 + y*43)*self.scale, 32*self.scale, 32*self.scale) for y in range(self.inventory.max_slot // self.cols) for x in range(self.cols)]
-            self.rects.append(pygame.rect.Rect(self.rects[4].left+ 48*self.scale, self.rects[4].top, 32*self.scale, 32*self.scale))
-            
-            
-            self.hover_surface = pygame.Surface((32*self.scale, 32*self.scale), pygame.SRCALPHA)
-            self.hover_surface.fill((255, 255, 255, 100))
+
+            self.rects = [
+                pygame.rect.Rect(
+                    int(self.rect.left + (INVENTORY_GRID_ORIGIN_OFFSET.x + x * INVENTORY_GRID_STEP.x) * self.scale),
+                    int(self.rect.bottom - (INVENTORY_GRID_ORIGIN_OFFSET.y + y * INVENTORY_GRID_STEP.y) * self.scale),
+                    int(INVENTORY_SLOT_SIZE.x * self.scale),
+                    int(INVENTORY_SLOT_SIZE.y * self.scale),
+                )
+                for y in range(self.inventory.max_slot // self.cols)
+                for x in range(self.cols)
+            ]
+            self.rects.append(
+                pygame.rect.Rect(
+                    int(self.rects[self.cols - 1].left + INVENTORY_HAND_SLOT_OFFSET.x * self.scale),
+                    self.rects[self.cols - 1].top,
+                    int(INVENTORY_SLOT_SIZE.x * self.scale),
+                    int(INVENTORY_SLOT_SIZE.y * self.scale),
+                )
+            )
+
+            self.hover_surface = pygame.Surface(
+                (
+                    int(INVENTORY_SLOT_SIZE.x * self.scale),
+                    int(INVENTORY_SLOT_SIZE.y * self.scale),
+                ),
+                pygame.SRCALPHA,
+            )
+            self.hover_surface.fill((255, 255, 255, HOVER_ALPHA))
         
 
     def update(self, dt):
@@ -123,7 +189,12 @@ class InventoryState(State):
         
 
         if self.select is not None:
-            rect = pygame.Rect(0, 0, 32*self.scale, 32*self.scale)
+            rect = pygame.Rect(
+                0,
+                0,
+                int(INVENTORY_SLOT_SIZE.x * self.scale),
+                int(INVENTORY_SLOT_SIZE.y * self.scale),
+            )
             rect.center = pygame.mouse.get_pos()
             self.select.draw_inventory(screen, rect, self.scale, self.inventory.get_count(self.select))
 
@@ -140,7 +211,7 @@ class InventoryState(State):
             The first slot is 0 in the bottom left.
             First slot is the hand slot.
         """
-        new = self.cursor + 5 * move[0] + move[1]
+        new = self.cursor + self.cols * move[0] + move[1]
         if new >= 0 and new <= self.inventory.max_slot:
             self.cursor = new
 

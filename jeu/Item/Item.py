@@ -16,6 +16,14 @@ import pygame
 from WorldElement.WorldElement import WorldElement
 
 
+MIN_VALID_DURABILITY = 1
+DEFAULT_ANIMATION_TIME = 0
+QUANTITY_TEXT_THRESHOLD = 1
+QUANTITY_FONT_PATH = "Fonts/TLOZ.ttf"
+QUANTITY_FONT_SIZE = 18
+QUANTITY_TEXT_COLOR = (255, 255, 255)
+
+
 class Item(WorldElement):
     """class that implements the items that the player can drop onto the map
     
@@ -36,11 +44,11 @@ class Item(WorldElement):
         
         #Is None if the Item have infinity durability
         self.durability = durability
-        if (durability is not None and durability < 1) or be_stackable == None:
+        if (durability is not None and durability < MIN_VALID_DURABILITY) or be_stackable == None:
             self.be_stackable = False
         else:
             self.be_stackable = be_stackable
-        self.animation_time = 0
+        self.animation_time = DEFAULT_ANIMATION_TIME
 
 
     def use(self, player: Player, map: Map):
@@ -71,15 +79,16 @@ class Item(WorldElement):
         self.coordinates = None
 
     def draw_inventory(self, surface: pygame.Surface, rect: pygame.Rect, scale: int, quantity: int) -> None:
-        self.sprite[0] = pygame.transform.smoothscale(self.sprite[0], (self.sprite_size[0][0]*scale, self.sprite_size[0][1]*scale))
+        sprite_size = pygame.Vector2(self.sprite_size[0]) * scale
+        self.sprite[0] = pygame.transform.smoothscale(self.sprite[0], (int(sprite_size.x), int(sprite_size.y)))
         
         rect_img = self.sprite[0].get_rect()
         rect_img.center = rect.center
     
         surface.blit(self.sprite[0], rect_img)
 
-        if quantity > 1:
-            image = pygame.font.Font("Fonts/TLOZ.ttf", 18).render(str(quantity), True, (255, 255, 255))
+        if quantity > QUANTITY_TEXT_THRESHOLD:
+            image = pygame.font.Font(QUANTITY_FONT_PATH, QUANTITY_FONT_SIZE).render(str(quantity), True, QUANTITY_TEXT_COLOR)
             image_rect = image.get_rect()
             image_rect.bottomright = rect.bottomright
             surface.blit(image, image_rect)

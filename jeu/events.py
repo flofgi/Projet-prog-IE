@@ -1,5 +1,7 @@
 import pygame
 
+FPS = 60
+
 STATE_POP = pygame.event.custom_type()
 STATE_PUSH = pygame.event.custom_type()
 STATE_REPLACE = pygame.event.custom_type()
