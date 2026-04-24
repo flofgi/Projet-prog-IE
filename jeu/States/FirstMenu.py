@@ -1,11 +1,16 @@
 import pygame
 
 from States.State import State
-from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE
+from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE, WHITE
 from States.keys_dictionary import load_key
 
 from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.TextButton import TextButton
+
+
+TEXT_POLICE = 18
+HORIZONTAL_LINE = 4
+VERTICAL_LINE = 2
 
 class FirstMenu(State):
 
@@ -21,7 +26,7 @@ class FirstMenu(State):
         # x = center of the screen, y = write at the 3*COLUMNS of the screen, splite in 3 layers for the 3 buttons.
 
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
-        self.GAME_TITLE_POS = (self.screen_size[0] // 2, self.screen_size[1] // 4)
+        self.GAME_TITLE_POS = (self.screen_size[0] // VERTICAL_LINE, self.screen_size[1] // HORIZONTAL_LINE)
 
         load_key()
 
@@ -34,8 +39,8 @@ class FirstMenu(State):
         self.game_title_rect = self.game_title.get_rect()
         self.game_title_rect.center = self.GAME_TITLE_POS
 
-        self.button_text_font = pygame.font.Font("Fonts/TLOZ.ttf", 18)
-        self.button_text_color = (255, 255, 255)
+        self.button_text_font = pygame.font.Font("Fonts/TLOZ.ttf", TEXT_POLICE)
+        self.button_text_color = WHITE
 
         # Initialize buttons with their positions, sprites, and scale.
         
@@ -126,11 +131,15 @@ class FirstMenu(State):
 
 
     def _calculte_position(self, screen_size):
-        self.START_POS = (screen_size[0] //2, screen_size[1] * ((1/16)+(1/2)))
-        self.PARAM_POS = (screen_size[0] //2, screen_size[1] * ((1/8)+(1/2)))
-        self.LEAVE_POS = (screen_size[0] //2, screen_size[1] * ((3/16)+(1/2)))
 
-        self.GAME_TITLE_POS = (screen_size[0] // 2, screen_size[1] // 4)
+
+        HORIZONTAL_SUB_LINE = 16
+        # Numbers represent the nth collumn/row where the element is on
+        self.START_POS = (screen_size[0] //VERTICAL_LINE, screen_size[1] * ((1/HORIZONTAL_SUB_LINE)+(2/HORIZONTAL_LINE)))
+        self.PARAM_POS = (screen_size[0] //VERTICAL_LINE, screen_size[1] * ((2/HORIZONTAL_SUB_LINE)+(2/HORIZONTAL_LINE)))
+        self.LEAVE_POS = (screen_size[0] //VERTICAL_LINE, screen_size[1] * ((3/HORIZONTAL_SUB_LINE)+(2/HORIZONTAL_LINE)))
+
+        self.GAME_TITLE_POS = (screen_size[0] // VERTICAL_LINE, screen_size[1] // HORIZONTAL_LINE)
 
 
     def _update_position(self):

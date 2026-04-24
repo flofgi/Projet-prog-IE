@@ -24,7 +24,6 @@ class ClassicButtons(ABC):
 
         self.image = pygame.transform.scale(sprite, self.BASESCALE)
         self.rect = self.image.get_rect()
-        
         self.rect.center = center_pos
 
         if rect_pos:

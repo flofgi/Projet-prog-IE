@@ -46,8 +46,13 @@ class TextButton():
     
 
     def draw(self, screen):
+
+        X_INFLATE = 20
+        Y_INFLATE = 10
+        HOVERED_COLOR = (33, 33, 33)
+
         if self.button_is_hovered == True :        
-            pygame.draw.rect(screen, (33,33,33), self.text_rect.inflate(20, 10))
+            pygame.draw.rect(screen, HOVERED_COLOR, self.text_rect.inflate(X_INFLATE, Y_INFLATE))
         screen.blit(self.text_image, self.text_rect)
 
 

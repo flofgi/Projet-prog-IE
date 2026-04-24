@@ -12,6 +12,7 @@ from States.Buttons.ClickButton import ClickButton
 
 from utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN, update_json, CHANGE_FPS
 
+HOVERED_SCALE = 1.1
 
 class ParamState(State):
     def __init__(self, state_manager: StateManager):
@@ -45,7 +46,9 @@ class ParamState(State):
 
         #Text
 
-        myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
+        POLICE_SIZE1 = 18
+
+        myFont = pygame.font.Font("Fonts/TLOZ.ttf", POLICE_SIZE1)
 
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
         
@@ -93,7 +96,7 @@ class ParamState(State):
                                    STATE_REPLACE,
                                    myFont,
                                    name="button_back",
-                                   hovered_scale=1.1)
+                                   hovered_scale=HOVERED_SCALE)
         
         self.Button_key = ClassicButton1(self.Button_keys_pos,
                                   self.button_BKL_sprite,
@@ -102,7 +105,7 @@ class ParamState(State):
                                   STATE_REPLACE,
                                   myFont,
                                   name="button_key",
-                                  hovered_scale=1.1)
+                                  hovered_scale=HOVERED_SCALE)
         
         self.Button_language = ClassicButton1(self.Button_language_pos,
                                     self.button_BKL_sprite,
@@ -111,7 +114,7 @@ class ParamState(State):
                                     STATE_REPLACE,
                                     myFont,
                                     name="button_language",
-                                    hovered_scale=1.1)
+                                    hovered_scale=HOVERED_SCALE)
         
         self._update_position()
 

@@ -29,25 +29,36 @@ class ClassicButton1(ClassicButtons):
         self.state_action = state_action
         
         ZOOM_HOVERED = hovered_scale
-        
-        self.TOP_LEFT_NOT_HOVERED = (center_pos[0] - self.BASESCALE[0] // 2, center_pos[1] - self.BASESCALE[1] // 2)
-        self.TOP_LEFT_HOVERED = (self.TOP_LEFT_NOT_HOVERED[0] - (self.BASESCALE[0]*ZOOM_HOVERED - self.BASESCALE[0])//2, self.TOP_LEFT_NOT_HOVERED[1] - (self.BASESCALE[1]*ZOOM_HOVERED - self.BASESCALE[1])//2)
-        
+        self.hovered_scale = hovered_scale
+
         self.nhovered = pygame.transform.scale(sprite, self.BASESCALE)
         self.hovered = pygame.transform.scale(sprite_hovered, (int(self.BASESCALE[0]*ZOOM_HOVERED), int(self.BASESCALE[1]*ZOOM_HOVERED)))
+
+        self.center_pos = center_pos
+
+        self.nhovered_rect = self.nhovered.get_rect()
+        self.nhovered_rect.center = self.center_pos
+
+        self.hovered_rect = self.hovered.get_rect()
+        self.hovered_rect.center = self.center_pos
+
+
+
+
+
 
     def update(self, dt: float) :
         
 
         if self.button_is_hovered == True :
             self.image = self.hovered
-            self.rect = self.image.get_rect()
-            self.rect.topleft = self.TOP_LEFT_HOVERED
+            self.rect = self.hovered_rect
+            
         else :
             self.image = self.nhovered
-            self.rect = self.image.get_rect()
-            self.rect.topleft = self.TOP_LEFT_NOT_HOVERED
+            self.rect = self.nhovered_rect
             
+
         if self.button_was_clicked == True : 
 
             pygame.event.post(pygame.event.Event(self.state_action, state=self.state_name))
@@ -56,25 +67,23 @@ class ClassicButton1(ClassicButtons):
 
     def update_position(self, center_pos: tuple[int, int], new_rect_pos: tuple[int, int] = None, new_text_pos = None):
         super().update_position(center_pos, new_rect_pos)
-        
-        self.TOP_LEFT_NOT_HOVERED = (center_pos[0] - self.BASESCALE[0] // 2, center_pos[1] - self.BASESCALE[1] // 2)
-        self.TOP_LEFT_HOVERED = (self.TOP_LEFT_NOT_HOVERED[0] - (self.BASESCALE[0]*1.1 - self.BASESCALE[0])//2, self.TOP_LEFT_NOT_HOVERED[1] - (self.BASESCALE[1]*1.1 - self.BASESCALE[1])//2)
 
+        self.nhovered_rect.center = center_pos
+        self.hovered_rect.center = center_pos
+        
+        
         if self.Text is not None:
             if new_text_pos is None:
                 self.Text_rect.center = center_pos
             else:
                 self.Text_rect.center = new_text_pos
             
-
-
-
-
     def draw(self, screen):
         super().draw(screen)
         if self.Text is not None:
             screen.blit(self.Text, self.Text_rect)
-        
+
+
 
 
 

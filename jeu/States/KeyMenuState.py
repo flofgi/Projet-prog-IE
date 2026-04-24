@@ -5,7 +5,13 @@ from States.State import State
 from States.Buttons.Button1 import ClassicButton1
 from utilitary import STATE_PUSH, KEY_CHANGE, STATE_REPLACE
 
+# Constantes
 
+TEXT_POLICE = 18
+HOVERED_SCALE = 1.1
+SEPARATION = 38
+SCROLL_SPEED = 20
+KEYSTATE_OWN_SCREEN_COLOR = (20, 20, 20)
 
 class KeyState(State):
     def __init__(self, state_manager):
@@ -14,7 +20,6 @@ class KeyState(State):
         self.screen_is_resized = False
 
         self.scroll_y = 0 # > 0 => vers le haut, negatif vers le bas.
-        self.sp = 20
         self.max_scroll = None # mettre une valeur ici assez grande pour que tout le monde rentre
         self.MOUSEWHEEL_ON = False
 
@@ -37,9 +42,6 @@ class KeyState(State):
         self.button_back_sprite = pygame.image.load("Design/button_background.png").convert_alpha()
         self.button_back_sprite_hovered = pygame.image.load("Design/button_background_1.png").convert_alpha()
 
-        myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
-    
-
         self.screen_size: tuple[int, int] = pygame.display.get_surface().get_size()
 
         self._calculte_position()
@@ -50,29 +52,21 @@ class KeyState(State):
 
         self._calculte_screen_position()
 
-        myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
+        myFont = pygame.font.Font("Fonts/TLOZ.ttf", TEXT_POLICE)
 
         self.text_Z_pos =  (0,0)
         self.text_Q_pos =  (0,0)
         self.text_S_pos = (0,0) 
         self.text_D_pos = (0,0)
-
-        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Z_pos, "button_up" , rect_pos=self.rect_Z_pos, hovered_scale=1.1)
-        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Q_pos, "button_left" , rect_pos=self.rect_Q_pos, hovered_scale=1.1)
-        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_S_pos, "button_down" , rect_pos=self.rect_S_pos, hovered_scale=1.1)
-        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_D_pos, "button_right" , rect_pos=self.rect_D_pos, hovered_scale=1.1)
-
-        SEPARATION = 38
-
-
-
-        self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
-        self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
-        self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
-        self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
-        
         self.Button_back_pos = (0, 0)
 
+        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Z_pos, "button_up" , rect_pos=self.rect_Z_pos, hovered_scale=HOVERED_SCALE)
+        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Q_pos, "button_left" , rect_pos=self.rect_Q_pos, hovered_scale=HOVERED_SCALE)
+        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_S_pos, "button_down" , rect_pos=self.rect_S_pos, hovered_scale=HOVERED_SCALE)
+        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_D_pos, "button_right" , rect_pos=self.rect_D_pos, hovered_scale=HOVERED_SCALE)
+        
+        self._calculate_text_position()
+        
         self.Button_back = ClassicButton1(self.Button_back_pos,
                                    self.button_back_sprite,
                                    self.button_back_sprite_hovered,
@@ -80,16 +74,17 @@ class KeyState(State):
                                    STATE_REPLACE,
                                    myFont,
                                    name="button_back",
-                                   hovered_scale=1.1)
+                                   hovered_scale=HOVERED_SCALE)
         
         self.Button_back_pos = (self.scroll_screen_rect.bottomleft[0] + self.Button_back.rect.size[0] / 2, (self.screen_size[1] - self.scroll_screen_rect.bottomleft[1])*(3/2) + self.scroll_screen_rect.size[1] )
+
         self._update_position()
 
     def handle_event(self, event):
 
         # sert pour faire bouger l'écran en fonction de la molette
         TOP_LIMIT = 0
-        BOTTOM_LIMIT = (1010 - self.scroll_screen_rect.height + self.image.get_rect().height) / self.sp 
+        BOTTOM_LIMIT = (1010 - self.scroll_screen_rect.height + self.image.get_rect().height) / SCROLL_SPEED 
 
         if event.type == pygame.MOUSEWHEEL:
             self.MOUSEWHEEL_ON = True
@@ -126,30 +121,21 @@ class KeyState(State):
 
     def update(self, dt: float):
         """Handle the transition to the Menu state."""
-
-        SEPARATION = 38
-
         # sert pour faire bouger l'écran en fonction de la molette
         if self.MOUSEWHEEL_ON == True:
             self._calculte_position()
             self._calculte_screen_position()
-
-            self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
-            self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
-            self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
-            self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
-
+            self._calculte_text_position()
             self._update_position()
             self.MOUSEWHEEL_ON = False
 
         # Gérer le redimensionnement de l'écran
         if self.screen_is_resized == True:
             self._calculte_position()
+
             self.Button_back_pos = (self.scroll_screen_rect.bottomleft[0] + self.Button_back.rect.size[0] / 2, (self.screen_size[1] - self.scroll_screen_rect.bottomleft[1])*(3/2) + self.scroll_screen_rect.size[1] )
-            self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
-            self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
-            self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
-            self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
+            
+            self._calculate_text_position()
             self._calculte_screen_position()
             self._update_position()
             self.screen_is_resized == False
@@ -180,7 +166,7 @@ class KeyState(State):
     
 
     def render(self, screen: pygame.Surface):
-        self.scroll_screen.fill((20, 20, 20))
+        self.scroll_screen.fill(KEYSTATE_OWN_SCREEN_COLOR)
         self.button_z.draw(self.scroll_screen)
         self.button_q.draw(self.scroll_screen)
         self.button_s.draw(self.scroll_screen)
@@ -194,13 +180,15 @@ class KeyState(State):
         self.button_z = None
 
     def _calculte_position(self):
+        
+        SMALL_SCREEN_RATIO = 2/3
 
-        self.scroll_size = (self.screen_size[0] * (2/3), self.screen_size[1] * (2/3))
+        self.scroll_size = (self.screen_size[0] * SMALL_SCREEN_RATIO, self.screen_size[1] * SMALL_SCREEN_RATIO)
 
-        self.Z_pos = self.init_Z_pos[0], self.init_Z_pos[1] - self.scroll_y * self.sp
-        self.Q_pos = self.init_Q_pos[0], self.init_Q_pos[1] - self.scroll_y * self.sp
-        self.S_pos = self.init_S_pos[0], self.init_S_pos[1] - self.scroll_y * self.sp
-        self.D_pos = self.init_D_pos[0], self.init_D_pos[1] - self.scroll_y * self.sp
+        self.Z_pos = self.init_Z_pos[0], self.init_Z_pos[1] - self.scroll_y * SCROLL_SPEED
+        self.Q_pos = self.init_Q_pos[0], self.init_Q_pos[1] - self.scroll_y * SCROLL_SPEED
+        self.S_pos = self.init_S_pos[0], self.init_S_pos[1] - self.scroll_y * SCROLL_SPEED
+        self.D_pos = self.init_D_pos[0], self.init_D_pos[1] - self.scroll_y * SCROLL_SPEED
 
     def _update_position(self):
         self.button_z.update_position(self.Z_pos, self.rect_Z_pos, self.text_Z_pos)
@@ -213,7 +201,14 @@ class KeyState(State):
         self.scroll_screen_rect.center = pygame.display.get_surface().get_rect().center
 
         self.Button_back.update_position(self.Button_back_pos)
-        
+    
+    def _calculate_text_position(self):
+
+        # Text size is divided by half to be centered correctly (we are moving compared to the center of the text
+        self.text_Z_pos = self.Z_pos[0] + SEPARATION + self.button_z.Text.get_size()[0]//2, self.Z_pos[1]
+        self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
+        self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
+        self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
         
     def _calculte_screen_position(self):
         ORIGIN = self.scroll_screen_rect.topleft

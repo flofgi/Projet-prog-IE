@@ -1,18 +1,18 @@
 {
     "Options": {
         "button_sound": {
-            "Percentage": 0.5125
+            "Percentage": 0.2125
         },
         "button_fps": {
-            "Percentage": 0.2375
+            "Percentage": 0.175
         },
         "button_gamma": {
-            "Percentage": 0.0
+            "Percentage": 0.725
         }
     },
     "Saved_keys": {
-        "UP": 107,
-        "DOWN": 100,
+        "UP": 122,
+        "DOWN": 115,
         "LEFT": 113,
         "RIGHT": 100,
         "INVENTORY": 101

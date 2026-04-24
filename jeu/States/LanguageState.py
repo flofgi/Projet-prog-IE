@@ -6,8 +6,12 @@ from States.StateManager import StateManager
 from States.Buttons.TextButton import TextButton
 from States.Buttons.Button1 import ClassicButton1
 
-from utilitary import STATE_REPLACE, update_json
+from utilitary import STATE_REPLACE, update_json, WHITE
 
+HORIZONTAL_LINE = 8
+VERTICAL_LINE = 6
+HOVERED_SCALE = 1.1
+TEXT_POLICE = 18
 
 class LanguageState(State):
     def __init__(self, state_manager):
@@ -26,7 +30,7 @@ class LanguageState(State):
 
         self.screen_size = pygame.display.get_surface().get_size()
         
-        myFont = pygame.font.Font("Fonts/TLOZ.ttf", 18)
+        myFont = pygame.font.Font("Fonts/TLOZ.ttf", TEXT_POLICE)
 
         self._calculte_position(self.screen_size)
 
@@ -34,7 +38,7 @@ class LanguageState(State):
                                     None,
                                     None,
                                     myFont,
-                                    (255,255,255),
+                                    WHITE,
                                     "button_fr"
                                     )
 
@@ -42,7 +46,7 @@ class LanguageState(State):
                                     None,
                                     None,
                                     myFont,
-                                    (255,255,255),
+                                    WHITE,
                                     "button_en"
                                     )
         
@@ -53,18 +57,17 @@ class LanguageState(State):
                                    STATE_REPLACE,
                                    myFont,
                                    name="button_back",
-                                   hovered_scale=1.1)
+                                   hovered_scale=HOVERED_SCALE)
 
 
         self._update_position()
 
-    def update(self, dt: float): 
+    def update(self, dt: float):
 
         if self.screen_is_resized == True:
             self._calculte_position(self.screen_size)
             self._update_position()
             self.screen_is_resized == False
-        
         
         self.Button_en.update(dt)
         self.Button_fr.update(dt)
@@ -83,12 +86,7 @@ class LanguageState(State):
                 "Name":"en"
             }
             update_json("Language", data)
-            
-
-
-
-
-
+        
     def handle_event(self, event: pygame.event.Event):
 
         if event.type == pygame.VIDEORESIZE:
@@ -110,9 +108,11 @@ class LanguageState(State):
 
     
     def _calculte_position(self, screen_size):
-        self.Button_fr_pos = self.screen_size[0]*(1/3), self.screen_size[1]//2
-        self.Button_en_pos = self.screen_size[0]*(2/3), self.screen_size[1]//2 
-        self.Button_back_pos = self.screen_size[0]//2, self.screen_size[1]*(7/8)
+
+        # Numbers = the nth rows/collumns
+        self.Button_fr_pos = self.screen_size[0]*(2/VERTICAL_LINE), self.screen_size[1]*(4/HORIZONTAL_LINE)
+        self.Button_en_pos = self.screen_size[0]*(4/VERTICAL_LINE), self.screen_size[1]*(4/HORIZONTAL_LINE)
+        self.Button_back_pos = self.screen_size[0]*(3/VERTICAL_LINE), self.screen_size[1]*(7/HORIZONTAL_LINE)
         
     def _update_position(self):
 

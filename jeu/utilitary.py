@@ -9,7 +9,13 @@ STATE_PUSH = pygame.event.custom_type()
 FULLSCREEN = pygame.event.custom_type()
 KEY_CHANGE = pygame.event.custom_type()
 CHANGE_FPS = pygame.event.custom_type()
-    
+
+# BASIC COLOR
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+DARKEN_COLOR = (0, 0, 0, 127)
+
 
 def update_json(section, new_data, file_path: str = None):
     if file_path:

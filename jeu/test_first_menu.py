@@ -8,10 +8,12 @@ from States.ParamState import ParamState
 from States.KeyMenuState import KeyState 
 from States.SwitchKeyState import SwitchKeyState
 from States.LanguageState import LanguageState
+from utilitary import CHANGE_FPS, read_json
+
 
 pygame.font.init()
 
-from utilitary import CHANGE_FPS, read_json
+
 
 data = read_json("assets/options.json")
 
@@ -19,6 +21,8 @@ FPS = data.get("Options", {}).get("fps", {}).get("Percentage", 1)*240
 
 SCREEN_WIDTH = 1280 # de même
 SCREEN_HEIGHT = 720 # de même
+
+STATE_BACK_COLOR = (5, 5, 10)
 
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE| pygame.DOUBLEBUF)
@@ -61,7 +65,7 @@ while run:
 
     dt = clock.tick(FPS) / 1000
 
-    screen.fill((6, 6, 7))
+    screen.fill((STATE_BACK_COLOR))
 
     state_manager.update(dt)
     state_manager.render(screen)
