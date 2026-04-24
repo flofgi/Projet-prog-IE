@@ -29,7 +29,7 @@ SWORD_ANGLE = 90
 SWORD_RANGE = 50
 BACKGROUND_COLOR = (25, 30, 40)
 
-TILESIZE = pygame.Vector2(32, 32)
+TILESIZE =  (32, 32)
 MAPSIZE = pygame.Vector2(30, 40)
 WINDOWSIZE = pygame.Vector2(800, 800)
 SPEED = 3
