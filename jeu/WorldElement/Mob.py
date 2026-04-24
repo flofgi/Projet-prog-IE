@@ -9,7 +9,7 @@ from WorldElement.Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
-from utilitary import BOSSFIGHT, DEAD
+from utilitary import BOSSFIGHT, DEAD, vec_to_list, list_to_vec
 
 
 DEFAULT_NAME = " "
@@ -171,3 +171,57 @@ class Mob(Entity):
         elif self.is_boss:
             pygame.event.post(pygame.event.Event(BOSSFIGHT, target = self))
 
+    def save(self) -> dict:
+        data = super().save()
+        wandering_point = [self.wandering_point.x, self.wandering_point.y] if self.wandering_point is not None else None
+        target_coordinates = [self.target_coordinates.x, self.target_coordinates.y] if self.target_coordinates is not None else None
+        data.update(
+            {
+                "wandering_point": wandering_point,
+                "target_coordinates": target_coordinates,
+                "ALERT_ZONE": self.ALERT_ZONE,
+                "CONFORT_ZONE": self.CONFORT_ZONE,
+                "WANDERING_ZONE": self.WANDERING_ZONE,
+                "is_paused": self.is_paused,
+                "timer": self.timer,
+                "is_boss": self.is_boss,
+            }
+        )
+        return data
+
+
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> Mob:
+        """Create a Mob instance from saved data.
+
+        Args:
+            data (dict): A dictionary containing the ally's saved state, including wandering point, target coordinates, and zone thresholds.
+        """
+        hp = data.get("hp", 100)
+        sprites = data.get("sprites", [])
+
+
+
+        coordinates = list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0]))
+
+        mob = Mob(hp, sprites, coordinates)
+        
+        
+        mob.name = data.get("name", DEFAULT_NAME)
+        mob.scale = data.get("scale", 1.0)
+        
+        mob.velocity = pygame.Vector2(0, 0)
+        mob.current_frame = data.get("current_frame", 0)
+        mob.animation_timer = data.get("animation_timer", 0)
+        mob.max_speed = data.get("max_speed", 0)
+
+        mob.wandering_point = list_to_vec(data.get(map_name, {}).get("wandering_point", [0, 0]))
+        mob.target_coordinates = list_to_vec(data.get(map_name, {}).get("target_coordinates", [0, 0]))
+        mob.ALERT_ZONE = data.get(map_name, {}).get("ALERT_ZONE", DEFAULT_ALERT_ZONE)
+        mob.CONFORT_ZONE = data.get(map_name, {}).get("CONFORT_ZONE", DEFAULT_CONFORT_ZONE)
+        mob.WANDERING_ZONE = data.get(map_name, {}).get("WANDERING_ZONE", DEFAULT_WANDERING_ZONE)
+        mob.is_paused = data.get(map_name, {}).get("is_paused", False)
+        mob.timer = data.get(map_name, {}).get("timer", 0)
+        mob.is_boss = data.get(map_name, {}).get("is_boss", False)
+
+        return mob

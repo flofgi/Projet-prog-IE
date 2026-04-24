@@ -1,0 +1,1478 @@
+{
+    "map_name": "map1",
+    "spawn_point": [
+        250.0,
+        250.0
+    ],
+    "Tileset": {
+        "file": "Design/Tileset/MAP1_tileset.png",
+        "tilesize": [
+            32,
+            32
+        ],
+        "margin": 1,
+        "spacing": 1
+    },
+    "worldelements": {
+        "ally": [
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        103.0,
+                        118.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    102.67119993129073,
+                    117.62331642613889
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.3288000687092729,
+                    -0.3766835738611088
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        127.0,
+                        108.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    126.61910435111365,
+                    107.67608873952972
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.38089564888634964,
+                    -0.3239112604702816
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        145.0,
+                        141.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    144.64153686426056,
+                    140.65142550248785
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.35846313573944244,
+                    -0.3485744975121475
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        111.0,
+                        105.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    110.63676579152265,
+                    104.65640007306196
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.36323420847735793,
+                    -0.34359992693804126
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        149.0,
+                        119.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    148.60930991343076,
+                    118.68797234696821
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.3906900865692249,
+                    -0.3120276530317971
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        123.0,
+                        111.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    122.62880344122567,
+                    110.66501773964268
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.371196558774326,
+                    -0.3349822603573186
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        135.0,
+                        104.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    134.60390625023877,
+                    103.69486111129505
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.3960937497612282,
+                    -0.30513888870494615
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        127.0,
+                        148.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    126.67439322442092,
+                    147.62055273397084
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.3256067755790718,
+                    -0.3794472660291545
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        144.0,
+                        124.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    143.6211155988233,
+                    123.67373843232006
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.37888440117670297,
+                    -0.32626156767993864
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            },
+            {
+                "map1": {
+                    "wandering_point": [
+                        0.0,
+                        0.0
+                    ],
+                    "target_coordinates": [
+                        102.0,
+                        146.0
+                    ],
+                    "ALERT_ZONE": 400,
+                    "CONFORT_ZONE": 20,
+                    "WANDERING_ZONE": 200
+                },
+                "type": "Ally",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_D_3.png"
+                ],
+                "coordinates": [
+                    101.7136457806039,
+                    145.59012043106048
+                ],
+                "scale": 1,
+                "hp": 10,
+                "velocity": [
+                    -0.28635421939610406,
+                    -0.4098795689395215
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 1
+            }
+        ],
+        "item": [
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    146.0,
+                    139.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    139.0,
+                    100.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    139.0,
+                    128.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    109.0,
+                    146.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    105.0,
+                    123.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    150.0,
+                    122.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    113.0,
+                    127.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    105.0,
+                    111.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    111.0,
+                    138.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    133.0,
+                    136.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    136.0,
+                    118.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    137.0,
+                    141.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    109.0,
+                    129.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    128.0,
+                    150.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    114.0,
+                    145.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    108.0,
+                    104.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    134.0,
+                    116.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    147.0,
+                    144.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    101.0,
+                    107.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "sword",
+                "name": " ",
+                "sprites": [
+                    "Design\\sword.png"
+                ],
+                "coordinates": [
+                    144.0,
+                    110.0
+                ],
+                "scale": 1,
+                "durability": 50,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_angle": 90,
+                "shot_distance": 50,
+                "damage": 3,
+                "is_used": false,
+                "animation": 0.4
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    148.0,
+                    149.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    132.0,
+                    107.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    127.0,
+                    132.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    143.0,
+                    133.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    133.0,
+                    108.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    138.0,
+                    119.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    140.0,
+                    142.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    136.0,
+                    124.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    134.0,
+                    115.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    148.0,
+                    148.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    117.0,
+                    133.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    130.0,
+                    124.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    136.0,
+                    124.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    103.0,
+                    107.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    130.0,
+                    100.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    135.0,
+                    115.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    141.0,
+                    122.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    100.0,
+                    125.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    110.0,
+                    137.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            },
+            {
+                "type": "gun",
+                "name": " ",
+                "sprites": [
+                    "Design\\gun.png"
+                ],
+                "coordinates": [
+                    128.0,
+                    143.0
+                ],
+                "scale": 1,
+                "durability": null,
+                "be_stackable": false,
+                "animation_time": 0.016666666666666666,
+                "shot_distance": 50,
+                "tolerance": 5,
+                "damage": 5,
+                "list_shots": []
+            }
+        ],
+        "mob": [
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            },
+            {
+                "hp": 10,
+                "velocity": [
+                    0.0,
+                    0.0
+                ],
+                "current_frame": 0,
+                "animation_timer": 0.016666666666666666,
+                "max_speed": 0.7,
+                "wandering_point": [
+                    149.0,
+                    125.0
+                ],
+                "target_coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "ALERT_ZONE": 200,
+                "CONFORT_ZONE": 20,
+                "WANDERING_ZONE": 200,
+                "is_paused": false,
+                "timer": 1,
+                "is_boss": false,
+                "type": "Mob",
+                "name": " ",
+                "sprites": [
+                    "Design\\Hunter_Walk_GB_3.png"
+                ],
+                "coordinates": [
+                    149.0,
+                    125.0
+                ],
+                "scale": 1
+            }
+        ]
+    },
+    "camera": {
+        "x": 0,
+        "y": 0
+    }
+}

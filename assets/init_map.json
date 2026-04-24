@@ -1,28 +1,84 @@
 {
- "Map_test": {
-        "map_path": "Design/Map1.png",
-        "spawn_points": [100, 100],
-        "Tileset": {
-            "tileset_path": "Design/Tileset.png",
-            "tile_size": 32,
-            "mapset": "assets/mapset_test.txt"},
-        "worldelement": {
-            "ally": {
-                "ally1": {
-                    "hp": 50,
-                    "sprites": ["Design/Hunter_Stand_DB_1.png"],
-                    "spawn": [150, 150]
-                }
-            },
-            "mob": {
-            },
-            "item": {
-            }
-            
-    }
- }
-
-
-
-
+    "map_name": "map1",
+    "map_path": "Design/Tileset/MAP1_tileset.png",
+    "spawn_point": [
+        250.0,
+        250.0
+    ],
+    "Tileset": {
+        "tileset_path": "Design/Tileset/MAP1_tileset.png",
+        "tilesize": [
+            32,
+            32
+        ],
+        "mapset_path": "assets/tilesets/map1_mapset.txt"
+    },
+    "worldelements": [
+        {
+            "type": "Ally",
+            "name": " ",
+            "sprites": [
+                "Design/Hunter_Stand_DB_2.png"
+            ],
+            "coordinates": [
+                310.0,
+                420.0
+            ],
+            "scale": 1,
+            "hp": 10,
+            "velocity": [
+                0.0,
+                0.0
+            ],
+            "current_frame": 0,
+            "animation_timer": 0.0,
+            "max_speed": 1,
+            "wandering_point": [
+                300.0,
+                430.0
+            ],
+            "target_coordinates": [
+                250.0,
+                250.0
+            ],
+            "ALERT_ZONE": 400,
+            "CONFORT_ZONE": 20,
+            "WANDERING_ZONE": 200
+        },
+        {
+            "type": "Mob",
+            "name": " ",
+            "sprites": [
+                "Design/Hunter_Walk_GB_3.png"
+            ],
+            "coordinates": [
+                500.0,
+                300.0
+            ],
+            "scale": 1,
+            "hp": 10,
+            "velocity": [
+                0.0,
+                0.0
+            ],
+            "current_frame": 0,
+            "animation_timer": 0.0,
+            "max_speed": 0.7
+        },
+        {
+            "type": "sword",
+            "name": " ",
+            "sprites": [
+                "Design/sword.png"
+            ],
+            "coordinates": [
+                270.0,
+                260.0
+            ],
+            "scale": 1,
+            "durability": 50,
+            "be_stackable": false,
+            "animation_time": 0
+        }
+    ]
 }

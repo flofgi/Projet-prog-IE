@@ -63,3 +63,9 @@ class Camera :
   @property
   def rect(self):
     return pygame.Rect(self.x, self.y, self.zoomsize[0], self.zoomsize[1])
+  def save(self) -> dict:
+    """save the camera's position and relevant attributes for serialization."""
+    return {
+        "x": self.x,
+        "y": self.y,
+    }

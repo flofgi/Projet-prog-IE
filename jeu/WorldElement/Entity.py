@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 import pygame
 
 from WorldElement.WorldElement import WorldElement
-from utilitary import DEAD, FPS
+from utilitary import DEAD, FPS, vec_to_list, list_to_vec
 
 
 DEFAULT_VELOCITY = pygame.Vector2(0, 0)
@@ -17,6 +17,7 @@ DEFAULT_FRAME = 0
 DEFAULT_ANIMATION_TIMER = 0
 DEFAULT_MAX_SPEED = 1
 MIN_HP = 0
+DEFAULT_NAME = " "
 
 
 class Entity(WorldElement):
@@ -65,7 +66,7 @@ class Entity(WorldElement):
         """
         if mouvement is not None:
             self.velocity = mouvement
-        self.coordinates += mouvement * dt * self.BASE_FPS
+        self.coordinates += self.velocity * dt * self.BASE_FPS
         self.rect.topleft = (
             int(self.coordinates.x + self.hitbox_offset.x),
             int(self.coordinates.y + self.hitbox_offset.y),
@@ -82,6 +83,46 @@ class Entity(WorldElement):
         self.hp -= dommage
         if self.hp <= MIN_HP:
             pygame.event.post(pygame.event.Event(DEAD, target = self))
+
+    def save(self, data: dict = {}) -> dict[str, dict]:
+        super().save(data)
+        data.update(
+            {
+                "hp": self.hp,
+                "velocity": [self.velocity.x, self.velocity.y],
+                "current_frame": self.current_frame,
+                "animation_timer": self.animation_timer,
+                "max_speed": self.max_speed,
+            }
+        )
+        return data
+    
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> Entity:
+        """Create an Entity instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the entity's saved state, including health points, velocity, animation state, and position.
+            """
+        
+        entity = self(
+            hp=data.get("hp", 100),
+            sprites=data.get("sprites", []),
+            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0])),
+            name=data.get("name", DEFAULT_NAME)
+        )
+        entity.scale = data.get("scale", 1.0)
+
+        
+        entity.velocity = pygame.Vector2(data.get("velocity", [0, 0]))
+        entity.current_frame = data.get("current_frame", 0)
+        entity.animation_timer = data.get("animation_timer", 0)
+        entity.max_speed = data.get("max_speed", 0)
+
+        return entity
+
+
+
 
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from Camera import Camera
 
 
-from utilitary import RECUP_EVENT
+from utilitary import RECUP_EVENT, vec_to_list, list_to_vec
 
 
 
@@ -99,6 +99,39 @@ class Item(WorldElement):
 
     def update(self, dt: float, map: Map, target: Player = None):
         self.animation_time += dt
+
+    def save(self) -> dict:
+        data = super().save()
+        data.update(
+            {
+                "type": self.__class__.__name__,
+                "durability": self.durability,
+                "be_stackable": self.be_stackable,
+                "animation_time": self.animation_time,
+            }
+        )
+        return data
+    
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> Item:
+        """Create an Item instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the item's saved state, including durability and stackability.
+            map_name (str, optional): The name of the map to load coordinates from. Defaults to None.
+        """
+        item = self(
+            sprites=data.get("sprites", []),
+            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0])),
+            durability=data.get("durability", None),
+            be_stackable=data.get("be_stackable", False)
+        )
+        item.animation_time = data.get("animation_time", DEFAULT_ANIMATION_TIME)
+
+        return item
+
+
+
 
     def __eq__(self, value: Item):
         if not isinstance(value, Item):

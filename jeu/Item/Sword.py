@@ -3,15 +3,14 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Map import Map
-    from WorldElement.Player import Player
+    from WorldElement.Player import Player, WorldElement, Mob
 
-from WorldElement.WorldElement import WorldElement
-from WorldElement.Mob import Mob
 
-from Item.Item import Item
+from .base_Item import Item
+from .utilitary import register_item
 import pygame
 from Camera import Camera
-import math
+from events import vec_to_list, list_to_vec
 
 
 DEFAULT_SWORD_DAMAGE = 3
@@ -25,6 +24,7 @@ SWING_COLOR = (200, 200, 200)
 SWING_LINE_WIDTH = 2
 
 
+@register_item("sword")
 class sword(Item):
 
     def __init__(self, sprites, coordinates, shot_angle: float, shot_distance: float, damage: float = DEFAULT_SWORD_DAMAGE, durability = DEFAULT_SWORD_DURABILITY, be_stackable = False):
@@ -54,7 +54,7 @@ class sword(Item):
             if self.durability <= 0:
                 player.inventory.remove_item(self)
 
-        mobs: list[Mob] = map.get_worldelements(player, self.shot_distance, Mob)
+        mobs: list[Mob] = map.mobs
         for mob in mobs:
             if self.in_cone(player, mob):
                 mob.is_attack(self.damage)
@@ -62,7 +62,7 @@ class sword(Item):
     def in_cone(self, player: Player, target: pygame.Vector2 | WorldElement):
         """Check if a target is within the sword's attack cone."""
         self.mouse_position = pygame.Vector2(pygame.mouse.get_pos()) + player.camera.get_coordinates
-        if isinstance(target, WorldElement):
+        if not(isinstance(target, pygame.Vector2)):
             target = target.get_coordinates
         position = player.get_coordinates
 
@@ -92,3 +92,38 @@ class sword(Item):
         self.animation_time += dt
         if self.animation_time > self.animation:
             self.is_used = False
+
+    def save(self) -> dict:
+        data = super().save()
+        data.update(
+            {
+                "shot_angle": self.shot_angle,
+                "shot_distance": self.shot_distance,
+                "damage": self.damage,
+                "is_used": self.is_used,
+                "animation": self.animation,
+            }
+        )
+        return data
+    
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> sword:
+        """Create a sword instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the sword's saved state, including shot angle, shot distance, damage, usage state, and animation duration.
+            map_name (str, optional): The name of the map to load coordinates from. Defaults to None.
+        """
+        sword_instance = self(
+            sprites=data.get("sprites", []),
+            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", None)),
+            shot_angle=data.get("shot_angle", HAND_SWORD_ANGLE),
+            shot_distance=data.get("shot_distance", HAND_SWORD_DISTANCE),
+            damage=data.get("damage", DEFAULT_SWORD_DAMAGE),
+            durability=data.get("durability", DEFAULT_SWORD_DURABILITY),
+            be_stackable=data.get("be_stackable", False)
+        )
+        sword_instance.is_used = data.get("is_used", False)
+        sword_instance.animation = data.get("animation", DEFAULT_SWING_DURATION)
+
+        return sword_instance

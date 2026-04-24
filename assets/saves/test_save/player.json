@@ -1,0 +1,23 @@
+{
+    "hp": 100,
+    "velocity": [
+        0.0,
+        0.0
+    ],
+    "current_frame": 0,
+    "animation_timer": 0.016666666666666666,
+    "max_speed": 1,
+    "shot_distance": 20,
+    "shot_angle": 100,
+    "damage": 1,
+    "allies": [],
+    "inventory": {
+        "items": []
+    },
+    "map1": {
+        "coordinates": [
+            250.0,
+            250.0
+        ]
+    }
+}

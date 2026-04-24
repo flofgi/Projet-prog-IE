@@ -1,14 +1,17 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from WorldElement.Player import Player
     from Map import Map
     from Camera import Camera
 
-from Item.Item import Item
+from Item.utilitary import register_item
+from Item.base_Item import Item
 from WorldElement.Mob import Mob
 import pygame
+from events import vec_to_list, list_to_vec
 
 
 DEFAULT_SHOT_DISTANCE = 50
@@ -20,6 +23,8 @@ SHOT_TRACE_DURATION = 0.5
 SHOT_COLOR = (255, 0, 0)
 SHOT_LINE_WIDTH = 2
 
+
+@register_item("gun")
 class gun(Item):
 
     def __init__(self, sprites, coordinates, durability = None, be_stackable = False, shot_distance: int = DEFAULT_SHOT_DISTANCE, tolerance: int = DEFAULT_TOLERANCE, damage: float = DEFAULT_DAMAGE):
@@ -70,3 +75,50 @@ class gun(Item):
 
     def update(self, dt, map, target = None):
         self.animation_time += dt
+
+    def save(self) -> dict:
+        data = super().save()
+        data.update(
+            {
+                "shot_distance": self.shot_distance,
+                "tolerance": self.tolerance,
+                "damage": self.damage,
+                "list_shots": [
+                    {
+                        "time": shot[0],
+                        "player_position": [shot[1].x, shot[1].y],
+                        "shot": [shot[2].x, shot[2].y],
+                    }
+                    for shot in self.list_shots
+                ],
+            }
+        )
+        return data
+    
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> gun:
+        """Create a gun instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the gun's saved state, including shot distance, tolerance, damage, and list of shots.
+            map_name (str, optional): The name of the map to load coordinates from. Defaults to None.
+        """
+        gun_instance = self(
+            sprites=data.get("sprites", []),
+            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", None)),
+            durability=data.get("durability", None),
+            be_stackable=data.get("be_stackable", False),
+            shot_distance=data.get("shot_distance", DEFAULT_SHOT_DISTANCE),
+            tolerance=data.get("tolerance", DEFAULT_TOLERANCE),
+            damage=data.get("damage", DEFAULT_DAMAGE)
+        )
+        gun_instance.animation_time = data.get("animation_time", 0)
+        gun_instance.list_shots = [
+            (
+                shot_data["time"],
+                list_to_vec(shot_data["player_position"]),
+                list_to_vec(shot_data["shot"])
+            )
+            for shot_data in data.get("list_shots", [])
+        ]
+        return gun_instance

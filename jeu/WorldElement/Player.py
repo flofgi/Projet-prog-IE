@@ -1,22 +1,22 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from Item.Sword import sword
+from Item import Item
+
 
 if TYPE_CHECKING:
     from WorldElement.Ally import Ally
     from Map import Map
-    from Item.Item import Item
     from Camera import Camera
-    from WorldElement.Mob import Mob
     
     from WorldElement.WorldElement import WorldElement
 
 
 from WorldElement.Entity import Entity
 from Inventory import Inventory
-from Item.Item import Item
-from utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE
+from Item.Sword import sword
+from utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE, vec_to_list
+
 
 import pygame
 
@@ -197,10 +197,50 @@ class Player(Entity):
             self.inventory.held_item.load()
 
     
-    def load_new_map(self, new_map: Map, new_camera: Camera):
+    def load_new_map(self, new_map: Map, new_camera: Camera, coordinates: pygame.Vector2):
         """Update the player's map reference when transitioning to a new map."""
         self.map = new_map
         self.camera = new_camera
+        self.coordinates = coordinates
+
+    def save(self, map_name: str, data: dict | None = None) -> dict:
+        super().save(data)
+        data.update(
+            {
+                "shot_distance": self.shot_distance,
+                "shot_angle": self.shot_angle,
+                "damage": self.damage,
+                "allies": [ally.save(map_name) for ally in self.allies],
+                "inventory": self.inventory.save(),
+                f"{map_name}": {
+                    "coordinates": vec_to_list(self.coordinates)
+                }
+            }
+        )
+        return data
+
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> "Player":
+        """Create a Player instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the player's saved state, including allies and inventory.
+            map_name (str, optional): The name of the map to load coordinates for. Defaults to None.
+        """
+        player: Player = super().load_from_data(data, map_name)
+
+        player.shot_distance = data.get("shot_distance", DEFAULT_SHOT_DISTANCE)
+        player.shot_angle = data.get("shot_angle", DEFAULT_SHOT_ANGLE)
+        player.damage = data.get("damage", DEFAULT_DAMAGE)
+
+        allies_data = data.get("allies", [])
+        player.allies = [Ally.load_from_data(ally_data, map_name) for ally_data in allies_data]
+
+        inventory_data = data.get("inventory", {})
+        player.inventory = Inventory.load_from_data(inventory_data)
+
+        return player
+
 
 
 

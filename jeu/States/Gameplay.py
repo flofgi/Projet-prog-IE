@@ -1,26 +1,26 @@
 from __future__ import annotations
 
+import json
+import os
+from random import randint
+
 import numpy as np
 import pygame
 
 from Camera import Camera
+from Item.base_Item import Item
+from Item.Gun import gun
+from Item.Sword import sword
 from Map import Map, Tileset
 from States.State import State
 from States.StateManager import StateManager
-from WorldElement.Player import Player
-from Item.Gun import gun
-from Item.Sword import sword
-from utilitary import KEYS, STATE_PUSH, STATE_POP, STATE_REPLACE
-from WorldElement.Ally import Ally
-from WorldElement.Mob import Mob
-from Item import Item
-from random import randint
+from WorldElement import Ally, Entity, Mob, Player
+from utilitary import KEYS, read_json, vec_to_list, list_to_vec
 
 
 INTERACT_RANGE = 50
 PLAYER_HP = 100
 PLAYER_SPAWN = pygame.Vector2(250, 250)
-PLAYER_SPRITES_PATH = ["Design/Hunter_Stand_DB_1.png", "Design/Hunter_Stand_DB_2.png", "Design/Hunter_Stand_DB_3.png"]
 ALLY_COUNT = 10
 MOB_COUNT = 10
 ITEM_SPAWN_COUNT = 20
@@ -32,9 +32,9 @@ BACKGROUND_COLOR = (0, 0, 50)
 
 TILESIZE =  (32, 32)
 MAPSIZE = pygame.Vector2(30, 40)
-WINDOWSIZE = pygame.Vector2(800, 800)
-SPEED = 3
 TILESET = "Design/Tileset/MAP1_tileset.png"
+DEFAULT_MAPSET_PATH = "assets/mapset_test.txt"
+DEFAULT_PLAYER_SPRITE = "Design/Hunter_Stand_DB_1.png"
 
 
 def random_spawn_position() -> pygame.Vector2:
@@ -45,27 +45,30 @@ def random_spawn_position() -> pygame.Vector2:
 
 
 class Gameplay(State):
-    """Playable state with two simple test maps."""
+    """Playable state with save/load support."""
 
-    def __init__(self, state_manager: StateManager, first_map_name):
+    def __init__(self, state_manager: StateManager, game_name: str, first_map_name: str):
         super().__init__(state_manager)
+        self.game_name = game_name
         self.first_map = first_map_name
+        try:
+            self.maps: list[str] = [os.path.splitext(f)[0] for f in os.listdir(f"assets/maps") if f.endswith(".json")]
+        except FileNotFoundError:
+            self.maps = []
 
     def handle_events(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == KEYS["inventory"]:
                 self.player.open_inventory()
-            
             elif event.key == KEYS["escape"]:
-                pygame.event.post(pygame.event.Event(pygame.QUIT, state = "quit"))
-            
+                self.save()
+                pygame.event.post(pygame.event.Event(pygame.QUIT, state="quit"))
             elif event.key == KEYS["interact"]:
-                for element in self.current_map.get_worldelements(self.player, INTERACT_RANGE):
+                for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
 
-
-        self.current_map.handle_events(event)
+        self.map.handle_events(event)
         self.player.handle_events(event)
 
     def load(self):
@@ -86,6 +89,9 @@ class Gameplay(State):
             gun(["Design\\gun.png"], random_spawn_position())
             for _ in range(ITEM_SPAWN_COUNT)
         ]
+        tileset = Tileset(TILESET, TILESIZE)
+        mapset = np.array(read_json("Design/Maps/map1.json"))
+
 
         self.maps: dict[str, Map] = {
             "map1": Map(
@@ -97,71 +103,82 @@ class Gameplay(State):
         }
 
 
-        self.current_camera = Camera((int(MAPSIZE.x), int(MAPSIZE.y)), screen_size, TILESIZE)
+        self.camera = Camera((int(MAPSIZE.x), int(MAPSIZE.y)), screen_size, TILESIZE)
 
-
-
-        
-        
-        
-        self.current_map.load()
-        self.player.load(self.map)
+        self.map.load()
+        self.player.load(self.map, self.camera)
 
     def update(self, dt: float):
         self.player.update(dt, self.map)
-        self.current_map.update(dt, self.player)
-        self.current_camera.update(self.player)
+        self.map.update(dt, self.player)
+        self.camera.update(self.player)
 
     def render(self, screen: pygame.Surface):
         screen.fill(BACKGROUND_COLOR)
 
-        self.current_map.draw()
+        self.map.draw()
         screen.blit(
-            self.current_map.image,
-            self.current_map.rect,
+            self.map.image,
+            self.map.rect,
             (
-                self.current_camera.x,
-                self.current_camera.y,
+                self.camera.x,
+                self.camera.y,
                 screen.get_width(),
                 screen.get_height(),
             ),
         )
 
-        render_list = self.current_map.get_worldelement + [self.player] + self.player.get_allies
+        render_list = self.map.get_worldelement + [self.player] + self.player.get_allies
         render_list.sort(key=lambda e: e.get_rect.bottom)
 
         for element in render_list:
             if not element.sprite:
                 continue
-            element.draw(screen, self.current_camera, self.player)
+            element.draw(screen, self.camera, self.player)
 
     def handle_collision(self):
         """Placeholder collision-handling hook."""
-        self.current_map.handle_collisions(self.player)
-
-
-
-
-
-
-
-
-
-
+        self.map.handle_collisions(self.player)
 
 
     def load_new_map(self, map_name: str):
-        """Load a new map and update player/camera links."""
         if map_name not in self.maps:
             return
+        if self.map.name == map_name:
+            return
+        if self.map:
+            self.map.save(self.camera, self.game_name)
 
-        self.current_map = self.maps[map_name]
-        self.current_map.load()
-        self.camera = self.cameras[map_name]
-        self.player.camera = self.camera
-        self.player.map = self.current_map
-        self.player.get_coordinates = self.current_map.spawn_point
+        map_data = read_json(f"assets/maps/{map_name}.json")
 
-    def load_save(self, save_data: str):
+        self.map = Map.load_from_data(map_data, self.game_name, map_name)
+        self.camera = Camera(self.map.mapsize, pygame.display.get_surface().get_size(), TILESIZE)
+        
+        self.map.load()
+
+        player_data = read_json(f"assets/saves/{self.game_name}/player.json")
+        coordinates = list_to_vec(player_data.get(map_name, {}).get("coordinates", vec_to_list(self.map.spawn_point)))
+
+        self.player.load_new_map(self.map, self.camera, coordinates)
+    
+
+    def load_save(self, map_name: str):
         """Placeholder save-loading hook."""
-        pass
+        player_data = read_json(f"assets/saves/{self.game_name}/player.json")
+        world_data = read_json(f"assets/saves/{self.game_name}/{map_name}.json")
+
+        self.Map = Map.load_from_data(world_data, self.game_name, map_name)
+        self.Player = Player.load_from_data(player_data, map_name)
+        
+
+    def save(self) -> None:
+        """Save current map/player state without losing data from other maps."""
+        save_dir = f"assets/saves/{self.game_name}"
+        os.makedirs(save_dir, exist_ok=True)
+        player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
+
+        self.map.save(self.camera, self.game_name)
+        player_data = self.player.save(self.map.name, player_data)
+
+        with open(f"assets/saves/{self.game_name}/player.json", "w", encoding="utf-8") as f:
+            json.dump(player_data, f, indent=4)
