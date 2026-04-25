@@ -10,7 +10,7 @@ from WorldElement.Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
-from jeu.utilitary import ALLY_EVENT
+from utilitary import ALLY_EVENT
 
 
 DEFAULT_NAME = " "

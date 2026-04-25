@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from jeu.WorldElement.Ally import Ally
+    from WorldElement.Ally import Ally
     from Item.Item import Item
     from WorldElement.Entity import Entity
     from WorldElement.WorldElement import WorldElement
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 import pygame
 import numpy as np
 from WorldElement.WorldElement import WorldElement
-from jeu.utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
+from utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
 
 
 class Map :

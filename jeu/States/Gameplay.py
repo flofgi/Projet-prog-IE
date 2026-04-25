@@ -10,7 +10,7 @@ from States.StateManager import StateManager
 from WorldElement.Player import Player
 from Item.Gun import gun
 from Item.Sword import sword
-from jeu.utilitary import KEYS, STATE_PUSH, STATE_POP, STATE_REPLACE
+from utilitary import KEYS, STATE_PUSH, STATE_POP, STATE_REPLACE
 from WorldElement.Ally import Ally
 from WorldElement.Mob import Mob
 from Item import Item

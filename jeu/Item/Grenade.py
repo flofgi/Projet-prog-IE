@@ -5,12 +5,12 @@ if TYPE_CHECKING:
 
     
     from jeu import Map
-    from jeu.WorldElement.Mob import Mob
-    from jeu.WorldElement.Mob import Player
+    from WorldElement.Mob import Mob
+    from WorldElement.Mob import Player
 
 import pygame
 from Item.Item import Item
-from jeu.utilitary import GRENADE_EXPLOSION_EVENT
+from utilitary import GRENADE_EXPLOSION_EVENT
 
 
 DEFAULT_GRENADE_RADIUS = 100

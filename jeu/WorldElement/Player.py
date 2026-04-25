@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from Item.Sword import sword
 
 if TYPE_CHECKING:
-    from jeu.WorldElement.Ally import Ally
+    from WorldElement.Ally import Ally
     from Map import Map
     from Item.Item import Item
     from Camera import Camera
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 from WorldElement.Entity import Entity
 from Inventory import Inventory
 from Item.Item import Item
-from jeu.utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE
+from utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE
 
 import pygame
 
