@@ -21,7 +21,7 @@ pygame.display.set_caption("demo button")
 
 state_manager = StateManager()
 
-gameplay = Gameplay(state_manager)
+gameplay = Gameplay(state_manager, "Wow", "map1")
 inventory_state = InventoryState(state_manager)
 
 state_manager.push_state(gameplay)

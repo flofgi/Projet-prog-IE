@@ -166,7 +166,7 @@ class Map :
 
     
     @classmethod
-    def load_from_data(self, data: dict, game_name: str, map_name: str) -> Map:
+    def load_map(self, data: dict, game_name: str, map_name: str) -> Map:
         """Create a Map instance from saved data.
         
         Args:
@@ -175,7 +175,42 @@ class Map :
         spawn_point = pygame.Vector2(data.get("spawn_point", [0, 0]))
 
         mapsize = data.get("Mapsize", (0, 0))
-        mapset = np.loadtxt(f"assets/tilesets/{map_name}_mapset.txt", dtype=int) 
+        mapset = np.loadtxt(f"assets/saves/{game_name}/{self.name}_mapset.txt", dtype=int) 
+        
+        tileset = Tileset.load_from_data(data.get("Tileset", {}))
+        name = data.get("Map_name")
+        map = Map(mapsize, tileset, mapset, name)
+        map.spawn_point = spawn_point
+
+        worldelements_data: dict[str, list[dict]] = data.get("worldelements", [])
+        for element_data in worldelements_data.get("ally", []):
+            element = Ally.load_from_data(element_data)
+            map.allies.append(element)
+
+        for element_data in worldelements_data.get("item", []):
+            element = Item.load_from_data(element_data)
+            item_class = ITEM_REGISTRY.get(element_data.get("type"))
+
+            element = item_class.load_from_data(element_data.get("item", {}))
+            map.items.append(element)
+        
+        for element_data in worldelements_data.get("mob", []):
+            element = Mob.load_from_data(element_data)
+            map.mobs.append(element)
+
+        return map
+    
+    @classmethod
+    def load_new_map(self, data: dict, game_name: str, map_name: str) -> Map:
+        """Create a Map instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the map's saved state, including spawn point and world elements.
+        """
+        spawn_point = pygame.Vector2(data.get("spawn_point", [0, 0]))
+
+        mapsize = data.get("Mapsize", (0, 0))
+        mapset = np.loadtxt(f"assets/saves/{map_name}_mapset.txt", dtype=int) 
         
         tileset = Tileset.load_from_data(data.get("Tileset", {}))
         name = data.get("Map_name")

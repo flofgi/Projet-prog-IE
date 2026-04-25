@@ -8,13 +8,10 @@ import numpy as np
 import pygame
 
 from Camera import Camera
-from Item.base_Item import Item
-from Item.Gun import gun
-from Item.Sword import sword
-from Map import Map, Tileset
+from Map import Map
 from States.State import State
 from States.StateManager import StateManager
-from WorldElement import Ally, Entity, Mob, Player
+from WorldElement.Player import Player
 from utilitary import KEYS, read_json, vec_to_list, list_to_vec
 
 
@@ -51,10 +48,9 @@ class Gameplay(State):
         super().__init__(state_manager)
         self.game_name = game_name
         self.first_map = first_map_name
-        try:
-            self.maps: list[str] = [os.path.splitext(f)[0] for f in os.listdir(f"assets/maps") if f.endswith(".json")]
-        except FileNotFoundError:
-            self.maps = []
+        self.player: Player
+        self.map: Map
+        self.camera: Camera
 
     def handle_events(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
@@ -73,40 +69,15 @@ class Gameplay(State):
 
     def load(self):
         screen_size = pygame.display.get_surface().get_size()
-        self.player = Player(
-            PLAYER_HP,
-            ["Design/Hunter_Stand_DB_1.png"],
-            PLAYER_SPAWN
-        )
         
-        allies = [Ally(10, ["Design\\Hunter_Stand_DB_2.png"], random_spawn_position()) for _ in range(ALLY_COUNT)]
-        mobs = [Mob(10, ["Design\\Hunter_Walk_GB_3.png"], random_spawn_position()) for _ in range(MOB_COUNT)]
-
-        items : Item = [
-            sword(["Design\\sword.png"], random_spawn_position(), SWORD_ANGLE, SWORD_RANGE)
-            for _ in range(ITEM_SPAWN_COUNT)
-        ] + [
-            gun(["Design\\gun.png"], random_spawn_position())
-            for _ in range(ITEM_SPAWN_COUNT)
-        ]
-        tileset = Tileset(TILESET, TILESIZE)
-        mapset = np.array(read_json("Design/Maps/map1.json"))
+        if not os.path.exists(f"assets/saves/{self.game_name}"):
+            self.load_new_map(self.first_map)
 
 
-        self.maps: dict[str, Map] = {
-            "map1": Map(
-                mapsize=(int(MAPSIZE.x), int(MAPSIZE.y)),
-                tileset=tileset,
-                mapset=mapset,
-                worldelements=allies + mobs + items,
-            )
-        }
-
-
-        self.camera = Camera((int(MAPSIZE.x), int(MAPSIZE.y)), screen_size, TILESIZE)
-
-        self.map.load()
-        self.player.load(self.map, self.camera)
+            os.makedirs(f"assets/saves/{self.game_name}")
+        else:
+            self.load_map(self.first_map)
+        
 
     def update(self, dt: float):
         self.player.update(dt, self.map)
@@ -151,7 +122,7 @@ class Gameplay(State):
 
         map_data = read_json(f"assets/maps/{map_name}.json")
 
-        self.map = Map.load_from_data(map_data, self.game_name, map_name)
+        self.map = Map.load_map(map_data, self.game_name, map_name)
         self.camera = Camera(self.map.mapsize, pygame.display.get_surface().get_size(), TILESIZE)
         
         self.map.load()
