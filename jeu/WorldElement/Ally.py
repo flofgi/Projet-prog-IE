@@ -2,14 +2,29 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Player import Player
+    from WorldElement.Player import Player
+    from Map import Map
 
 
-from Entity import Entity
+from WorldElement.Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
-from events import ALLY_EVENT
+from utilitary import ALLY_EVENT
+
+
+DEFAULT_NAME = " "
+DEFAULT_WANDERING_POINT = pygame.Vector2(0, 0)
+DEFAULT_ALERT_ZONE = 400
+DEFAULT_CONFORT_ZONE = 20
+DEFAULT_WANDERING_ZONE = 200
+INTERACTION_DISTANCE = 20
+FOLLOW_TELEPORT_MARGIN = 5
+WANDER_CHECK_SECONDS = 100
+HALF_SPEED_FACTOR = 0.5
+RANDOM_BOOL_MIN = 0
+RANDOM_BOOL_MAX = 1
+TAU = pi * 2
 
 
 class Ally(Entity):
@@ -27,18 +42,14 @@ class Ally(Entity):
 
     def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
         """Initialize an ally with follow and wandering parameters."""
-        Entity.__init__(self, hp, sprites, coordinates, " ")
-        self.wandering_point = pygame.Vector2(0, 0)
+        Entity.__init__(self, hp, sprites, coordinates, DEFAULT_NAME)
+        self.wandering_point = DEFAULT_WANDERING_POINT.copy()
         self.target_coordinates = coordinates
-        self.ALERT_ZONE = 400
-        self.CONFORT_ZONE = 20
-        self.WANDERING_ZONE = 200
+        self.ALERT_ZONE = DEFAULT_ALERT_ZONE
+        self.CONFORT_ZONE = DEFAULT_CONFORT_ZONE
+        self.WANDERING_ZONE = DEFAULT_WANDERING_ZONE
 
     def interaction(self):
-        pass
-
-
-    def attack(self, attacked: Entity):
         pass
 
     def combat(self):
@@ -53,7 +64,7 @@ class Ally(Entity):
         Returns:
             bool: True if interaction occurred, False otherwise.
         """
-        if player.get_coordinates.distance_to(self.coordinates) < 20:
+        if player.get_coordinates.distance_to(self.coordinates) < INTERACTION_DISTANCE:
             pygame.event.post(pygame.event.Event(ALLY_EVENT, {
                 "target": self
             }))
@@ -61,11 +72,10 @@ class Ally(Entity):
         return False
 
 
-    def update(self, dt: float, events: list[pygame.event.Event], target: Player = None):
+    def update(self, dt: float, map: Map, target: Player = None):
         """Update ally behavior to follow or wander around a target.
         Args:
             dt (float): Time delta since last update, used for timing animations and movements.
-            events (list[pygame.event.Event]): List of events to process for interactions.
             target (Player, optional): The player entity to follow or wander around. Defaults to None.
         """
         self.animation_timer += dt
@@ -79,9 +89,8 @@ class Ally(Entity):
                 self.velocity = pygame.Vector2(0, 0)
             
             elif distance_player_ally > self.ALERT_ZONE:
-                self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE+5, self.target_coordinates)
-                print(self.target_coordinates)
-                self.velocity = pygame.Vector2(0, 0)
+                self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE + FOLLOW_TELEPORT_MARGIN, self.target_coordinates)
+                self.velocity = DEFAULT_WANDERING_POINT.copy()
                 
 
             else:
@@ -94,16 +103,16 @@ class Ally(Entity):
         """Move ally toward a random wandering point near the target.
         Args:
             target (pygame.Vector2): The position to wander around."""
-        if self.animation_timer > 100 / self.BASE_FPS:
+        if self.animation_timer > WANDER_CHECK_SECONDS / self.BASE_FPS:
             self.animation_timer = 0
-            if randint(0, 1) == 1:
+            if randint(RANDOM_BOOL_MIN, RANDOM_BOOL_MAX) == RANDOM_BOOL_MAX:
                 self.wandering_point = self.target_random_point(self.CONFORT_ZONE, self.WANDERING_ZONE, target)
 
         direction = self.wandering_point - self.coordinates
         if direction.length_squared() > 0:
-            self.velocity = direction.normalize() * (self.max_speed * 0.5)
+            self.velocity = direction.normalize() * (self.max_speed * HALF_SPEED_FACTOR)
 
-    def set_zones(self, ALERT_ZONE = 400, CONFORT_ZONE = 20, WANDERING_ZONE = 200):
+    def set_zones(self, ALERT_ZONE = DEFAULT_ALERT_ZONE, CONFORT_ZONE = DEFAULT_CONFORT_ZONE, WANDERING_ZONE = DEFAULT_WANDERING_ZONE):
         """Update ally distance thresholds for follow and wandering zones.
         Args:
             ALERT_ZONE (int, optional): Distance at which ally starts following the target. Defaults to 400.
@@ -128,5 +137,5 @@ class Ally(Entity):
             target = self.coordinates
         
         rayon = uniform(min_rayon_limite, max_rayon_limite)
-        angle = uniform(0, pi*2)
+        angle = uniform(RANDOM_BOOL_MIN, TAU)
         return pygame.Vector2(cos(angle)*rayon, sin(angle)*rayon)+target

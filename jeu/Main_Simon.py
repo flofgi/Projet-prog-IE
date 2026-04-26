@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 from Map import Map, Tileset
 from Camera import Camera
-from Player import Player
+from WorldElement.Player import Player
 
 pygame.init()
 

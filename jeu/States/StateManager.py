@@ -1,6 +1,6 @@
 import pygame
 
-from EVENTS import STATE_POP, STATE_PUSH, STATE_REPLACE
+from utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE
 
 from States.State import State
 
@@ -17,7 +17,7 @@ class StateManager:
 
     def __init__(self):
         self.states: list[State] = []
-        self.routes: dict[str, state] = {}
+        self.routes: dict[str, State] = {}
 
     def register_route(self, route_name: str, state: State):
         """Register a state with a route name for easy transitions.

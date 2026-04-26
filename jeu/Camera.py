@@ -1,5 +1,10 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from WorldElement.Player import Player
+
 import pygame
-from Player import Player
 
 
 class Camera :
@@ -27,12 +32,18 @@ class Camera :
 
   def update(self, player: Player):
     """update the position of the camera following the player's coordinates and the border of the map"""
-    
     self.max_x = max(0,self.mapsize[1] * self.tilesize[0] - self.zoomsize[0])
     self.max_y = max(0,self.mapsize[0] * self.tilesize[1] - self.zoomsize[1])
     self.x = max(0, min(player.get_coordinates[0] - self.zoomsize[0]// 2, self.max_x))
     self.y = max(0, min(player.get_coordinates[1] - self.zoomsize[1]// 2, self.max_y))
+
+
+  @property
+  def get_coordinates(self) -> pygame.Vector2:
+    """return the position of the camera as a pygame.Vector2"""
+    return pygame.Vector2(self.x, self.y)
   
+
   def scaling(self, newscale):
     """update the zoom of the window depending on the scale gived, and redraw the map"""   
     self.coefscale = max(self.min_scale, min(self.max_scale, newscale))
