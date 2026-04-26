@@ -16,10 +16,12 @@ import pygame
 import numpy as np
 from WorldElement.WorldElement import WorldElement
 from utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT
+from WorldElement import WorldElement
+from Tileset import Tileset
 
 
 class Map :
-    def __init__(self,mapsize : tuple, tileset, mapset : np.array, rect=None, worldelements: list[WorldElement] = None): #, sectors: tuple, camera: caméra
+    def __init__(self,mapsize : tuple, tileset : Tileset, mapset : np.array, worldelements: list[WorldElement] = None, rect=None): #, sectors: tuple, camera: caméra
         """initialize the map
         Args:
         mapsize(tuple) : the size of the map in tiles
@@ -29,29 +31,36 @@ class Map :
         """
     
         self.mapsize = mapsize
-        self.mapset: np.array = mapset
+        self.mapset = mapset
         self.tileset = tileset
-        self.worldelements: list[WorldElement] = list(worldelements) if worldelements is not None else []
+        self.worldelements = list(worldelements) if worldelements is not None else []
         #self.sectors = sectors
 
         h, w = self.mapsize
-        self.image = pygame.Surface((32*w,32*h))
-        
-        if rect :
-            self.rect = pygame.Rect(rect)
-        else :
-            self.rect = self.image.get_rect()
+        tile_w, tile_h = self.tileset.getTileSize
+        self.background = pygame.Surface((tile_w*w,tile_h*h))
+        self.rect = rect if rect else self.background.get_rect()
 
       
 
-    def draw(self):
-        """draw the map with the tileset and the associated list of tiles"""
-        m, n = self.mapset.shape
-        for i in range (m):
-            for j in range (n):
-                tile = self.tileset.tiles[self.mapset[i,j]]
-                self.image.blit(tile, (j*32,i*32))
+    def draw(self, camera):
+        """draw the affiched map with the tileset and the associated list of tiles"""
+        surface = camera.scaled_window
+        tile_w, tile_h = self.tileset.getTileSize
+    
+        start_x = max(0, camera.x//tile_w)
+        end_x = min(self.mapsize[1], (surface.get_width()+ camera.x)//tile_w+1)
+        start_y = max(0, camera.y//tile_h)
+        end_y = min(self.mapsize[0], (surface.get_height()+ camera.y)//tile_h+1)
         
+        for i in range (int(start_y), int(end_y)):
+            for j in range (int(start_x), int(end_x)):
+                if 0<=i<self.mapset.shape[0] and 0<=j<self.mapset.shape[1]:
+                    tile = self.tileset.tiles[self.mapset[i,j]]
+                    x = j * tile_w - camera.x
+                    y = i * tile_h - camera.y
+                    surface.blit(tile, (x, y))
+  
     @property
     def get_worldelement(self) -> list[WorldElement]:
         return self.worldelements 
@@ -111,32 +120,3 @@ class Map :
         for element in self.worldelements:
             element.load()
 
-class Tileset:
-    def __init__(self, file, tilesize=(32, 32), margin=1, spacing=1):
-      self.file = file
-      self.tilesize = tilesize
-      self.margin = margin
-      self.spacing = spacing
-      self.image = pygame.image.load(file)
-      self.rect = self.image.get_rect()
-      self.tiles = []
-      self.load()
-
-    def load(self):
-      """cut the image containing the tiles into individual tiles in a list"""
-      self.tiles = []
-      x0 = y0 = self.margin
-      w, h = self.rect.size
-      dx = self.tilesize[0] + self.spacing
-      dy = self.tilesize[1] + self.spacing
-      
-      for x in range(x0, w, dx):
-          for y in range(y0, h, dy):
-              tile = pygame.Surface(self.tilesize)
-              tile.blit(self.image, (0, 0), (x, y, *self.tilesize))
-              self.tiles.append(tile)
-
-    def unload(self):
-      """Nullify the tile list"""
-      for i in range (len(self.tiles)):
-        self.tiles[i]=None
