@@ -27,12 +27,16 @@ class KeyState(State):
         self.init_Q_pos = (64, 192)
         self.init_S_pos = (64, 320)
         self.init_D_pos = (64, 448)
+        self.init_i_pos = (64, 576)
+        self.init_e_pos = (64, 704)
+        
 
         self.z_post = None
         self.q_post = None
         self.s_post = None
         self.d_post = None
-
+        self.i_post = None
+        self.e_post = None
 
     def load(self):
 
@@ -58,13 +62,16 @@ class KeyState(State):
         self.text_Q_pos =  (0,0)
         self.text_S_pos = (0,0) 
         self.text_D_pos = (0,0)
+        self.text_I_pos = (0,0)
+        self.text_E_pos = (0,0)
         self.Button_back_pos = (0, 0)
 
         self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Z_pos, "button_up" , rect_pos=self.rect_Z_pos, hovered_scale=HOVERED_SCALE)
         self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Q_pos, "button_left" , rect_pos=self.rect_Q_pos, hovered_scale=HOVERED_SCALE)
         self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_S_pos, "button_down" , rect_pos=self.rect_S_pos, hovered_scale=HOVERED_SCALE)
         self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_D_pos, "button_right" , rect_pos=self.rect_D_pos, hovered_scale=HOVERED_SCALE)
-        
+        self.button_i = ClassicButton1(self.I_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_I_pos, "button_interact" , rect_pos=self.rect_I_pos, hovered_scale=HOVERED_SCALE)
+        self.button_e = ClassicButton1(self.E_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_E_pos, "button_inventory" , rect_pos=self.rect_E_pos, hovered_scale=HOVERED_SCALE)
         self._calculate_text_position()
         
         self.Button_back = ClassicButton1(self.Button_back_pos,
@@ -101,7 +108,8 @@ class KeyState(State):
         self.button_s.handle_event(event)
         self.button_d.handle_event(event)
         self.Button_back.handle_event(event)
-
+        self.button_i.handle_event(event)
+        self.button_e.handle_event(event)
         if event.type == pygame.MOUSEBUTTONUP:
             if self.button_z.is_hovered(event) is True and self.button_z.button_was_clicked is True:
                 self.z_post = True
@@ -147,6 +155,9 @@ class KeyState(State):
         self.button_q.update(dt)
         self.button_s.update(dt)
         self.button_d.update(dt)
+        self.button_i.update(dt)
+        self.button_e.update(dt)
+
         self.Button_back.update(dt)
 
 
@@ -163,6 +174,12 @@ class KeyState(State):
         elif self.d_post:    
             self.d_post = False
             pygame.event.post(pygame.event.Event(KEY_CHANGE, key="RIGHT"))
+        elif self.i_post:
+            self.i_post = False
+            pygame.event.post(pygame.event.Event(KEY_CHANGE, key="INTERACT"))
+        elif self.e_post:
+            self.e_post = False
+            pygame.event.post(pygame.event.Event(KEY_CHANGE, key="INVENTORY"))
     
 
     def render(self, screen: pygame.Surface):
@@ -171,6 +188,8 @@ class KeyState(State):
         self.button_q.draw(self.scroll_screen)
         self.button_s.draw(self.scroll_screen)
         self.button_d.draw(self.scroll_screen)
+        self.button_i.draw(self.scroll_screen)
+        self.button_e.draw(self.scroll_screen)
         screen.blit(self.scroll_screen, self.scroll_screen_rect)
         self.Button_back.draw(screen)
 
@@ -189,13 +208,17 @@ class KeyState(State):
         self.Q_pos = self.init_Q_pos[0], self.init_Q_pos[1] - self.scroll_y * SCROLL_SPEED
         self.S_pos = self.init_S_pos[0], self.init_S_pos[1] - self.scroll_y * SCROLL_SPEED
         self.D_pos = self.init_D_pos[0], self.init_D_pos[1] - self.scroll_y * SCROLL_SPEED
+        self.I_pos = self.init_i_pos[0], self.init_i_pos[1] - self.scroll_y * SCROLL_SPEED
+        self.E_pos = self.init_e_pos[0], self.init_e_pos[1] - self.scroll_y * SCROLL_SPEED 
+        
 
     def _update_position(self):
         self.button_z.update_position(self.Z_pos, self.rect_Z_pos, self.text_Z_pos)
         self.button_q.update_position(self.Q_pos, self.rect_Q_pos, self.text_Q_pos)
         self.button_s.update_position(self.S_pos, self.rect_S_pos, self.text_S_pos)
         self.button_d.update_position(self.D_pos, self.rect_D_pos, self.text_D_pos)
-
+        self.button_i.update_position(self.I_pos, self.rect_I_pos, self.text_I_pos)
+        self.button_e.update_position(self.E_pos, self.rect_E_pos, self.text_E_pos)
         self.scroll_screen = pygame.transform.scale(self.scroll_screen, self.scroll_size)
         self.scroll_screen_rect = self.scroll_screen.get_rect()
         self.scroll_screen_rect.center = pygame.display.get_surface().get_rect().center
@@ -209,6 +232,8 @@ class KeyState(State):
         self.text_Q_pos = self.Q_pos[0] + SEPARATION + self.button_q.Text.get_size()[0]//2, self.Q_pos[1]
         self.text_S_pos = self.S_pos[0] + SEPARATION + self.button_s.Text.get_size()[0]//2, self.S_pos[1]
         self.text_D_pos = self.D_pos[0] + SEPARATION + self.button_d.Text.get_size()[0]//2, self.D_pos[1]
+        self.text_I_pos = self.I_pos[0] + SEPARATION + self.button_i.Text.get_size()[0]//2, self.I_pos[1]
+        self.text_E_pos = self.E_pos[0] + SEPARATION + self.button_e.Text.get_size()[0]//2, self.E_pos[1]
         
     def _calculte_screen_position(self):
         ORIGIN = self.scroll_screen_rect.topleft
@@ -217,7 +242,9 @@ class KeyState(State):
         self.rect_Q_pos = ORIGIN[0] + self.Q_pos[0], ORIGIN[1] + self.Q_pos[1]
         self.rect_S_pos = ORIGIN[0] + self.S_pos[0], ORIGIN[1] + self.S_pos[1]
         self.rect_D_pos = ORIGIN[0] + self.D_pos[0], ORIGIN[1] + self.D_pos[1]
-
+        self.rect_I_pos = ORIGIN[0] + self.I_pos[0], ORIGIN[1] + self.I_pos[1]
+        self.rect_E_pos = ORIGIN[0] + self.E_pos[0], ORIGIN[1] + self.E_pos[1]
+        
         
 
         
