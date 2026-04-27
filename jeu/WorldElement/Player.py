@@ -16,7 +16,7 @@ from WorldElement.Entity import Entity
 from Inventory import Inventory
 from Item.Sword import sword
 from Item.Item import Item
-from utilitary import RECUP_EVENT, ALLY_EVENT, vec_to_list
+from utilitary import RECUP_EVENT, ALLY_EVENT, vec_to_list, list_to_vec
 from assets.keys_dictionary import KEYS, MOUSE
 
 import pygame
