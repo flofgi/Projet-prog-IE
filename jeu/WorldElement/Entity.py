@@ -2,12 +2,21 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Player import Player
+    from WorldElement.Player import Player
+    from Camera import Camera
 
 from abc import ABC, abstractmethod
 import pygame
 
-from WorldElement import WorldElement
+from WorldElement.WorldElement import WorldElement
+from utilitary import DEAD, FPS
+
+
+DEFAULT_VELOCITY = pygame.Vector2(0, 0)
+DEFAULT_FRAME = 0
+DEFAULT_ANIMATION_TIMER = 0
+DEFAULT_MAX_SPEED = 1
+MIN_HP = 0
 
 
 class Entity(WorldElement):
@@ -27,7 +36,7 @@ class Entity(WorldElement):
         name (string) name of entity
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = 60) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = FPS) -> None:
         """
         Args:
             hp (int): Initial health points for the entity. Must be a positive integer.
@@ -39,13 +48,12 @@ class Entity(WorldElement):
             current_frame (int) index of the current sprite load
             animation_timer (int) index of the fps to load the next sprite
         """
-        super().__init__(sprites, coordinates)
+        super().__init__(sprites, coordinates, name)
         self.hp = hp
-        self.velocity = pygame.Vector2(0, 0)
-        self.name = name
-        self.current_frame = 0
-        self.animation_timer = 0
-        self.max_speed = 1
+        self.velocity = DEFAULT_VELOCITY.copy()
+        self.current_frame = DEFAULT_FRAME
+        self.animation_timer = DEFAULT_ANIMATION_TIMER
+        self.max_speed = DEFAULT_MAX_SPEED
         self.BASE_FPS = BASE_FPS
 
 
@@ -56,7 +64,10 @@ class Entity(WorldElement):
         tuning where max_speed was effectively calibrated per frame at 60 FPS.
         """
         self.coordinates += self.velocity * dt * self.BASE_FPS
-        self.rect.topleft = (self.coordinates.x, self.coordinates.y)
+        self.rect.topleft = (
+            int(self.coordinates.x + self.hitbox_offset.x),
+            int(self.coordinates.y + self.hitbox_offset.y),
+        )
 
     @abstractmethod
     def combat(self):
@@ -64,12 +75,15 @@ class Entity(WorldElement):
         """
         pass
 
+    
+    def is_attack(self, dommage: float):
+        self.hp -= dommage
+        if self.hp <= MIN_HP:
+            pygame.event.post(pygame.event.Event(DEAD, target = self))
 
-    def attack(self, attacked: "Entity"):
-        """add the logic of the attack for entity"""
-        pass
-
-    def draw(self, surface: pygame.surface, player: Player) -> None:
+    def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:
-            surface.blit(self.sprite[self.current_frame], self.rect)
+            frame = self.sprite[self.current_frame]
+            draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
+            surface.blit(frame, draw_pos)
 
