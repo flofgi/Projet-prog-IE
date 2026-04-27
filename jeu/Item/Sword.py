@@ -6,11 +6,11 @@ if TYPE_CHECKING:
     from WorldElement.Player import Player, WorldElement, Mob
 
 
-from .base_Item import Item
+from .Item import Item
 from .utilitary import register_item
 import pygame
 from Camera import Camera
-from events import vec_to_list, list_to_vec
+from utilitary import vec_to_list, list_to_vec
 
 
 DEFAULT_SWORD_DAMAGE = 3
@@ -93,8 +93,8 @@ class sword(Item):
         if self.animation_time > self.animation:
             self.is_used = False
 
-    def save(self) -> dict:
-        data = super().save()
+    def save(self, map_name: str, data: dict = {}) -> dict:
+        data = super().save(map_name, data)
         data.update(
             {
                 "shot_angle": self.shot_angle,
@@ -114,9 +114,11 @@ class sword(Item):
             data (dict): A dictionary containing the sword's saved state, including shot angle, shot distance, damage, usage state, and animation duration.
             map_name (str, optional): The name of the map to load coordinates from. Defaults to None.
         """
+        coordinates_data = data.get(map_name, {}).get("coordinates", data.get("coordinates", [0, 0]))
+
         sword_instance = self(
             sprites=data.get("sprites", []),
-            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", None)),
+            coordinates=list_to_vec(coordinates_data),
             shot_angle=data.get("shot_angle", HAND_SWORD_ANGLE),
             shot_distance=data.get("shot_distance", HAND_SWORD_DISTANCE),
             damage=data.get("damage", DEFAULT_SWORD_DAMAGE),

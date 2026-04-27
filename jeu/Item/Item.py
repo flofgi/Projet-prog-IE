@@ -100,11 +100,10 @@ class Item(WorldElement):
     def update(self, dt: float, map: Map, target: Player = None):
         self.animation_time += dt
 
-    def save(self) -> dict:
-        data = super().save()
+    def save(self, map_name: str, data: dict = {}) -> dict:
+        data = super().save(map_name, data)
         data.update(
             {
-                "type": self.__class__.__name__,
                 "durability": self.durability,
                 "be_stackable": self.be_stackable,
                 "animation_time": self.animation_time,
@@ -120,14 +119,15 @@ class Item(WorldElement):
             data (dict): A dictionary containing the item's saved state, including durability and stackability.
             map_name (str, optional): The name of the map to load coordinates from. Defaults to None.
         """
+        coordinates_data = data.get(map_name, {}).get("coordinates", data.get("coordinates", [0, 0]))
+
         item = self(
             sprites=data.get("sprites", []),
-            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0])),
+            coordinates=list_to_vec(coordinates_data),
             durability=data.get("durability", None),
             be_stackable=data.get("be_stackable", False)
         )
         item.animation_time = data.get("animation_time", DEFAULT_ANIMATION_TIME)
-
         return item
 
 

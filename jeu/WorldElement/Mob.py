@@ -171,8 +171,8 @@ class Mob(Entity):
         elif self.is_boss:
             pygame.event.post(pygame.event.Event(BOSSFIGHT, target = self))
 
-    def save(self) -> dict:
-        data = super().save()
+    def save(self, map_name) -> dict:
+        data = super().save(map_name)
         wandering_point = [self.wandering_point.x, self.wandering_point.y] if self.wandering_point is not None else None
         target_coordinates = [self.target_coordinates.x, self.target_coordinates.y] if self.target_coordinates is not None else None
         data.update(
@@ -185,6 +185,7 @@ class Mob(Entity):
                 "is_paused": self.is_paused,
                 "timer": self.timer,
                 "is_boss": self.is_boss,
+                "coordinates": vec_to_list(self.coordinates)
             }
         )
         return data
@@ -200,9 +201,8 @@ class Mob(Entity):
         hp = data.get("hp", 100)
         sprites = data.get("sprites", [])
 
-
-
-        coordinates = list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0]))
+        map_data = data.get(map_name, {}) if map_name is not None else data
+        coordinates = list_to_vec(map_data.get("coordinates", data.get("coordinates", [0, 0])))
 
         mob = Mob(hp, sprites, coordinates)
         
@@ -215,13 +215,13 @@ class Mob(Entity):
         mob.animation_timer = data.get("animation_timer", 0)
         mob.max_speed = data.get("max_speed", 0)
 
-        mob.wandering_point = list_to_vec(data.get(map_name, {}).get("wandering_point", [0, 0]))
-        mob.target_coordinates = list_to_vec(data.get(map_name, {}).get("target_coordinates", [0, 0]))
-        mob.ALERT_ZONE = data.get(map_name, {}).get("ALERT_ZONE", DEFAULT_ALERT_ZONE)
-        mob.CONFORT_ZONE = data.get(map_name, {}).get("CONFORT_ZONE", DEFAULT_CONFORT_ZONE)
-        mob.WANDERING_ZONE = data.get(map_name, {}).get("WANDERING_ZONE", DEFAULT_WANDERING_ZONE)
-        mob.is_paused = data.get(map_name, {}).get("is_paused", False)
-        mob.timer = data.get(map_name, {}).get("timer", 0)
-        mob.is_boss = data.get(map_name, {}).get("is_boss", False)
+        mob.wandering_point = list_to_vec(map_data.get("wandering_point", [0, 0]))
+        mob.target_coordinates = list_to_vec(map_data.get("target_coordinates", [0, 0]))
+        mob.ALERT_ZONE = map_data.get("ALERT_ZONE", DEFAULT_ALERT_ZONE)
+        mob.CONFORT_ZONE = map_data.get("CONFORT_ZONE", DEFAULT_CONFORT_ZONE)
+        mob.WANDERING_ZONE = map_data.get("WANDERING_ZONE", DEFAULT_WANDERING_ZONE)
+        mob.is_paused = map_data.get("is_paused", False)
+        mob.timer = map_data.get("timer", 0)
+        mob.is_boss = map_data.get("is_boss", False)
 
         return mob

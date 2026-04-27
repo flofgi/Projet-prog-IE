@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 from abc import ABC, abstractmethod
-from events import vec_to_list
+from utilitary import vec_to_list
 
 import pygame
 
@@ -104,14 +104,16 @@ class WorldElement(ABC):
             int(self.coordinates.y + self.hitbox_offset.y),
         )
 
-    def save(self, data: dict | None = None) -> dict:
+    def save(self, map_name: str, data: dict | None = None) -> dict:
         """Serialize the common state shared by every world element."""
         data = data or {}
         data.update({
             "type": self.__class__.__name__,
             "name": self.name,
             "sprites": list(self.sprite_paths),
-            "coordinates": vec_to_list(self.coordinates),
+            map_name:{
+                "coordinates": vec_to_list(self.coordinates),
+            },
             "scale": self.scale,
         })
         return data

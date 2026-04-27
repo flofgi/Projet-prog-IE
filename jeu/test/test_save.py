@@ -6,11 +6,11 @@ from pathlib import Path
 import numpy as np
 import pygame
 
-from Camera import Camera
-from Item.Gun import gun
-from Item.Sword import sword
-from Map import Map, Tileset
-from States.Gameplay import (
+from jeu.Camera import Camera
+from jeu.Item.Gun import gun
+from jeu.Item.Sword import sword
+from jeu.Map import Map, Tileset
+from jeu.States.Gameplay import (
     ALLY_COUNT,
     BACKGROUND_COLOR,
     DEFAULT_MAPSET_PATH,
@@ -38,8 +38,8 @@ from WorldElement.Player import Player
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 740
 FPS = 60
-GAME_NAME = "test_save"
-FIRST_MAP_NAME = "map1"
+GAME_NAME = "init"
+FIRST_MAP_NAME = "gameplay_test_map"
 
 
 
@@ -69,7 +69,7 @@ class SaveTestGameplay(Gameplay):
             for _ in range(ITEM_SPAWN_COUNT)
         ]
 
-        tileset = Tileset(TILESET)
+        tileset = Tileset(TILESET, TILESIZE)
         mapset = np.loadtxt(DEFAULT_MAPSET_PATH, dtype=int)
 
         self.map = Map(

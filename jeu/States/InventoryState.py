@@ -11,7 +11,7 @@ from .State import State
 from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE, KEYS, MOUSE
 from WorldElement.Player import Player
 from Inventory import Inventory
-from Item.base_Item import Item
+from Item.Item import Item
 
 
 INVENTORY_COLS = 5

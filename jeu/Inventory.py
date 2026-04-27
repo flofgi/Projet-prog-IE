@@ -1,5 +1,5 @@
 from utilitary import STATE_POP, STATE_PUSH
-from Item import Item
+from Item.Item import Item
 import pygame
 
 from Item.utilitary import ITEM_REGISTRY
@@ -72,13 +72,15 @@ class Inventory:
 
     def load(self):
         """Load sprites for all items in the inventory."""
-        pass
+        for item in self.items:
+            item.load()
 
-    def save(self) -> dict:
+    def save(self, map_name: str) -> dict:
         return {
             "items": [
                 {
-                    "item": item.save(),
+                    "type": type(item).__name__,
+                    "item": item.save(map_name),
                     "count": values[self.COUNT_INDEX],
                     "slot": values[self.SLOT_INDEX],
                 }
@@ -96,8 +98,10 @@ class Inventory:
         items_data: dict[str, dict[str, dict]] = data.get("items", [])
         items = {}
         for item_data in items_data:
-            type = item_data.get("type", {})
-            item_class = ITEM_REGISTRY.get(type)
+            typee = item_data.get("type", {})
+            item_class: type[Item] = ITEM_REGISTRY.get(typee)
+            if item_class is None:
+                continue
 
             item = item_class.load_from_data(item_data.get("item", {}))
             count = item_data.get("count", 0)

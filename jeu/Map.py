@@ -4,21 +4,23 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from WorldElement.Ally import Ally
-    from Item.base_Item import Item
-    from WorldElement.Entity import Entity
+    from Item.Item import Item
     from WorldElement.WorldElement import WorldElement
     from WorldElement.Player import Player
-    from Camera import Camera
     from WorldElement.Mob import Mob
 
 
 #from sectors import sector
 import pygame
 import numpy as np
+from math import pi
 from pathlib import Path
+from Camera import Camera
 from WorldElement.WorldElement import WorldElement
-from utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT, vec_to_list
-from WorldElement import WorldElement
+from WorldElement.Ally import Ally
+from WorldElement.Mob import Mob
+from Item.Item import Item
+from utilitary import RECUP_EVENT, ALLY_EVENT, DEAD, GRENADE_EXPLOSION_EVENT, list_to_vec, vec_to_list
 from Tileset import Tileset
 from Item.utilitary import ITEM_REGISTRY
 
@@ -142,10 +144,10 @@ class Map :
 
     def save(self, camera: Camera, game_name: str) -> dict:
         """Return a dictionary representing the map's current state for saving."""
-        folder = Path(f"assets/saves/{game_name}")
+        folder = Path(f"assets/saves/{game_name}/map")
         folder.mkdir(parents=True, exist_ok=True)
 
-        np.savetxt(f"assets/saves/{game_name}/{self.name}_mapset.txt", self.mapset, fmt="%d")
+        np.savetxt(f"assets/saves/{game_name}/map/{self.name}_mapset.txt", self.mapset, fmt="%d")
         
         world_data = {
             "map_name": self.name,
@@ -153,87 +155,54 @@ class Map :
             "Tileset": self.tileset.save(),
             "worldelements": {
                 "ally": [ally.save(self.name) for ally in self.allies],
-                "item": [item.save() for item in self.items],
-                "mob": [mob.save() for mob in self.mobs]
+                "item": [item.save(self.name) for item in self.items],
+                "mob": [mob.save(self.name) for mob in self.mobs]
                 },
             "camera": camera.save()
         
         }
 
-        with open(f"assets/saves/{game_name}/{self.name}.json", "w", encoding="utf-8") as f:
+        with open(f"assets/saves/{game_name}/map/{self.name}.json", "w", encoding="utf-8") as f:
             json.dump(world_data, f, indent=4)
-        
+         
 
-    
     @classmethod
-    def load_map(self, data: dict, game_name: str, map_name: str) -> Map:
+    def load_from_data(cls, data: dict, map_name: str, save_path: str = f"assets/saves/init/map/") -> tuple[Map, Camera]:
         """Create a Map instance from saved data.
         
         Args:
             data (dict): A dictionary containing the map's saved state, including spawn point and world elements.
+            map_name (str): The name of the map.
+            save_path (str): The path to the saved map data.
         """
-        spawn_point = pygame.Vector2(data.get("spawn_point", [0, 0]))
 
-        mapsize = data.get("Mapsize", (0, 0))
-        mapset = np.loadtxt(f"assets/saves/{game_name}/{self.name}_mapset.txt", dtype=int) 
+
+        mapset = np.loadtxt(str(Path(save_path) / f"{map_name}_mapset.txt"), dtype=int)
+        mapsize = tuple(data.get("Mapsize", mapset.shape))
         
         tileset = Tileset.load_from_data(data.get("Tileset", {}))
-        name = data.get("Map_name")
+        name = data.get("map_name", map_name)
         map = Map(mapsize, tileset, mapset, name)
-        map.spawn_point = spawn_point
+        map.spawn_point = list_to_vec(data.get("spawn_point", [0, 0]))
 
-        worldelements_data: dict[str, list[dict]] = data.get("worldelements", [])
+        worldelements_data: dict[str, list[dict]] = data.get("worldelements", {})
         for element_data in worldelements_data.get("ally", []):
-            element = Ally.load_from_data(element_data)
+            element = Ally.load_from_data(element_data, map_name)
             map.allies.append(element)
 
         for element_data in worldelements_data.get("item", []):
-            element = Item.load_from_data(element_data)
-            item_class = ITEM_REGISTRY.get(element_data.get("type"))
-
-            element = item_class.load_from_data(element_data.get("item", {}))
+            item_class: type[Item] = ITEM_REGISTRY.get(element_data.get("type"))
+            if item_class is None:
+                continue
+            element = item_class.load_from_data(element_data, map_name)
             map.items.append(element)
         
         for element_data in worldelements_data.get("mob", []):
-            element = Mob.load_from_data(element_data)
+            element = Mob.load_from_data(element_data, map_name)
             map.mobs.append(element)
 
-        return map
+        return map, Camera.load_from_data(data.get("camera", {}), mapsize, pygame.display.get_surface().get_size(), tileset.getTileSize)
     
-    @classmethod
-    def load_new_map(self, data: dict, game_name: str, map_name: str) -> Map:
-        """Create a Map instance from saved data.
-        
-        Args:
-            data (dict): A dictionary containing the map's saved state, including spawn point and world elements.
-        """
-        spawn_point = pygame.Vector2(data.get("spawn_point", [0, 0]))
-
-        mapsize = data.get("Mapsize", (0, 0))
-        mapset = np.loadtxt(f"assets/saves/{map_name}_mapset.txt", dtype=int) 
-        
-        tileset = Tileset.load_from_data(data.get("Tileset", {}))
-        name = data.get("Map_name")
-        map = Map(mapsize, tileset, mapset, name)
-        map.spawn_point = spawn_point
-
-        worldelements_data: dict[str, list[dict]] = data.get("worldelements", [])
-        for element_data in worldelements_data.get("ally", []):
-            element = Ally.load_from_data(element_data)
-            map.allies.append(element)
-
-        for element_data in worldelements_data.get("item", []):
-            element = Item.load_from_data(element_data)
-            item_class = ITEM_REGISTRY.get(element_data.get("type"))
-
-            element = item_class.load_from_data(element_data.get("item", {}))
-            map.items.append(element)
-        
-        for element_data in worldelements_data.get("mob", []):
-            element = Mob.load_from_data(element_data)
-            map.mobs.append(element)
-
-        return map
 
 
 

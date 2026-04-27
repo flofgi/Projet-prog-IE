@@ -8,10 +8,10 @@ if TYPE_CHECKING:
     from Camera import Camera
 
 from Item.utilitary import register_item
-from Item.base_Item import Item
+from Item.Item import Item
 from WorldElement.Mob import Mob
 import pygame
-from events import vec_to_list, list_to_vec
+from utilitary import vec_to_list, list_to_vec
 
 
 DEFAULT_SHOT_DISTANCE = 50
@@ -76,8 +76,8 @@ class gun(Item):
     def update(self, dt, map, target = None):
         self.animation_time += dt
 
-    def save(self) -> dict:
-        data = super().save()
+    def save(self, map_name: str, data: dict = {}) -> dict:
+        data = super().save(map_name, data)
         data.update(
             {
                 "shot_distance": self.shot_distance,
@@ -103,9 +103,11 @@ class gun(Item):
             data (dict): A dictionary containing the gun's saved state, including shot distance, tolerance, damage, and list of shots.
             map_name (str, optional): The name of the map to load coordinates from. Defaults to None.
         """
+        coordinates_data = data.get(map_name, {}).get("coordinates", data.get("coordinates", [0, 0]))
+
         gun_instance = self(
             sprites=data.get("sprites", []),
-            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", None)),
+            coordinates=list_to_vec(coordinates_data),
             durability=data.get("durability", None),
             be_stackable=data.get("be_stackable", False),
             shot_distance=data.get("shot_distance", DEFAULT_SHOT_DISTANCE),

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from Item import Item
+from Item.Item import Item
 
 
 if TYPE_CHECKING:
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 from WorldElement.Entity import Entity
 from Inventory import Inventory
 from Item.Sword import sword
-from utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE, vec_to_list
+from utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE, list_to_vec, vec_to_list
 
 
 import pygame
@@ -48,7 +48,7 @@ class Player(Entity):
         inventory (list): List of items owned by the player.
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = DEFAULT_NAME) -> None:
         """Initialize a player with allies and inventory state.
         
         Args:
@@ -58,7 +58,7 @@ class Player(Entity):
             allies (list[Ally], optional): List of allies to initialize with. Defaults to None.
             inventory (dict, optional): List of items to initialize the inventory with. Defaults to None.
         """
-        super().__init__(hp, sprites, coordinates, DEFAULT_NAME)
+        super().__init__(hp, sprites, coordinates, name)
         self.shot_distance = DEFAULT_SHOT_DISTANCE
         self.shot_angle = DEFAULT_SHOT_ANGLE
         self.damage = DEFAULT_DAMAGE
@@ -173,7 +173,7 @@ class Player(Entity):
                 return True
         return False
 
-    def load(self,map: Map , camera: Camera, allies: list[Ally] = None, inventory = None):
+    def load(self,map: Map , camera: Camera, allies: list[Ally] = None, inventory = None, name: str = DEFAULT_NAME):
         """Load sprites from disk.
 
         If sprites is provided, replace the stored sprite paths before loading.
@@ -195,7 +195,8 @@ class Player(Entity):
         
         if self.inventory.held_item is not None:
             self.inventory.held_item.load()
-
+        
+        self.inventory.load()
     
     def load_new_map(self, new_map: Map, new_camera: Camera, coordinates: pygame.Vector2):
         """Update the player's map reference when transitioning to a new map."""
@@ -204,14 +205,14 @@ class Player(Entity):
         self.coordinates = coordinates
 
     def save(self, map_name: str, data: dict | None = None) -> dict:
-        super().save(data)
+        data = super().save(map_name, data)
         data.update(
             {
                 "shot_distance": self.shot_distance,
                 "shot_angle": self.shot_angle,
                 "damage": self.damage,
                 "allies": [ally.save(map_name) for ally in self.allies],
-                "inventory": self.inventory.save(),
+                "inventory": self.inventory.save(map_name),
                 f"{map_name}": {
                     "coordinates": vec_to_list(self.coordinates)
                 }
@@ -240,9 +241,16 @@ class Player(Entity):
         player.inventory = Inventory.load_from_data(inventory_data)
 
         return player
-
-
-
+    
+    def load_map(self, map: Map, camera: Camera, player_data: dict):
+        """Load a new map and update the player's position accordingly."""
+        self.map = map
+        self.camera = camera
+        map = player_data.get(self.map.name, {})
+        if map == {}:
+            self.coordinates = self.map.spawn_point.copy()
+        else:
+            self.coordinates = list_to_vec(map.get("coordinates", vec_to_list(self.map.spawn_point)))
 
     @property
     def get_allies(self) -> list[Ally]:

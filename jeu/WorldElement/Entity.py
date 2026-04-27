@@ -84,8 +84,10 @@ class Entity(WorldElement):
         if self.hp <= MIN_HP:
             pygame.event.post(pygame.event.Event(DEAD, target = self))
 
-    def save(self, data: dict = {}) -> dict[str, dict]:
-        super().save(data)
+    def save(self, map_name, data: dict = {}) -> dict[str, dict]:
+        data = super().save(map_name, data)
+        
+        
         data.update(
             {
                 "hp": self.hp,
@@ -105,10 +107,12 @@ class Entity(WorldElement):
             data (dict): A dictionary containing the entity's saved state, including health points, velocity, animation state, and position.
             """
         
+        coordinates_data = data.get(map_name, {}).get("coordinates")
+
         entity = self(
             hp=data.get("hp", 100),
             sprites=data.get("sprites", []),
-            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0])),
+            coordinates=list_to_vec(coordinates_data),
             name=data.get("name", DEFAULT_NAME)
         )
         entity.scale = data.get("scale", 1.0)

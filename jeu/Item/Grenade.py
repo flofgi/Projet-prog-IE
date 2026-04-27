@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from WorldElement.Mob import Player
 
 import pygame
-from Item.base_Item import Item
+from Item.Item import Item
 from Item.utilitary import register_item
 from utilitary import GRENADE_EXPLOSION_EVENT, vec_to_list, list_to_vec
 
@@ -54,8 +54,8 @@ class grenade(Item):
             )
         )
 
-    def save(self) -> dict:
-        data = super().save()
+    def save(self, map_name: str, data: dict = {}) -> dict:
+        data = super().save(map_name, data)
         data.update(
             {
                 "radius": self.radius,
@@ -73,9 +73,11 @@ class grenade(Item):
             data (dict): A dictionary containing the grenade's saved state, including radius, damage, and position.
             map_name (str, optional): The name of the map to retrieve coordinates from. Defaults to None.
         """
+        coordinates_data = data.get(map_name, {}).get("coordinates", data.get("coordinates", [0, 0]))
+
         grenade = self(
             sprites=data.get("sprites", []),
-            coordinates=list_to_vec(data.get(map_name, {}).get("coordinates", [0, 0])),
+            coordinates=list_to_vec(coordinates_data),
             radius=data.get("radius", DEFAULT_GRENADE_RADIUS),
             damage=data.get("damage", DEFAULT_GRENADE_DAMAGE)
         )
