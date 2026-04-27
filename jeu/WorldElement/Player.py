@@ -16,9 +16,13 @@ if TYPE_CHECKING:
 from WorldElement.Entity import Entity
 from Inventory import Inventory
 from Item.Item import Item
-from utilitary import RECUP_EVENT, ALLY_EVENT, KEYS, STATE_POP, STATE_REPLACE, STATE_PUSH, MOUSE
+from utilitary import RECUP_EVENT, ALLY_EVENT, STATE_POP, STATE_REPLACE, STATE_PUSH
+
+from assets.keys_dictionary import KEYS, MOUSE
 
 import pygame
+
+
 
 
 DEFAULT_NAME = " "
