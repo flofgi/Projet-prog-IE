@@ -1,3 +1,4 @@
+
 import pygame
 
 from abc import ABC, abstractmethod
@@ -42,11 +43,11 @@ class State(ABC):
         """
         pass
 
-    def handle_event(self, event: pygame.event.Event):
+    def handle_events(self, event: pygame.event.Event):
         """Optional method to handle events specific to the state.
 
         Args:
-            event (pygame.event.Event): The pygame event to handle.
+            event (pygame.event.Event): A single pygame event to handle
         """
         pass
     
@@ -68,5 +69,3 @@ class State(ABC):
     def unpause(self):
         """Optional method to unpause the state when it becomes active again."""
         pass
-
-
