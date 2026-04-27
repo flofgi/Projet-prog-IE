@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 
 
 from abc import ABC, abstractmethod
+from utilitary import vec_to_list
 
 import pygame
 
@@ -54,7 +55,7 @@ class WorldElement(ABC):
         Don't forget to change the animation timer. """
         pass
 
-    def handle_events(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event):
         """Check for player-specific events such as item pickup or ally interaction.
         Args:
             events (pygame.event.Event):events to process for interactions.
@@ -102,7 +103,21 @@ class WorldElement(ABC):
             int(self.coordinates.x + self.hitbox_offset.x),
             int(self.coordinates.y + self.hitbox_offset.y),
         )
-    
+
+    def save(self, map_name: str, data: dict | None = None) -> dict:
+        """Serialize the common state shared by every world element."""
+        data = data or {}
+        data.update({
+            "type": self.__class__.__name__,
+            "name": self.name,
+            "sprites": list(self.sprite_paths),
+            map_name:{
+                "coordinates": vec_to_list(self.coordinates),
+            },
+            "scale": self.scale,
+        })
+        return data
+
 
     def distance_to(self, target: WorldElement | pygame.Vector2) -> float:
         """Calculate the distance between this element and a target.

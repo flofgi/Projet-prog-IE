@@ -13,6 +13,8 @@ ATTACK = pygame.event.custom_type()
 DEAD = pygame.event.custom_type()
 BOSSFIGHT = pygame.event.custom_type()
 GRENADE_EXPLOSION_EVENT = pygame.event.custom_type()
+CHANGE_FPS = pygame.event.custom_type()
+KEY_CHANGE = pygame.event.custom_type()
 
 # BASIC COLOR
 
@@ -38,3 +40,15 @@ def read_json(f_path) -> dict:
     if os.path.exists(f_path):
         with open(f_path, "r", encoding="utf-8") as f:
             return json.load(f)
+      
+
+def vec_to_list(vec: pygame.Vector2 | None) -> list[float] | None:
+    """Convert a pygame.Vector2 to a list of two floats, or return None if the input is None."""
+    if vec is None:
+        return None
+    return [vec.x, vec.y]
+
+def list_to_vec(lst: list[float] | None) -> pygame.Vector2 | None:
+    if lst is None:
+        return None
+    return pygame.Vector2(lst[0], lst[1])

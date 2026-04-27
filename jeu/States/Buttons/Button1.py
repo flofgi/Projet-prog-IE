@@ -1,7 +1,7 @@
 import pygame
 from utilitary import read_json
 
-from States.Buttons.Buttons import ClassicButtons, SpliteButtons
+from States.Buttons.Buttons import ClassicButtons
 
 class ClassicButton1(ClassicButtons):
     def __init__(self, center_pos: tuple[int, int], sprite, sprite_hovered: pygame.Surface, state_name: str, state_action: pygame.event.EventType, myFont: pygame.font.Font = None ,text_pos: tuple[int, int] = None, name: str = "Error" ,text_color = (255, 255, 255) ,rect_pos: tuple[int, int] = None,  scale: int = 1, hovered_scale: int = 1):
@@ -87,25 +87,6 @@ class ClassicButton1(ClassicButtons):
 
 
 
-class SpliteButton1(SpliteButtons):
-    def __init__(self, topleft_pos: tuple[int, int], sprite: pygame.Surface, button_width: int, button_height: int, corner_dim: tuple[int, int], top_side_width: int, side_side_height: int):
-        super().__init__(topleft_pos, sprite, button_width, button_height, corner_dim, top_side_width, side_side_height)
-
-    def update(self, dt):
-        
-        pass
-
-    def update_position(self, topleft_pos: tuple[int, int]):
-        super().update_position(topleft_pos)
-
-    def _create_list_of_sprites_pos(self, new_topleft_pos, corner_dim, top_side_width, side_side_height, top_side_itteration, left_side_itteration):
-        return super()._create_list_of_sprites_pos(new_topleft_pos, corner_dim, top_side_width, side_side_height, top_side_itteration, left_side_itteration)
-
-    def handle_event(self, event: pygame.event.Event):
-        super().handle_event(event)
-
-    def draw(self, screen: pygame.Surface):
-        super().draw(screen)
 
 
     

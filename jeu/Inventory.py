@@ -1,7 +1,10 @@
-from Item.Item import Item
-from utilitary import STATE_POP, STATE_PUSH
+from __future__ import annotations
+
 import pygame
 
+from utilitary import STATE_POP, STATE_PUSH
+from Item.Item import Item
+from Item.utilitary import ITEM_REGISTRY
 
 MAX_SLOT = 15
 SLOT_SIZE = 64
@@ -71,7 +74,43 @@ class Inventory:
 
     def load(self):
         """Load sprites for all items in the inventory."""
-        pass
+        for item in self.items:
+            item.load()
+
+    def save(self, map_name: str) -> dict:
+        return {
+            "items": [
+                {
+                    "type": type(item).__name__,
+                    "item": item.save(map_name),
+                    "count": values[self.COUNT_INDEX],
+                    "slot": values[self.SLOT_INDEX],
+                }
+                for item, values in self.items.items()
+            ]
+        }
+
+    @classmethod
+    def load_from_data(self, data: dict) -> Inventory:
+        """Create an Inventory instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the inventory's saved state, including items and their counts and slots.
+        """
+        items_data: dict[str, dict[str, dict]] = data.get("items", [])
+        items = {}
+        for item_data in items_data:
+            typee = item_data.get("type", {})
+            item_class: type[Item] = ITEM_REGISTRY.get(typee)
+            if item_class is None:
+                continue
+
+            item = item_class.load_from_data(item_data.get("item", {}))
+            count = item_data.get("count", 0)
+            slot = item_data.get("slot", 0)
+            items[item] = [count, slot]
+        return self(items)
+
 
     @property
     def number_slot(self) -> int:

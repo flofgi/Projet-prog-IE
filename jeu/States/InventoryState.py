@@ -2,13 +2,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from StateManager import StateManager
+    from States.StateManager import StateManager
 
 
 import pygame
 
-from States.State import State
-from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE, KEYS, MOUSE
+from .State import State
+from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE
+from assets.keys_dictionary import KEYS, MOUSE
 from WorldElement.Player import Player
 from Inventory import Inventory
 from Item.Item import Item
@@ -44,7 +45,7 @@ class InventoryState(State):
 
 
     def load(self):
-        self.player: Player = self.manager.routes["gameplay"].player
+        self.player: Player = self.manager.routes["gameplay_state"].player
         self.inventory: Inventory = self.player.inventory
         self.scale = int(INVENTORY_SCALE_RATIO * self.screen_size[0] // INVENTORY_IMAGE_SIZE.x)
 
@@ -90,29 +91,29 @@ class InventoryState(State):
 
                                        
 
-    def handle_events(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event):
         """Handle events specific to the Inventory state.
         
         Args:
             event (pygame.event.Event): An event to handle.
         """
         if event.type == pygame.KEYDOWN:
-            if event.key == KEYS["inventory"] or event.key == KEYS["escape"]:
+            if event.key == KEYS["INVENTORY"] or event.key == KEYS["ESCAPE"]:
                 self.inventory.close_inventory()
             
-            if event.key == KEYS["inventoryUP"]:
+            if event.key == KEYS["UP"]:
                 self.cursor_move((1, 0))
             
-            if event.key == KEYS["inventoryDOWN"]:
+            if event.key == KEYS["DOWN"]:
                 self.cursor_move((-1, 0))
             
-            if event.key == KEYS["inventoryLEFT"]:
+            if event.key == KEYS["LEFT"]:
                 self.cursor_move((0, -1))
             
-            if event.key == KEYS["inventoryRIGHT"]:
+            if event.key == KEYS["RIGHT"]:
                 self.cursor_move((0, 1))
             
-            if event.key == KEYS["inventorySELECT"]:
+            if event.key == KEYS["INTERACT"]:
                 self.select_item()
         
         if event.type == pygame.MOUSEBUTTONDOWN:

@@ -1,20 +1,19 @@
 from __future__ import annotations
 
+import json
+import os
+from random import randint
+
 import numpy as np
 import pygame
 
 from Camera import Camera
-from Map import Map, Tileset
+from Map import Map
 from States.State import State
 from States.StateManager import StateManager
 from WorldElement.Player import Player
-from Item.Gun import gun
-from Item.Sword import sword
-from utilitary import KEYS, STATE_PUSH, STATE_POP, STATE_REPLACE
-from WorldElement.Ally import Ally
-from WorldElement.Mob import Mob
-from Item import Item
-from random import randint
+from utilitary import read_json, vec_to_list, list_to_vec, STATE_POP
+from assets.keys_dictionary import KEYS
 
 
 INTERACT_RANGE = 50
@@ -24,16 +23,16 @@ ALLY_COUNT = 10
 MOB_COUNT = 10
 ITEM_SPAWN_COUNT = 20
 RANDOM_SPAWN_MIN = pygame.Vector2(100, 100)
-RANDOM_SPAWN_MAX = pygame.Vector2(150, 150)
+RANDOM_SPAWN_MAX = pygame.Vector2(400, 400)
 SWORD_ANGLE = 90
 SWORD_RANGE = 50
-BACKGROUND_COLOR = (25, 30, 40)
+BACKGROUND_COLOR = (0, 0, 50)
 
 TILESIZE =  (32, 32)
 MAPSIZE = pygame.Vector2(30, 40)
-WINDOWSIZE = pygame.Vector2(800, 800)
-SPEED = 3
 TILESET = "Design/Tileset/MAP1_tileset.png"
+DEFAULT_MAPSET_PATH = "assets/mapset_test.txt"
+DEFAULT_PLAYER_SPRITE = "Design/Hunter_Stand_DB_1.png"
 
 
 def random_spawn_position() -> pygame.Vector2:
@@ -44,59 +43,60 @@ def random_spawn_position() -> pygame.Vector2:
 
 
 class Gameplay(State):
-    """Playable state with two simple test maps."""
+    """Playable state with save/load support."""
 
-    def __init__(self, state_manager: StateManager):
+    def __init__(self, state_manager: StateManager, game_name: str, first_map_name: str):
         super().__init__(state_manager)
+        self.game_name = game_name
+        self.first_map = first_map_name
+        self.initmaps = []
+        self.map: Map | None = None
+        self.camera: Camera | None = None
+        self.player: Player | None = None
 
-    def handle_events(self, event: pygame.event.Event):
+        if os.path.exists("assets/saves/init/map"):
+            for files in os.listdir("assets/saves/init/map"):
+                if files.endswith(".json"):
+                    self.initmaps.append(files[:-5])
+
+        self.maps = []
+
+        os.makedirs(f"assets/saves/{self.game_name}/map", exist_ok=True)
+        for files in os.listdir(f"assets/saves/{self.game_name}/map"):
+            if files.endswith(".json"):
+                self.maps.append(files[:-5])
+
+
+    def handle_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
-            if event.key == KEYS["inventory"]:
-                self.player.open_inventory()
-            
-            elif event.key == KEYS["escape"]:
-                pygame.event.post(pygame.event.Event(pygame.QUIT, state = "quit"))
-            
-            elif event.key == KEYS["interact"]:
+            if event.key == KEYS["INTERACT"]:
                 for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
+            
+            if event.key == KEYS["ESCAPE"]:
+                pygame.event.post(pygame.event.Event(STATE_POP))
+            
+            if event.key == KEYS["INVENTORY"]:
+                self.player.open_inventory()
 
-
-        self.map.handle_events(event)
-        self.player.handle_events(event)
+        self.map.handle_event(event)
+        self.player.handle_event(event)
 
     def load(self):
-        screen_size = pygame.display.get_surface().get_size()
+        """Load gameplay from saved map if available, otherwise from init map."""
+        if self.player is None:
+            player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
+            if player_data:
+                self.player = Player.load_from_data(player_data, self.first_map)
+            else:
+                init_data = read_json("assets/saves/init/player.json") or {}
+                self.player = Player.load_from_data(init_data, self.first_map)
 
-        self.camera = Camera((int(MAPSIZE.x), int(MAPSIZE.y)), screen_size, TILESIZE)
-
-        self.player = Player(
-            PLAYER_HP,
-            ["Design/Hunter_Stand_DB_1.png"],
-            PLAYER_SPAWN,
-            self.camera,
-        )
-
-        allies = [Ally(10, ["Design\\Hunter_Stand_DB_2.png"], random_spawn_position()) for _ in range(ALLY_COUNT)]
-        mobs = [Mob(10, ["Design\\Hunter_Walk_GB_3.png"], random_spawn_position()) for _ in range(MOB_COUNT)]
-
-        items : Item = [
-            sword(["Design\\sword.png"], random_spawn_position(), SWORD_ANGLE, SWORD_RANGE)
-            for _ in range(ITEM_SPAWN_COUNT)
-        ] + [
-            gun(["Design\\gun.png"], random_spawn_position())
-            for _ in range(ITEM_SPAWN_COUNT)
-        ]
-
-        self.map: Map = Map(
-            mapsize=(int(MAPSIZE.x), int(MAPSIZE.y)),
-            tileset=tileset,
-            mapset=mapset,
-            worldelements=allies + mobs + items,
-        )
-        self.map.load()
-        self.player.load(self.map)
+        if self.first_map not in self.maps:
+            self.load_new_map(self.first_map)
+        else:
+            self.load_map(self.first_map)
 
     def update(self, dt: float):
         self.player.update(dt, self.map)
@@ -104,19 +104,8 @@ class Gameplay(State):
         self.camera.update(self.player)
 
     def render(self, screen: pygame.Surface):
-        screen.fill(BACKGROUND_COLOR)
-
-        self.map.draw()
-        screen.blit(
-            self.map.image,
-            self.map.rect,
-            (
-                self.camera.x,
-                self.camera.y,
-                screen.get_width(),
-                screen.get_height(),
-            ),
-        )
+        self.camera.scaled_window.fill(BACKGROUND_COLOR)
+        self.map.draw(self.camera)
 
         render_list = self.map.get_worldelement + [self.player] + self.player.get_allies
         render_list.sort(key=lambda e: e.get_rect.bottom)
@@ -124,61 +113,76 @@ class Gameplay(State):
         for element in render_list:
             if not element.sprite:
                 continue
-            element.draw(screen, self.camera, self.player)
+            element.draw(self.camera.scaled_window, self.camera, self.player)
 
-    def load_new_map(self, map_name: str):
-        """Load a new map and update player/camera links."""
-        if map_name not in self.maps:
+        self.camera.render(screen)
+
+    def handle_collision(self):
+        """Placeholder collision-handling hook."""
+        self.map.handle_collisions(self.player)
+
+    def unload(self):
+        self.save()
+
+    def save(self) -> None:
+        """Save current map/player state without losing data from other maps."""
+        if self.map is None or self.player is None or self.camera is None:
             return
 
-        self.map = self.maps[map_name]
+        save_dir = f"assets/saves/{self.game_name}"
+        os.makedirs(f"{save_dir}/map", exist_ok=True)
+
+        player_data = read_json(f"{save_dir}/player.json") or {}
+
+        self.map.save(self.camera, self.game_name)
+        player_data = self.player.save(self.map.name, player_data)
+
+        with open(f"{save_dir}/player.json", "w", encoding="utf-8") as f:
+            json.dump(player_data, f, indent=4)
+
+
+    def load_new_map(self, map_name: str):
+
+        if map_name not in self.initmaps:
+            raise ValueError(f"Map '{map_name}' not found in initial maps. Available maps: {self.initmaps}")
+
+        if self.map is not None:
+            self.map.save(self.camera, self.game_name)
+
+        map_data = read_json(f"assets/saves/init/map/{map_name}.json")
+        self.map, self.camera = Map.load_from_data(map_data, map_name, "assets/saves/init/map/")
+        
         self.map.load()
-        self.camera = self.cameras[map_name]
-        self.player.camera = self.camera
-        self.player.map = self.map
-        self.player.get_coordinates = self.map.spawn_point
 
-    def load_save(self, save_data: str):
-        """Placeholder save-loading hook."""
-        pass
+        player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
+        allies = getattr(self.player, "allies", None)
+        inventory = getattr(getattr(self.player, "inventory", None), "items", None)
+        self.player.load(self.map, self.camera, allies, inventory)
+        self.player.load_map(self.map, self.camera, player_data)
+    
+    def load_map(self, map_name: str):
+        """Load a previously saved map state."""
+        if map_name not in self.maps:
+            self.load_new_map(map_name)
+            return
+        else:
+            map_path = f"assets/saves/{self.game_name}/map/"
+        
+        if self.map is not None:
+            self.map.save(self.camera, self.game_name)
 
+        map_data = read_json(f"{map_path}{map_name}.json")
 
+        self.map, self.camera = Map.load_from_data(map_data, map_name, map_path)
+        
+        self.map.load()
 
+        player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
+        allies = getattr(self.player, "allies", None)
+        inventory = getattr(getattr(self.player, "inventory", None), "items", None)
+        self.player.load(self.map, self.camera, allies, inventory)
+        self.player.load_map(self.map, self.camera, player_data)
 
-
-
-tileset = Tileset(TILESET, tilesize=TILESIZE)
-mapset = np.array([
-    [1, 6, 2, 4, 1, 6, 2, 4, 1, 5, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 3, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6],
-    [4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 3, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 1, 4, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1],
-    [2, 4, 1, 6, 2, 4, 1, 6, 5, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 5, 1, 6, 2, 4, 1, 6],
-    [6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 3, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2],
-    [1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 3, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4],
-    [4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 5, 2, 1, 6, 4, 2, 1, 6],
-    [6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 3, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1],
-    [2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 5, 4, 2, 1, 6, 4, 2, 1, 6, 4],
-    [1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 3, 2, 1, 4, 6, 2],
-    [6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 5, 2, 4, 1],
-    [4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 3, 6, 1, 2, 4, 6, 1, 2],
-    [2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 5, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6],
-    [1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 18, 22, 6, 1, 4, 2, 6, 1, 3, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6],
-    [6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 19, 23, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 5, 4, 6, 2, 1, 4],
-    [4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 4, 6, 2, 1, 3, 6, 2, 1],
-    [2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 5, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1],
-    [1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 3, 4, 6],
-    [6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 5, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4],
-    [4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 3, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2],
-    [2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 4, 6, 1, 2, 5, 6, 1, 2, 4, 6, 1],
-    [1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 3, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2, 1, 6, 4, 2],
-    [6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 5, 2, 4, 1],
-    [4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 3, 2, 4, 1, 6, 2, 4, 1, 6, 2],
-    [2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 5, 4],
-    [1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 3, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6],
-    [6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 5, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1, 6, 2, 4, 1],
-    [4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 3, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6],
-    [2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 5, 6, 4, 1, 2, 6, 4, 1],
-    [1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 3, 4, 1, 2, 6, 4, 1, 2, 6, 4],
-    [6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 4, 1, 2, 6, 5, 1, 2],
-    [4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 3, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1, 4, 2, 6, 1],
-])
-
+    def load_save(self, map_name: str):
+        """Compatibility wrapper for old callsites."""
+        self.load_map(map_name)

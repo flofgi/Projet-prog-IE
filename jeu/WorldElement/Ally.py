@@ -10,7 +10,7 @@ from WorldElement.Entity import Entity
 import pygame
 from random import uniform, randint
 from math import pi, cos, sin
-from utilitary import ALLY_EVENT
+from utilitary import ALLY_EVENT, list_to_vec, vec_to_list
 
 
 DEFAULT_NAME = " "
@@ -40,9 +40,9 @@ class Ally(Entity):
         name (string) name of entity
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str = DEFAULT_NAME) -> None:
         """Initialize an ally with follow and wandering parameters."""
-        Entity.__init__(self, hp, sprites, coordinates, DEFAULT_NAME)
+        Entity.__init__(self, hp, sprites, coordinates, name)
         self.wandering_point = DEFAULT_WANDERING_POINT.copy()
         self.target_coordinates = coordinates
         self.ALERT_ZONE = DEFAULT_ALERT_ZONE
@@ -139,3 +139,48 @@ class Ally(Entity):
         rayon = uniform(min_rayon_limite, max_rayon_limite)
         angle = uniform(RANDOM_BOOL_MIN, TAU)
         return pygame.Vector2(cos(angle)*rayon, sin(angle)*rayon)+target
+
+
+
+    def save(self, map_name: str | None, data: dict[str, dict] | None = None) -> dict:
+        if data is None:
+            data = {}
+        if map_name not in data:
+            data[map_name] = {}
+
+
+        super().save(map_name, data)
+        wandering_point = vec_to_list(self.wandering_point)
+        target_coordinates = vec_to_list(self.target_coordinates)
+
+
+        data[map_name].update(
+            {
+                "wandering_point": wandering_point,
+                "target_coordinates": target_coordinates,
+                "ALERT_ZONE": self.ALERT_ZONE,
+                "CONFORT_ZONE": self.CONFORT_ZONE,
+                "WANDERING_ZONE": self.WANDERING_ZONE
+            }
+        )
+
+        return data
+
+    @classmethod
+    def load_from_data(self, data: dict[str, dict[str, dict]], map_name: str | None = None) -> Ally:
+        """Create an Ally instance from saved data.
+        
+        Args:
+            data (dict): A dictionary containing the ally's saved state, including wandering point, target coordinates, and zone thresholds.
+        """
+ 
+        ally: Ally = super().load_from_data(data, map_name)
+
+        map_data = data.get(map_name, {}) if map_name is not None else data
+        ally.wandering_point = list_to_vec(map_data.get("wandering_point", [0, 0]))
+        ally.target_coordinates = list_to_vec(map_data.get("target_coordinates", [0, 0]))
+        ally.ALERT_ZONE = map_data.get("ALERT_ZONE", DEFAULT_ALERT_ZONE)
+        ally.CONFORT_ZONE = map_data.get("CONFORT_ZONE", DEFAULT_CONFORT_ZONE)
+        ally.WANDERING_ZONE = map_data.get("WANDERING_ZONE", DEFAULT_WANDERING_ZONE)
+        
+        return ally

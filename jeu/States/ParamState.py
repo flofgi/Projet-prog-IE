@@ -7,7 +7,7 @@ from States.StateManager import StateManager
 
 from States.Buttons.TextButton import TextButton
 from States.Buttons.ScrollButton import ScrollButton
-from States.Buttons.Button1 import ClassicButton1, SpliteButton1
+from States.Buttons.Button1 import ClassicButton1
 from States.Buttons.ClickButton import ClickButton
 
 from utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN, update_json, CHANGE_FPS

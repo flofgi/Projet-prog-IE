@@ -63,3 +63,32 @@ class Camera :
   @property
   def rect(self):
     return pygame.Rect(self.x, self.y, self.zoomsize[0], self.zoomsize[1])
+  
+  def save(self) -> dict:
+    """save the camera's position and relevant attributes for serialization."""
+    return {
+        "x": self.x,
+        "y": self.y,
+        "scale": self.coefscale,
+        "max_scale": self.max_scale,
+        "min_scale": self.min_scale,
+        "coefscale": self.coefscale,
+        "zoomsize": self.zoomsize
+    }
+
+  @classmethod
+  def load_from_data(cls, data: dict, mapsize: tuple, windowsize: tuple, tilesize: tuple) -> Camera:
+    """Create a Camera instance from saved data.
+    
+    Args:
+        data (dict): A dictionary containing the camera's saved state, including position and zoom level.
+    """
+    camera = cls(mapsize=mapsize, windowsize=windowsize, tilesize=tilesize)
+    camera.x = data.get("x", 0)
+    camera.y = data.get("y", 0)
+    camera.coefscale = data.get("coefscale", 1.0)
+    camera.zoomsize = data.get("zoomsize", windowsize)
+    camera.max_scale = data.get("max_scale", 2.0)
+    camera.min_scale = data.get("min_scale", 0.04)
+    
+    return camera

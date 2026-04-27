@@ -64,7 +64,7 @@ Class managing the map, the mini-map and all entities within it.
 | map | draw | method | renders the map and visible entities |
 | map | get_worldelement | method | property returning all world elements |
 | map | get_worldelements | method | returns world elements filtered by distance/type |
-| map | handle_events | method | dispatches events to world elements and map |
+| map | handle_event | method | dispatches events to world elements and map |
 | map | load | method | loads all world elements |
 | map | tiles | list[list[int]] | structure to stock the collision of the map |
 | map | transfer_entity(entity, old_sector, new_sector) | method | transfer an entity from one sector to another |
@@ -84,7 +84,7 @@ Subclass of Entity enabling movement and inventory management, as well as object
 | player | drop | method |
 | player | add_ally | method |
 | player | add_Item | method | method allowing adding one item to inventory |
-| player | handle_events | method | method processing player-specific events |
+| player | handle_event | method | method processing player-specific events |
 | player | handle_keys | method | method computing velocity from keys state |
 | player | load | method | method loading player sprites and map reference |
 | player | get_allies | method | property returning allies |

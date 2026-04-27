@@ -33,3 +33,21 @@ class Tileset:
       """Nullify the tile list"""
       for i in range (len(self.tiles)):
         self.tiles[i]=None
+
+    def save(self):
+      """save Tileset data"""
+      return {
+        "file": self.file,
+        "tilesize": self.tilesize,
+        "margin": self.margin,
+        "spacing": self.spacing
+      }
+
+    @classmethod
+    def load_from_data(cls, data):
+        return cls(
+            file=data["file"],
+            tilesize=data["tilesize"],
+            margin=data["margin"],
+            spacing=data["spacing"]
+        )

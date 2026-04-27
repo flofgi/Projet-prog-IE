@@ -4,10 +4,10 @@
             "Percentage": 0.2125
         },
         "button_fps": {
-            "Percentage": 0.175
+            "Percentage": 1.0
         },
         "button_gamma": {
-            "Percentage": 0.725
+            "Percentage": 0.6875
         }
     },
     "Saved_keys": {
@@ -15,9 +15,11 @@
         "DOWN": 115,
         "LEFT": 113,
         "RIGHT": 100,
-        "INVENTORY": 101
+        "INVENTORY": 101,
+        "INTERACT": 97,
+        "ESCAPE": 27
     },
     "Language": {
-        "Name": "en"
+        "Name": "fr"
     }
 }
