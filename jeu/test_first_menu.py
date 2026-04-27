@@ -2,7 +2,6 @@ import pygame
 
 from States.FirstMenu import FirstMenu
 from States.StateManager import StateManager
-from States.NextState import NextState
 from States.Title import Title
 from States.ParamState import ParamState
 from States.KeyMenuState import KeyState 
@@ -31,7 +30,7 @@ pygame.display.set_caption("demo button")
 
 state_manager = StateManager()
 first_menu = FirstMenu(state_manager)
-next_state = NextState(state_manager)
+
 title = Title(state_manager)
 paramState = ParamState(state_manager)
 key_state = KeyState(state_manager)
@@ -43,7 +42,7 @@ state_manager.push_state(first_menu)
 
 state_manager.register_route("title", title)
 state_manager.register_route("first_menu", first_menu)
-state_manager.register_route("next_state", next_state)
+
 state_manager.register_route("param_state", paramState)
 state_manager.register_route("key_state", key_state)
 state_manager.register_route("Switch_key_state", switch_key_state)

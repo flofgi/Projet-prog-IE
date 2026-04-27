@@ -3,12 +3,16 @@ import json
 import os
 # It's in a separate file to avoid circular imports with StateManager and the states that use it. Those under are customs type to post in the event queue.
 
-STATE_REPLACE = pygame.event.custom_type()
 STATE_POP = pygame.event.custom_type()
 STATE_PUSH = pygame.event.custom_type()
+STATE_REPLACE = pygame.event.custom_type()
+RECUP_EVENT = pygame.event.custom_type()
+ALLY_EVENT = pygame.event.custom_type()
 FULLSCREEN = pygame.event.custom_type()
-KEY_CHANGE = pygame.event.custom_type()
-CHANGE_FPS = pygame.event.custom_type()
+ATTACK = pygame.event.custom_type()
+DEAD = pygame.event.custom_type()
+BOSSFIGHT = pygame.event.custom_type()
+GRENADE_EXPLOSION_EVENT = pygame.event.custom_type()
 
 # BASIC COLOR
 

@@ -5,7 +5,7 @@ from States.State import State
 from States.Buttons.Button1 import ClassicButton1
 from utilitary import KEY_CHANGE, STATE_POP, update_json, WHITE, DARKEN_COLOR
 
-from States.keys_dictionary import keys_dictionary
+from assets.keys_dictionary import KEYS
 
 # Constantes 
 BACKGROUND_SCALE = 3
@@ -59,7 +59,7 @@ class SwitchKeyState(State):
     def update(self, dt):
         if self.exit_key == True:
             self.exit_key = False
-            keys_dictionary[self.changed_key] = self.new_key
+            KEYS[self.changed_key] = self.new_key
             pygame.event.post(pygame.event.Event(STATE_POP, state="key_state"))
 
         if self.screen_is_resized == True:
@@ -105,7 +105,7 @@ class SwitchKeyState(State):
     def unload(self):
         #json save touche modifier, ainsi, lorsqu'on fermera le jeu, on pourra garder les touches modifier. On doit sauvegarder chaque un tuple (str, pygame.key)
         
-        update_json("Saved_keys", keys_dictionary)
+        update_json("Saved_keys", KEYS)
 
         pass
     

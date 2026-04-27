@@ -2,7 +2,7 @@ import pygame
 
 from States.State import State
 from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE, WHITE
-from States.keys_dictionary import load_key
+from States.KEYS import load_key
 
 from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.TextButton import TextButton

@@ -11,7 +11,9 @@ if TYPE_CHECKING:
 from Entity import Entity
 
 from Item import Item
-from events import RECUP_EVENT, ALLY_EVENT, KEYS
+from utilitary import RECUP_EVENT, ALLY_EVENT, STATE_POP, STATE_PUSH
+
+from assets.keys_dictionary import KEYS
 
 import pygame
 class Player(Entity):
