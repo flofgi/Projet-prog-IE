@@ -10,6 +10,10 @@ from States.LanguageState import LanguageState
 from States.Gameplay import Gameplay
 from States.InventoryState import InventoryState
 
+from Item.Grenade import grenade
+from Item.Gun import gun
+from Item.Sword import sword
+
 from utilitary import CHANGE_FPS, read_json
 
 pygame.font.init()
@@ -38,7 +42,7 @@ paramState = ParamState(state_manager)
 key_state = KeyState(state_manager)
 switch_key_state = SwitchKeyState(state_manager)
 language_state = LanguageState(state_manager)
-gameplay = Gameplay(state_manager, "title", "gameplay_test_map")
+gameplay = Gameplay(state_manager, "bip bip bip je suis un satelite", "gameplay_test_map")
 inventorystate = InventoryState(state_manager)
 
 

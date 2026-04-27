@@ -69,7 +69,7 @@ class Gameplay(State):
 
     def handle_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_n:
+            if event.key == KEYS["INTERACT"]:
                 for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
@@ -156,7 +156,7 @@ class Gameplay(State):
 
         player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
         allies = getattr(self.player, "allies", None)
-        inventory = getattr(getattr(self.player, "INVENTORY", None), "items", None)
+        inventory = getattr(getattr(self.player, "inventory", None), "items", None)
         self.player.load(self.map, self.camera, allies, inventory)
         self.player.load_map(self.map, self.camera, player_data)
     
@@ -179,7 +179,7 @@ class Gameplay(State):
 
         player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
         allies = getattr(self.player, "allies", None)
-        inventory = getattr(getattr(self.player, "INVENTORY", None), "items", None)
+        inventory = getattr(getattr(self.player, "inventory", None), "items", None)
         self.player.load(self.map, self.camera, allies, inventory)
         self.player.load_map(self.map, self.camera, player_data)
 
