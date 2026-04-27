@@ -3,7 +3,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Map import Map
-    from WorldElement.Player import Player, WorldElement, Mob
+    from WorldElement.Player import Player
+    from WorldElement.WorldElement import WorldElement
+    from WorldElement.Mob import Mob
 
 
 from .Item import Item

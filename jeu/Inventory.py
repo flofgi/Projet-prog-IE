@@ -112,9 +112,6 @@ class Inventory:
         return self(items)
 
 
-
-
-
     @property
     def number_slot(self) -> int:
         """Return the number of occupied slots in the inventory.
