@@ -82,8 +82,6 @@ class StateManager:
             self.current_state.update(dt)
 
     def handle_event(self, event):
-        if event.type != pygame.MOUSEMOTION:
-            print(event)
         if event.type == STATE_REPLACE:
             self.change_state(self.routes[event.state])
         elif event.type == STATE_POP:

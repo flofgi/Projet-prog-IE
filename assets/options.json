@@ -16,7 +16,7 @@
         "LEFT": 113,
         "RIGHT": 100,
         "INVENTORY": 101,
-        "INTERACT": 101,
+        "INTERACT": 97,
         "ESCAPE": 27
     },
     "Language": {
