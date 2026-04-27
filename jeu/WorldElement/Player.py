@@ -114,7 +114,7 @@ class Player(Entity):
         else:
             self.hand.update(dt, map, self)
 
-    def handle_events(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event):
         """Check for player-specific events such as item pickup or ally interaction.
         Args:
             events (pygame.event.Event):events to process for interactions.
@@ -143,8 +143,8 @@ class Player(Entity):
         Args:
             keys (list[bool]): The current state of all keyboard keys, as returned by pygame.key.get_pressed().
         """
-        direction_x = keys[KEYS["move_right"]] - keys[KEYS["move_left"]]
-        direction_y = keys[KEYS["move_down"]] - keys[KEYS["move_up"]]
+        direction_x = keys[KEYS["RIGHT"]] - keys[KEYS["LEFT"]]
+        direction_y = keys[KEYS["DOWN"]] - keys[KEYS["UP"]]
         self.velocity = pygame.Vector2(direction_x, direction_y)
     
         if self.velocity.length() != 0:
@@ -215,7 +215,7 @@ class Player(Entity):
                 "shot_angle": self.shot_angle,
                 "damage": self.damage,
                 "allies": [ally.save(map_name) for ally in self.allies],
-                "inventory": self.inventory.save(map_name),
+                "INVENTORY": self.inventory.save(map_name),
                 f"{map_name}": {
                     "coordinates": vec_to_list(self.coordinates)
                 }
@@ -240,7 +240,7 @@ class Player(Entity):
         allies_data = data.get("allies", [])
         player.allies = [Ally.load_from_data(ally_data, map_name) for ally_data in allies_data]
 
-        inventory_data = data.get("inventory", {})
+        inventory_data = data.get("INVENTORY", {})
         player.inventory = Inventory.load_from_data(inventory_data)
 
         return player

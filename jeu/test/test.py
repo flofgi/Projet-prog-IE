@@ -27,7 +27,7 @@ inventory_state = InventoryState(state_manager)
 state_manager.push_state(gameplay)
 
 state_manager.register_route("gameplay", gameplay)
-state_manager.register_route("inventory", inventory_state)
+state_manager.register_route("INVENTORY", inventory_state)
 
 clock = pygame.time.Clock()
 

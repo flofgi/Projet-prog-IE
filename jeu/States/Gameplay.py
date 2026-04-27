@@ -12,8 +12,8 @@ from Map import Map
 from States.State import State
 from States.StateManager import StateManager
 from WorldElement.Player import Player
-from utilitary import KEYS, read_json, vec_to_list, list_to_vec
-
+from utilitary import read_json, vec_to_list, list_to_vec, STATE_POP
+from assets.keys_dictionary import KEYS
 
 
 INTERACT_RANGE = 50
@@ -67,20 +67,21 @@ class Gameplay(State):
                 self.maps.append(files[:-5])
 
 
-    def handle_events(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
-            if event.key == KEYS["inventory"]:
-                self.player.open_inventory()
-            elif event.key == KEYS["escape"]:
-                self.save()
-                pygame.event.post(pygame.event.Event(pygame.QUIT, state="quit"))
-            elif event.key == KEYS["interact"]:
+            if event.key == pygame.K_n:
                 for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
+            
+            if event.key == KEYS["ESCAPE"]:
+                pygame.event.post(pygame.event.Event(STATE_POP))
+            
+            if event.key == KEYS["INVENTORY"]:
+                self.player.open_inventory()
 
-        self.map.handle_events(event)
-        self.player.handle_events(event)
+        self.map.handle_event(event)
+        self.player.handle_event(event)
 
     def load(self):
         """Load gameplay from saved map if available, otherwise from init map."""
@@ -155,7 +156,7 @@ class Gameplay(State):
 
         player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
         allies = getattr(self.player, "allies", None)
-        inventory = getattr(getattr(self.player, "inventory", None), "items", None)
+        inventory = getattr(getattr(self.player, "INVENTORY", None), "items", None)
         self.player.load(self.map, self.camera, allies, inventory)
         self.player.load_map(self.map, self.camera, player_data)
     
@@ -178,7 +179,7 @@ class Gameplay(State):
 
         player_data = read_json(f"assets/saves/{self.game_name}/player.json") or {}
         allies = getattr(self.player, "allies", None)
-        inventory = getattr(getattr(self.player, "inventory", None), "items", None)
+        inventory = getattr(getattr(self.player, "INVENTORY", None), "items", None)
         self.player.load(self.map, self.camera, allies, inventory)
         self.player.load_map(self.map, self.camera, player_data)
 

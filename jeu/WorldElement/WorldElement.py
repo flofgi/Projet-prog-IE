@@ -55,7 +55,7 @@ class WorldElement(ABC):
         Don't forget to change the animation timer. """
         pass
 
-    def handle_events(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event):
         """Check for player-specific events such as item pickup or ally interaction.
         Args:
             events (pygame.event.Event):events to process for interactions.

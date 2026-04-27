@@ -2,7 +2,7 @@ import pygame
 
 from States.State import State
 from utilitary import STATE_PUSH, STATE_POP, STATE_REPLACE, WHITE
-from States.KEYS import load_key
+from assets.keys_dictionary import load_key
 
 from States.Buttons.ScrollButton import ScrollButton
 from States.Buttons.TextButton import TextButton
@@ -49,8 +49,8 @@ class FirstMenu(State):
         self._calculte_position(self.screen_size)
 
         self.Start_button = TextButton(self.START_POS,
-                                       "next_state",
-                                       STATE_REPLACE,
+                                       "gameplay_state",
+                                       STATE_PUSH,
                                        self.button_text_font,
                                        name="button_game")
         

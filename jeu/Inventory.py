@@ -1,7 +1,9 @@
-from utilitary import STATE_POP, STATE_PUSH
-from Item.Item import Item
+from __future__ import annotations
+
 import pygame
 
+from utilitary import STATE_POP, STATE_PUSH
+from Item.Item import Item
 from Item.utilitary import ITEM_REGISTRY
 
 MAX_SLOT = 15
@@ -89,7 +91,7 @@ class Inventory:
         }
 
     @classmethod
-    def load_from_data(self, data: dict) -> "Inventory":
+    def load_from_data(self, data: dict) -> Inventory:
         """Create an Inventory instance from saved data.
         
         Args:

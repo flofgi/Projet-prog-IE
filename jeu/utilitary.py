@@ -13,6 +13,8 @@ ATTACK = pygame.event.custom_type()
 DEAD = pygame.event.custom_type()
 BOSSFIGHT = pygame.event.custom_type()
 GRENADE_EXPLOSION_EVENT = pygame.event.custom_type()
+CHANGE_FPS = pygame.event.custom_type()
+KEY_CHANGE = pygame.event.custom_type()
 
 # BASIC COLOR
 

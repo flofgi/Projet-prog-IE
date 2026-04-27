@@ -21,7 +21,7 @@
     "shot_angle": 100,
     "damage": 1,
     "allies": [],
-    "inventory": {
+    "INVENTORY": {
         "items": []
     },
     "map1": {

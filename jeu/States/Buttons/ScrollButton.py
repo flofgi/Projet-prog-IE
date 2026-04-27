@@ -2,7 +2,7 @@ import pygame
 
 import json
 
-from States.Buttons.Buttons import ClassicButtons, SpliteButtons
+from States.Buttons.Buttons import ClassicButtons
 from utilitary import read_json
 
 class ScrollButton(ClassicButtons):

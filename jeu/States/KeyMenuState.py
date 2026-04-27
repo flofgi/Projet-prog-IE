@@ -125,7 +125,7 @@ class KeyState(State):
         if self.MOUSEWHEEL_ON == True:
             self._calculte_position()
             self._calculte_screen_position()
-            self._calculte_text_position()
+            self._calculate_text_position()
             self._update_position()
             self.MOUSEWHEEL_ON = False
 

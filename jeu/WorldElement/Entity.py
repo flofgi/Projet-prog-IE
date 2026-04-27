@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 import pygame
 
 from WorldElement.WorldElement import WorldElement
-from utilitary import DEAD, FPS, vec_to_list, list_to_vec
+from utilitary import DEAD, vec_to_list, list_to_vec
 
 
 DEFAULT_VELOCITY = pygame.Vector2(0, 0)
@@ -37,7 +37,7 @@ class Entity(WorldElement):
         name (string) name of entity
     """
 
-    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = FPS) -> None:
+    def __init__(self, hp: int, sprites: list[str], coordinates: pygame.Vector2, name: str, BASE_FPS: int = 60) -> None:
         """
         Args:
             hp (int): Initial health points for the entity. Must be a positive integer.

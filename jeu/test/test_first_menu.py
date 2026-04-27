@@ -7,8 +7,10 @@ from States.ParamState import ParamState
 from States.KeyMenuState import KeyState 
 from States.SwitchKeyState import SwitchKeyState
 from States.LanguageState import LanguageState
-from utilitary import CHANGE_FPS, read_json
+from States.Gameplay import Gameplay
+from States.InventoryState import InventoryState
 
+from utilitary import CHANGE_FPS, read_json
 
 pygame.font.init()
 
@@ -36,6 +38,8 @@ paramState = ParamState(state_manager)
 key_state = KeyState(state_manager)
 switch_key_state = SwitchKeyState(state_manager)
 language_state = LanguageState(state_manager)
+gameplay = Gameplay(state_manager, "title", "gameplay_test_map")
+inventorystate = InventoryState(state_manager)
 
 
 state_manager.push_state(first_menu)
@@ -47,6 +51,9 @@ state_manager.register_route("param_state", paramState)
 state_manager.register_route("key_state", key_state)
 state_manager.register_route("Switch_key_state", switch_key_state)
 state_manager.register_route("language_state", language_state)
+state_manager.register_route("gameplay_state", gameplay)
+state_manager.register_route("inventory", inventorystate)
+
 
 clock = pygame.time.Clock()
 

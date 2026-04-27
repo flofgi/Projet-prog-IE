@@ -101,13 +101,13 @@ class Map :
     #def get_visible_tiles(): 
     #def transfer_entity():
 
-    def handle_events(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event):
         """Check for player-specific events such as item pickup or ally interaction.
         Args:
             events (pygame.event.Event):events to process for interactions.
         """
         for worldelement in self.get_worldelement:
-            worldelement.handle_events(event)
+            worldelement.handle_event(event)
 
         if event.type == ALLY_EVENT:
             self.allies.remove(event.target)
