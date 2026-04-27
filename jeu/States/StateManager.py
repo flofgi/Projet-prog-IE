@@ -105,3 +105,5 @@ class StateManager:
 
         if self.states:
             self.current_state.render(screen)
+
+    

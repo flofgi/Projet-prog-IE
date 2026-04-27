@@ -1,8 +1,7 @@
 import pygame
 import json
 import os
-
-FPS = 60
+# It's in a separate file to avoid circular imports with StateManager and the states that use it. Those under are customs type to post in the event queue.
 
 STATE_POP = pygame.event.custom_type()
 STATE_PUSH = pygame.event.custom_type()
@@ -15,26 +14,11 @@ DEAD = pygame.event.custom_type()
 BOSSFIGHT = pygame.event.custom_type()
 GRENADE_EXPLOSION_EVENT = pygame.event.custom_type()
 
-KEYS= {
-    "interact": pygame.K_e,
-    "move_up": pygame.K_z,
-    "move_down": pygame.K_s,
-    "move_right": pygame.K_d,
-    "move_left": pygame.K_q,
-    "inventory": pygame.K_i,
-    "escape": pygame.K_ESCAPE,
-    "inventoryUP": pygame.K_UP,
-    "inventoryDOWN": pygame.K_DOWN ,
-    "inventoryLEFT": pygame.K_LEFT ,
-    "inventoryRIGHT": pygame.K_RIGHT,
-    "inventorySELECT": pygame.K_e
-}
+# BASIC COLOR
 
-MOUSE = {
-    "inventorymouseSELECT": 1,
-    "use_item": 1
-}
-
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+DARKEN_COLOR = (0, 0, 0, 127)
 
 
 def update_json(section, new_data, file_path: str = None):

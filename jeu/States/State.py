@@ -23,6 +23,7 @@ class State(ABC):
         """
 
         self.manager = state_manager
+        self.screen_size = None
 
     def load(self):
         """Load resources or initialize variables specific to the state here."""
@@ -33,7 +34,7 @@ class State(ABC):
         pass
  
     @abstractmethod
-    def update(self, dt: float):
+    def update(self, dt: float): 
         """Call the current state update method to get the state logic done.
 
         Args:
