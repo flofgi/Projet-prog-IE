@@ -173,6 +173,7 @@ class ParamState(State):
             self.Button_soundvolume.name: {"Percentage": self.Button_soundvolume.scroll_percent},
             self.Button_fps.name: {"Percentage": self.Button_fps.scroll_percent},
             self.Button_gamma.name: {"Percentage": self.Button_gamma.scroll_percent},
+            self.Button_fullscreen.name: {"Clicked": self.Button_fullscreen.click_state}
         }
 
         update_json("Options", savedParameter)

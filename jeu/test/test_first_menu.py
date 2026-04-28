@@ -23,6 +23,7 @@ pygame.font.init()
 data = read_json("assets/options.json")
 
 FPS = data.get("Options", {}).get("fps", {}).get("Percentage", 1)*240
+Is_Fullscreen = data.get("Options", {}).get("button_fullscreen", {}).get("Clicked", False)
 
 SCREEN_WIDTH = 1280 # de même
 SCREEN_HEIGHT = 720 # de même
@@ -31,6 +32,10 @@ STATE_BACK_COLOR = (5, 5, 10)
 
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE| pygame.DOUBLEBUF)
+
+if Is_Fullscreen == True:
+    pygame.display.toggle_fullscreen()
+
 
 pygame.display.set_caption("demo button")
 
@@ -60,6 +65,8 @@ state_manager.register_route("inventory", inventorystate)
 
 
 clock = pygame.time.Clock()
+
+
 
 run = True
 while run:
