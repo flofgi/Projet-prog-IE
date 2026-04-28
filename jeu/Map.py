@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from WorldElement.WorldElement import WorldElement
     from WorldElement.Player import Player
     from WorldElement.Mob import Mob
+    from WorldElement.WorldElement import Entity
 
 
 #from sectors import sector
@@ -46,6 +47,9 @@ class Map :
         self.allies: list[Ally] = []
         self.items: list[Item] = []
         self.mobs: list[Mob] = []
+        self.walls: list[str] = []
+        self.player_walls: list[str] = []
+        
        #self.sectors = sectors
 
         h, w = self.mapsize
@@ -136,6 +140,34 @@ class Map :
         for worldelement in self.get_worldelement:
             worldelement.update(dt, self, target)
 
+    def move_elements(self, dt: float) -> None:
+        """Move all worldelements from the list"""
+        move_list = self.allies + self.mobs
+        for worldelement in move_list:
+            worldelement.move(dt)
+
+    def handle_collisions(self, dt, player: Player) -> None:
+        """Handle collisions between the player and world elements, as well as between world elements themselves."""
+        worldelements = self.allies + self.mobs
+        for element in worldelements:
+            if element.rect.colliderect(player.rect):
+                element.handle_entity_collision(0, player)
+
+        for i in range(len(worldelements)):
+            for j in range(i + 1, len(worldelements)):
+                elem1 = worldelements[i]
+                elem2 = worldelements[j]
+                if elem1.rect.colliderect(elem2.rect):
+                    elem1.handle_entity_collision(dt, elem2)
+        
+        for i in worldelements:
+            for wall in self.tilerect(i):
+                if i.rect.colliderect(wall):
+                    i.handle_wall_collision(dt, wall)
+        
+        for wall in self.tilerect(player, self.player_walls):
+            if player.rect.colliderect(wall):
+                player.handle_wall_collision(dt, wall)
 
     def load(self) -> None:
         """load all worldelemets"""
@@ -158,7 +190,9 @@ class Map :
                 "item": [item.save(self.name) for item in self.items],
                 "mob": [mob.save(self.name) for mob in self.mobs]
                 },
-            "camera": camera.save()
+            "camera": camera.save(),
+            "walls": self.walls,
+            "player_walls": self.player_walls
         
         }
 
@@ -180,10 +214,15 @@ class Map :
         mapset = np.loadtxt(str(Path(save_path) / f"{map_name}_mapset.txt"), dtype=int)
         mapsize = tuple(data.get("Mapsize", mapset.shape))
         
+        
+
         tileset = Tileset.load_from_data(data.get("Tileset", {}))
         name = data.get("map_name", map_name)
         map = Map(mapsize, tileset, mapset, name)
         map.spawn_point = list_to_vec(data.get("spawn_point", [0, 0]))
+        
+        map.walls = data.get("walls", [])
+        map.player_walls = data.get("player_walls", [])
 
         worldelements_data: dict[str, list[dict]] = data.get("worldelements", {})
         for element_data in worldelements_data.get("ally", []):
@@ -203,6 +242,20 @@ class Map :
 
         return map, Camera.load_from_data(data.get("camera", {}), mapsize, pygame.display.get_surface().get_size(), tileset.getTileSize)
     
+    def tilerect(self, Entity: Entity, walls: list[str] = None) -> list[pygame.Rect]:
+        """Get the tile rectangle corresponding to the entity's position."""
+        tile_w, tile_h = self.tileset.tilesize
+        tile_x = int(Entity.rect.x // tile_w)
+        tile_y = int(Entity.rect.y // tile_h)
 
+        if walls is None:
+            walls = self.walls
+
+        list_rect = []
+        for i in range(3):
+            for j in range(3):
+                if 0 <= tile_y + i - 1 < self.mapset.shape[0] and 0 <= tile_x + j - 1 < self.mapset.shape[1] and self.mapset[tile_y + i - 1, tile_x + j - 1] in walls:
+                    list_rect.append(pygame.Rect((tile_x + j - 1) * tile_w, (tile_y + i - 1) * tile_h, tile_w, tile_h))
+        return list_rect
 
 

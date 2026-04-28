@@ -4,6 +4,8 @@
         250.0,
         250.0
     ],
+    "walls": [ 0 ],
+    "player_walls":[ 15 ],
     "Tileset": {
         "file": "Design/Tileset/MAP1_tileset.png",
         "tilesize": [
@@ -36,7 +38,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -69,7 +71,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -102,7 +104,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -135,7 +137,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -168,7 +170,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -201,7 +203,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -234,7 +236,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -267,7 +269,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -300,7 +302,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -333,7 +335,7 @@
                 "type": "Ally",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_D_3.png"
+                    "Design\\ally.png"
                 ],
                 "scale": 1,
                 "hp": 10,
@@ -1213,7 +1215,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1253,7 +1255,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1293,7 +1295,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1333,7 +1335,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1373,7 +1375,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1413,7 +1415,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1453,7 +1455,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1493,7 +1495,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1533,7 +1535,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [
@@ -1573,7 +1575,7 @@
                 "type": "Mob",
                 "name": " ",
                 "sprites": [
-                    "Design\\Hunter_Walk_GB_3.png"
+                    "Design\\mob.png"
                 ],
                 "gameplay_test_map": {
                     "coordinates": [

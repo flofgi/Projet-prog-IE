@@ -94,6 +94,14 @@ class Player(Entity):
             new_ally (Ally): The ally to be added to the player's list of allies."""
         if new_ally not in self.allies:
             self.allies.append(new_ally)
+    
+    def move(self, dt: float) -> None:
+        """Update player movement from keyboard input. And allies movement.
+        Args:
+            dt (float): Time delta since last update, used for timing animations and movements."""
+        super().move(dt)
+        for ally in self.allies:
+            ally.move(dt)
 
     def update(self, dt: float, map: Map, target: "Player" = None):
         """Update player movement from keyboard input and update allies.
@@ -104,7 +112,6 @@ class Player(Entity):
         keys = pygame.key.get_pressed()
 
         self.handle_keys(keys)
-        self.move(dt)
 
         for ally in self.allies:
             ally.update(dt, self)

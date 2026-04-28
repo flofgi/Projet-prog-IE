@@ -97,7 +97,6 @@ class Ally(Entity):
                 self.wandering(target.get_coordinates)
         else:
             self.wandering(self.target_coordinates)
-        self.move(dt)
 
     def wandering(self, target: pygame.Vector2):
         """Move ally toward a random wandering point near the target.

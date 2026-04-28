@@ -103,6 +103,12 @@ class Gameplay(State):
         self.map.update(dt, self.player)
         self.camera.update(self.player)
 
+        self.map.handle_collisions(dt, self.player)
+
+        self.player.move(dt)
+        self.map.move_elements(dt)
+
+
     def render(self, screen: pygame.Surface):
         self.camera.scaled_window.fill(BACKGROUND_COLOR)
         self.map.draw(self.camera)
@@ -117,9 +123,6 @@ class Gameplay(State):
 
         self.camera.render(screen)
 
-    def handle_collision(self):
-        """Placeholder collision-handling hook."""
-        self.map.handle_collisions(self.player)
 
     def unload(self):
         self.save()

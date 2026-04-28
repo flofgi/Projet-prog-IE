@@ -18,6 +18,8 @@ DEFAULT_ANIMATION_TIMER = 0
 DEFAULT_MAX_SPEED = 1
 MIN_HP = 0
 DEFAULT_NAME = " "
+HEIGH_COLLISION = 10
+COLLISION_COEF = 2
 
 
 class Entity(WorldElement):
@@ -56,6 +58,8 @@ class Entity(WorldElement):
         self.animation_timer = DEFAULT_ANIMATION_TIMER
         self.max_speed = DEFAULT_MAX_SPEED
         self.BASE_FPS = BASE_FPS
+        self.collision_rect = self.rect.copy()
+        self.dt = 0
 
 
     def move(self, dt: float, mouvement: pygame.Vector2 = None) -> None:
@@ -66,12 +70,15 @@ class Entity(WorldElement):
         """
         if mouvement is not None:
             self.velocity = mouvement
+        
         self.coordinates += self.velocity * dt * self.BASE_FPS
         self.rect.topleft = (
             int(self.coordinates.x + self.hitbox_offset.x),
             int(self.coordinates.y + self.hitbox_offset.y),
         )
+        self.dt = dt
 
+        
     @abstractmethod
     def combat(self):
         """Execute combat logic for the entity.
@@ -116,6 +123,7 @@ class Entity(WorldElement):
             name=data.get("name", DEFAULT_NAME)
         )
         entity.scale = data.get("scale", 1.0)
+        entity.collision_rect = pygame.Rect( entity.rect.left, entity.rect.bottom + HEIGH_COLLISION, entity.rect.width, HEIGH_COLLISION)
 
         
         entity.velocity = pygame.Vector2(data.get("velocity", [0, 0]))
@@ -134,3 +142,46 @@ class Entity(WorldElement):
             draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
             surface.blit(frame, draw_pos)
 
+
+    def handle_entity_collision(self, dt, other: Entity) -> None:
+        """Handle collision with another world element.
+        
+        This method can be overridden by subclasses to implement specific collision
+        responses, such as taking damage, bouncing off, or triggering events.
+        """
+        direction = (pygame.Vector2(self.collision_rect.center) - pygame.Vector2(other.collision_rect.center))
+        if direction.length() == 0:
+            direction = pygame.Vector2(1, 0)  # Arbitrary direction if entities are exactly on top of each other
+        else:
+            direction = direction.normalize()
+
+        self.velocity += direction * COLLISION_COEF * dt
+        other.velocity -= direction * COLLISION_COEF * dt 
+
+    def handle_collision(self, dt, other) -> None:
+        """Handle collision with another world element.
+        
+        This method can be overridden by subclasses to implement specific collision
+        responses, such as taking damage, bouncing off, or triggering events.
+        """
+    def handle_wall_collision(self, dt, wall: pygame.Rect) -> None:
+        """Handle collision with a wall.
+        
+        This method can be overridden by subclasses to implement specific collision
+        responses, such as taking damage, bouncing off, or triggering events.
+        """
+        if self.collision_rect.colliderect(wall):
+            direction = ( pygame.Vector2(self.collision_rect.center) - pygame.Vector2(wall.center))
+            if direction.length() == 0:
+                direction = pygame.Vector2(1, 0)  # Arbitrary direction if entity is exactly on top of the wall
+            else:
+                direction = direction.normalize()
+            self.velocity = direction * COLLISION_COEF * dt
+
+        else:    
+            next_coordinates = self.velocity * dt * self.BASE_FPS
+            next_rect = self.rect.copy()
+            next_rect.topleft += next_coordinates
+            if next_rect.colliderect(wall):
+                self.velocity = pygame.Vector2(0, 0)
+            

@@ -100,14 +100,13 @@ class Mob(Entity):
                     self.wandering(self.target_coordinates)
 
                 else:
-                    direction = self.target_coordinates - self.coordinates
-                    if direction.length_squared() > 0:
+                    direction = self.target_coordinates - self.get_coordinates
+                    if direction.length_squared() > 9:
                         self.velocity = direction.normalize() * self.max_speed
                     else:
                         self.velocity = ZERO_VECTOR.copy()
             else:
                 self.wandering(self.target_coordinates)
-        self.move(dt)
 
 
 
