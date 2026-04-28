@@ -8,7 +8,7 @@ from utilitary import STATE_PUSH, KEY_CHANGE, STATE_REPLACE
 # Constantes
 
 TEXT_POLICE = 18
-HOVERED_SCALE = 1.1
+HOVERED_SCALE = 1
 SEPARATION = 38
 SCROLL_SPEED = 20
 KEYSTATE_OWN_SCREEN_COLOR = (20, 20, 20)
@@ -42,7 +42,7 @@ class KeyState(State):
     def load(self):
 
         self.image = pygame.image.load("Design/Button.png").convert_alpha()
-        self.hovered_image = pygame.image.load("Design/Placeholder2.png").convert_alpha()
+        self.hovered_image = pygame.image.load("Design/Button_pressed.png").convert_alpha()
 
         self.button_back_sprite = pygame.image.load("Design/button_background.png").convert_alpha()
         self.button_back_sprite_hovered = pygame.image.load("Design/button_background_1.png").convert_alpha()

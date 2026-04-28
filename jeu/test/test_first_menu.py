@@ -28,7 +28,7 @@ Is_Fullscreen = data.get("Options", {}).get("button_fullscreen", {}).get("Clicke
 SCREEN_WIDTH = 1280 # de même
 SCREEN_HEIGHT = 720 # de même
 
-STATE_BACK_COLOR = (5, 5, 10)
+STATE_BACK_COLOR = (6, 6, 7)
 
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE| pygame.DOUBLEBUF)
