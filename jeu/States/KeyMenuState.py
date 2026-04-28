@@ -12,6 +12,7 @@ HOVERED_SCALE = 1.1
 SEPARATION = 38
 SCROLL_SPEED = 20
 KEYSTATE_OWN_SCREEN_COLOR = (20, 20, 20)
+SCALE = 2
 
 class KeyState(State):
     def __init__(self, state_manager):
@@ -40,7 +41,7 @@ class KeyState(State):
 
     def load(self):
 
-        self.image = pygame.image.load("Design/Placeholder.png").convert_alpha()
+        self.image = pygame.image.load("Design/Button.png").convert_alpha()
         self.hovered_image = pygame.image.load("Design/Placeholder2.png").convert_alpha()
 
         self.button_back_sprite = pygame.image.load("Design/button_background.png").convert_alpha()
@@ -66,12 +67,12 @@ class KeyState(State):
         self.text_E_pos = (0,0)
         self.Button_back_pos = (0, 0)
 
-        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Z_pos, "button_up" , rect_pos=self.rect_Z_pos, hovered_scale=HOVERED_SCALE)
-        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Q_pos, "button_left" , rect_pos=self.rect_Q_pos, hovered_scale=HOVERED_SCALE)
-        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_S_pos, "button_down" , rect_pos=self.rect_S_pos, hovered_scale=HOVERED_SCALE)
-        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_D_pos, "button_right" , rect_pos=self.rect_D_pos, hovered_scale=HOVERED_SCALE)
-        self.button_i = ClassicButton1(self.I_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_I_pos, "button_interact" , rect_pos=self.rect_I_pos, hovered_scale=HOVERED_SCALE)
-        self.button_e = ClassicButton1(self.E_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_E_pos, "button_inventory" , rect_pos=self.rect_E_pos, hovered_scale=HOVERED_SCALE)
+        self.button_z = ClassicButton1(self.Z_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Z_pos, "button_up" , rect_pos=self.rect_Z_pos, hovered_scale=HOVERED_SCALE, scale=SCALE)
+        self.button_q = ClassicButton1(self.Q_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_Q_pos, "button_left" , rect_pos=self.rect_Q_pos, hovered_scale=HOVERED_SCALE, scale=SCALE)
+        self.button_s = ClassicButton1(self.S_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_S_pos, "button_down" , rect_pos=self.rect_S_pos, hovered_scale=HOVERED_SCALE, scale=SCALE)
+        self.button_d = ClassicButton1(self.D_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_D_pos, "button_right" , rect_pos=self.rect_D_pos, hovered_scale=HOVERED_SCALE, scale=SCALE)
+        self.button_i = ClassicButton1(self.I_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_I_pos, "button_interact" , rect_pos=self.rect_I_pos, hovered_scale=HOVERED_SCALE, scale=SCALE)
+        self.button_e = ClassicButton1(self.E_pos, self.image, self.hovered_image, "Switch_key_state", STATE_PUSH, myFont, self.text_E_pos, "button_inventory" , rect_pos=self.rect_E_pos, hovered_scale=HOVERED_SCALE, scale=SCALE)
         self._calculate_text_position()
         
         self.Button_back = ClassicButton1(self.Button_back_pos,
