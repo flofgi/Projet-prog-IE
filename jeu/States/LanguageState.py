@@ -25,8 +25,8 @@ class LanguageState(State):
 
     def load(self):
 
-        self.Button_B_sprite = pygame.image.load("Design/placeholder.png").convert_alpha()
-        self.Button_B_sprite_hovered = pygame.image.load("Design/placeholder2.png").convert_alpha()
+        self.Button_B_sprite = pygame.image.load("Design/button_background.png").convert_alpha()
+        self.Button_B_sprite_hovered = pygame.image.load("Design/button_background_1.png").convert_alpha()
 
         self.screen_size = pygame.display.get_surface().get_size()
         

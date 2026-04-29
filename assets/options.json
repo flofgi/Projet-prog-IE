@@ -1,13 +1,16 @@
 {
     "Options": {
         "button_sound": {
-            "Percentage": 0.2125
+            "Percentage": 0.8875
         },
         "button_fps": {
-            "Percentage": 1.0
+            "Percentage": 0.25
         },
         "button_gamma": {
-            "Percentage": 0.6875
+            "Percentage": 0.4
+        },
+        "button_fullscreen": {
+            "Clicked": false
         }
     },
     "Saved_keys": {

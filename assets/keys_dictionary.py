@@ -1,5 +1,5 @@
 import pygame
-from utilitary import read_json
+from jeu.utilitary import read_json
 
 # To change key while the program is still loaded
 KEYS = {

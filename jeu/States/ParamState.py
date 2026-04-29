@@ -13,6 +13,7 @@ from States.Buttons.ClickButton import ClickButton
 from utilitary import STATE_POP, STATE_PUSH, STATE_REPLACE, FULLSCREEN, update_json, CHANGE_FPS
 
 HOVERED_SCALE = 1.1
+CLICKBUTTON_SCALE = 2.66
 
 class ParamState(State):
     def __init__(self, state_manager: StateManager):
@@ -34,8 +35,8 @@ class ParamState(State):
         self.button_GFV_trail = pygame.image.load("Design/scroll_trail.png").convert_alpha()
 
         # Click button
-        self.button_fullscreen_sprite = pygame.image.load("Design/placeholder.png").convert_alpha()
-        self.button_fullscreen_sprite_clicked = pygame.image.load("Design/placeholder2.png").convert_alpha()
+        self.button_fullscreen_sprite = pygame.image.load("Design/Click_button.png").convert_alpha()
+        self.button_fullscreen_sprite_clicked = pygame.image.load("Design/Click_button_valid.png").convert_alpha()
 
         # Hovered button
         self.button_BKL_sprite = pygame.image.load("Design/button_background.png").convert_alpha()
@@ -85,7 +86,8 @@ class ParamState(State):
                                             FULLSCREEN,
                                             myFont,
                                             self.BFS_T_pos,
-                                            "button_fullscreen"
+                                            "button_fullscreen", 
+                                            scale = CLICKBUTTON_SCALE,
                                             )
         
     
@@ -171,6 +173,7 @@ class ParamState(State):
             self.Button_soundvolume.name: {"Percentage": self.Button_soundvolume.scroll_percent},
             self.Button_fps.name: {"Percentage": self.Button_fps.scroll_percent},
             self.Button_gamma.name: {"Percentage": self.Button_gamma.scroll_percent},
+            self.Button_fullscreen.name: {"Clicked": self.Button_fullscreen.click_state}
         }
 
         update_json("Options", savedParameter)

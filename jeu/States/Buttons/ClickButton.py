@@ -19,6 +19,7 @@ class ClickButton(ClassicButtons):
     
             data = read_json("assets/options.json")
             lang = data.get("Language").get("Name")
+
             data = read_json("assets/text.json")
             Text = data.get(lang).get(name, "error")
 
@@ -36,24 +37,31 @@ class ClickButton(ClassicButtons):
         self.not_clicked_image_rect.center = center_pos
 
         self.event = action
-        
-        self.click_state = False
+
+        data = read_json("assets/options.json")
+        self.click_state = data.get("Options", {}).get(self.name, {}).get("Clicked", False)
+
 
     def update(self, dt):   
         if self.button_was_clicked == True:
             pygame.display.toggle_fullscreen()
-            if self.click_state == False:
-                self.image = self.clicked_image
-                self.rect = self.clicked_image_rect
-
-                self.click_state = True
-            else:
-                self.image = self.not_clicked_image
-                self.rect = self.not_clicked_image_rect
-
-                self.click_state = False
-
             self.button_was_clicked = False
+            if self.click_state == True:
+                self.click_state = False
+            else:
+                self.click_state = True
+
+        if self.click_state == True:
+            self.image = self.clicked_image
+            self.rect = self.clicked_image_rect
+
+        else:
+            self.image = self.not_clicked_image
+            self.rect = self.not_clicked_image_rect
+
+
+
+
         
             
     def draw(self, screen):
