@@ -64,7 +64,7 @@ class Ally(Entity):
         Returns:
             bool: True if interaction occurred, False otherwise.
         """
-        if player.get_coordinates.distance_to(self.coordinates) < INTERACTION_DISTANCE:
+        if player.get_coordinates.distance_to(self.get_coordinates) < INTERACTION_DISTANCE:
             pygame.event.post(pygame.event.Event(ALLY_EVENT, {
                 "target": self
             }))
@@ -83,13 +83,13 @@ class Ally(Entity):
         if target is not None and target.is_ally(self):
             self.target_coordinates = target.get_coordinates
 
-            distance_player_ally = self.target_coordinates.distance_to(self.coordinates) 
+            distance_player_ally = self.target_coordinates.distance_to(self.get_coordinates) 
             
             if distance_player_ally < self.CONFORT_ZONE:
                 self.velocity = pygame.Vector2(0, 0)
             
             elif distance_player_ally > self.ALERT_ZONE:
-                self.coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE + FOLLOW_TELEPORT_MARGIN, self.target_coordinates)
+                self.get_coordinates = self.target_random_point(self.CONFORT_ZONE, self.CONFORT_ZONE + FOLLOW_TELEPORT_MARGIN, self.target_coordinates)
                 self.velocity = DEFAULT_WANDERING_POINT.copy()
                 
 
@@ -107,7 +107,7 @@ class Ally(Entity):
             if randint(RANDOM_BOOL_MIN, RANDOM_BOOL_MAX) == RANDOM_BOOL_MAX:
                 self.wandering_point = self.target_random_point(self.CONFORT_ZONE, self.WANDERING_ZONE, target)
 
-        direction = self.wandering_point - self.coordinates
+        direction = self.wandering_point - self.get_coordinates
         if direction.length_squared() > 0:
             self.velocity = direction.normalize() * (self.max_speed * HALF_SPEED_FACTOR)
 
@@ -133,7 +133,7 @@ class Ally(Entity):
         Returns:
             pygame.Vector2: A random point around the target within the specified radius limits."""
         if target is None:
-            target = self.coordinates
+            target = self.get_coordinates
         
         rayon = uniform(min_rayon_limite, max_rayon_limite)
         angle = uniform(RANDOM_BOOL_MIN, TAU)

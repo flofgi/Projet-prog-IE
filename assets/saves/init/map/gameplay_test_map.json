@@ -6,6 +6,7 @@
     ],
     "walls": [ 0 ],
     "player_walls":[ 15 ],
+    "ally_walls":[ 0 ],
     "Tileset": {
         "file": "Design/Tileset/MAP1_tileset.png",
         "tilesize": [

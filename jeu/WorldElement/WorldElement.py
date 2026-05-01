@@ -16,7 +16,6 @@ import pygame
 DEFAULT_NAME = " "
 DEFAULT_COORDINATES = pygame.Vector2(0, 0)
 DEFAULT_RECT_SIZE = pygame.Vector2(0, 0)
-DEFAULT_HITBOX_OFFSET = pygame.Vector2(0, 0)
 DEFAULT_SCALE = 1
 BOUNDING_RECT_MIN_ALPHA = 1
 
@@ -43,9 +42,8 @@ class WorldElement(ABC):
         self.sprite_paths = sprites
         self.sprite: list[pygame.Surface] = []
         self.name = name
-        self.coordinates = pygame.Vector2(coordinates) if coordinates is not None else DEFAULT_COORDINATES.copy()
-        self.rect = pygame.Rect(self.coordinates.x, self.coordinates.y, DEFAULT_RECT_SIZE.x, DEFAULT_RECT_SIZE.y)
-        self.hitbox_offset = DEFAULT_HITBOX_OFFSET.copy()
+        self.rect = pygame.Rect(0, 0, DEFAULT_RECT_SIZE.x, DEFAULT_RECT_SIZE.y)
+        self.get_coordinates = pygame.Vector2(coordinates) if coordinates is not None else DEFAULT_COORDINATES.copy()
         self.is_enemy = False
         self.scale = DEFAULT_SCALE
 
@@ -73,7 +71,7 @@ class WorldElement(ABC):
         """Set the entity's position to the given coordinates."""
         self.rect.centerx = int(new_coordinates.x)
         self.rect.bottom = int(new_coordinates.y)
-
+        self.coordinates = pygame.Vector2(new_coordinates)
 
     @property
     def get_rect(self) -> pygame.Rect:
@@ -82,7 +80,7 @@ class WorldElement(ABC):
     
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         """Draw the entity on the given surface, optionally using player information for relative positioning."""
-        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
+        draw_pos = pygame.Vector2(self.rect.topleft) - camera.get_coordinates
         surface.blit(self.sprite[0], draw_pos)
 
 
@@ -97,12 +95,8 @@ class WorldElement(ABC):
         if hitbox_rect.width == DEFAULT_RECT_SIZE.x or hitbox_rect.height == DEFAULT_RECT_SIZE.y:
             hitbox_rect = self.sprite[0].get_rect()
 
-        self.hitbox_offset = pygame.Vector2(hitbox_rect.topleft)
-        self.rect = pygame.Rect(0, 0, hitbox_rect.width, hitbox_rect.height)
-        self.rect.topleft = (
-            int(self.coordinates.x + self.hitbox_offset.x),
-            int(self.coordinates.y + self.hitbox_offset.y),
-        )
+        self.rect = hitbox_rect
+        self.get_coordinates = self.get_coordinates  # Update rect position based on current coordinates
 
     def save(self, map_name: str, data: dict | None = None) -> dict:
         """Serialize the common state shared by every world element."""
@@ -112,7 +106,7 @@ class WorldElement(ABC):
             "name": self.name,
             "sprites": list(self.sprite_paths),
             map_name:{
-                "coordinates": vec_to_list(self.coordinates),
+                "coordinates": vec_to_list(self.get_coordinates),
             },
             "scale": self.scale,
         })

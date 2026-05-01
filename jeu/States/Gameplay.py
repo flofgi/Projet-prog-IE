@@ -73,6 +73,13 @@ class Gameplay(State):
                 for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
+
+                    
+            if event.key == KEYS["ZOOM"]:
+                self.camera.scaling(self.camera.coefscale * 1.1)
+            
+            if event.key == KEYS["UNZOOM"]:
+                self.camera.scaling(self.camera.coefscale * 0.9)
             
             if event.key == KEYS["ESCAPE"]:
                 pygame.event.post(pygame.event.Event(STATE_POP))

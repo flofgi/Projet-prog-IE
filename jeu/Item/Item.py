@@ -68,7 +68,7 @@ class Item(WorldElement):
         Returns:
             bool: True if interaction occurred, False otherwise.
         """
-        if self.coordinates is not None and player.rect.colliderect(self.rect):
+        if self.get_coordinates is not None and player.rect.colliderect(self.rect):
             pygame.event.post(pygame.event.Event(RECUP_EVENT, {
                 "target": self
             }))

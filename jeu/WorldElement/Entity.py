@@ -4,12 +4,15 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from WorldElement.Player import Player
     from Camera import Camera
+    from Map import Map
 
 from abc import ABC, abstractmethod
 import pygame
+from random import random
 
 from WorldElement.WorldElement import WorldElement
 from utilitary import DEAD, vec_to_list, list_to_vec
+
 
 
 DEFAULT_VELOCITY = pygame.Vector2(0, 0)
@@ -59,7 +62,16 @@ class Entity(WorldElement):
         self.max_speed = DEFAULT_MAX_SPEED
         self.BASE_FPS = BASE_FPS
         self.collision_rect = self.rect.copy()
-        self.dt = 0
+
+
+    def update_collision_rect(self) -> None:
+        """Rebuild the collision hitbox at the entity's feet."""
+        self.collision_rect = pygame.Rect(
+            self.rect.left,
+            self.rect.bottom - HEIGH_COLLISION,
+            self.rect.width,
+            HEIGH_COLLISION,
+        )
 
 
     def move(self, dt: float, mouvement: pygame.Vector2 = None) -> None:
@@ -71,12 +83,10 @@ class Entity(WorldElement):
         if mouvement is not None:
             self.velocity = mouvement
         
-        self.coordinates += self.velocity * dt * self.BASE_FPS
-        self.rect.topleft = (
-            int(self.coordinates.x + self.hitbox_offset.x),
-            int(self.coordinates.y + self.hitbox_offset.y),
-        )
-        self.dt = dt
+        self.get_coordinates += self.velocity * dt * self.BASE_FPS
+        self.rect.bottom = self.get_coordinates.y
+        self.rect.centerx = self.get_coordinates.x
+        self.update_collision_rect()
 
         
     @abstractmethod
@@ -123,8 +133,7 @@ class Entity(WorldElement):
             name=data.get("name", DEFAULT_NAME)
         )
         entity.scale = data.get("scale", 1.0)
-        entity.collision_rect = pygame.Rect( entity.rect.left, entity.rect.bottom + HEIGH_COLLISION, entity.rect.width, HEIGH_COLLISION)
-
+        entity.update_collision_rect()
         
         entity.velocity = pygame.Vector2(data.get("velocity", [0, 0]))
         entity.current_frame = data.get("current_frame", 0)
@@ -139,8 +148,13 @@ class Entity(WorldElement):
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:
             frame = self.sprite[self.current_frame]
-            draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
+            draw_pos = pygame.Vector2(self.rect.topleft) - camera.get_coordinates
             surface.blit(frame, draw_pos)
+
+
+    def load(self):
+        super().load()
+        self.update_collision_rect()
 
 
     def handle_entity_collision(self, dt, other: Entity) -> None:
@@ -151,37 +165,51 @@ class Entity(WorldElement):
         """
         direction = (pygame.Vector2(self.collision_rect.center) - pygame.Vector2(other.collision_rect.center))
         if direction.length() == 0:
-            direction = pygame.Vector2(1, 0)  # Arbitrary direction if entities are exactly on top of each other
+            direction = pygame.Vector2(random(),random()) 
         else:
             direction = direction.normalize()
 
         self.velocity += direction * COLLISION_COEF * dt
         other.velocity -= direction * COLLISION_COEF * dt 
 
-    def handle_collision(self, dt, other) -> None:
-        """Handle collision with another world element.
+    def handle_wall_collision(self, dt, wall: pygame.Rect, map: Map) -> None:
+        """Handle collision with a wall using AABB logic.
         
-        This method can be overridden by subclasses to implement specific collision
-        responses, such as taking damage, bouncing off, or triggering events.
+        Check if next position would collide, and if so, resolve along the axis
+        of minimum penetration depth.
         """
-    def handle_wall_collision(self, dt, wall: pygame.Rect) -> None:
-        """Handle collision with a wall.
-        
-        This method can be overridden by subclasses to implement specific collision
-        responses, such as taking damage, bouncing off, or triggering events.
-        """
-        if self.collision_rect.colliderect(wall):
-            direction = ( pygame.Vector2(self.collision_rect.center) - pygame.Vector2(wall.center))
-            if direction.length() == 0:
-                direction = pygame.Vector2(1, 0)  # Arbitrary direction if entity is exactly on top of the wall
-            else:
-                direction = direction.normalize()
-            self.velocity = direction * COLLISION_COEF * dt
+        next_rect = self.collision_rect.copy()
+        next_rect.topleft = self.collision_rect.topleft + self.velocity * dt * self.BASE_FPS
 
-        else:    
-            next_coordinates = self.velocity * dt * self.BASE_FPS
-            next_rect = self.rect.copy()
-            next_rect.topleft += next_coordinates
-            if next_rect.colliderect(wall):
-                self.velocity = pygame.Vector2(0, 0)
-            
+        if not next_rect.colliderect(wall):
+            return
+
+        # Penetration depths (toujours positifs si collision réelle)
+        overlap_left   = next_rect.right  - wall.left   # entité dépasse à droite du mur
+        overlap_right  = wall.right  - next_rect.left   # entité dépasse à gauche du mur
+        overlap_top    = next_rect.bottom - wall.top     # entité dépasse en bas du mur
+        overlap_bottom = wall.bottom  - next_rect.top   # entité dépasse en haut du mur
+
+        # Axe de correction = pénétration minimale
+        min_overlap = min(overlap_left, overlap_right, overlap_top, overlap_bottom)
+
+        if min_overlap == overlap_left:
+            # Entité vient de la gauche → recule à gauche
+            self.get_coordinates.x -= overlap_left
+            self.velocity.x = 0
+        elif min_overlap == overlap_right:
+            # Entité vient de la droite → recule à droite
+            self.get_coordinates.x += overlap_right
+            self.velocity.x = 0
+        elif min_overlap == overlap_top:
+            # Entité vient du haut → recule vers le haut
+            self.get_coordinates.y -= overlap_top
+            self.velocity.y = 0
+        elif min_overlap == overlap_bottom:
+            # Entité vient du bas → recule vers le bas
+            self.get_coordinates.y += overlap_bottom
+            self.velocity.y = 0
+
+        self.rect.bottom  = self.get_coordinates.y
+        self.rect.centerx = self.get_coordinates.x
+        self.update_collision_rect()
