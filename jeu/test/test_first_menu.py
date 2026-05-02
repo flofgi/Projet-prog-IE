@@ -47,7 +47,7 @@ paramState = ParamState(state_manager)
 key_state = KeyState(state_manager)
 switch_key_state = SwitchKeyState(state_manager)
 language_state = LanguageState(state_manager)
-gameplay = Gameplay(state_manager, "bip bip bip je suis un satelite", "gameplay_test_map")
+gameplay = Gameplay(state_manager, "Test mob m", "gameplay_test_map")
 inventorystate = InventoryState(state_manager)
 
 

@@ -29,6 +29,7 @@ class Camera :
     self.zoomsize = self.windowsize
     self.x = 0
     self.y = 0
+    self.coordinates = pygame.Vector2(0, 0)
 
   def update(self, player: Player):
     """update the position of the camera following the player's coordinates and the border of the map"""
@@ -36,13 +37,8 @@ class Camera :
     self.max_y = max(0,self.mapsize[0] * self.tilesize[1] - self.zoomsize[1])
     self.x = max(0, min(player.get_coordinates[0] - self.zoomsize[0]// 2, self.max_x))
     self.y = max(0, min(player.get_coordinates[1] - self.zoomsize[1]// 2, self.max_y))
+    self.coordinates.update(self.x, self.y)
 
-
-  @property
-  def get_coordinates(self) -> pygame.Vector2:
-    """return the position of the camera as a pygame.Vector2"""
-    return pygame.Vector2(self.x, self.y)
-  
 
   def scaling(self, newscale):
     """update the zoom of the window depending on the scale gived, and redraw the map"""   
@@ -53,12 +49,16 @@ class Camera :
 
 
   def render(self, window):
+    if self.zoomsize == self.windowsize:
+      window.blit(self.scaled_window, (0, 0))
+      return
+
     scaled = pygame.transform.scale(self.scaled_window, self.windowsize)
     window.blit(scaled,(0,0))
   
   @property
   def get_coordinates(self):
-    return pygame.Vector2(self.x, self.y)
+    return self.coordinates
   
   @property
   def rect(self):
@@ -86,6 +86,7 @@ class Camera :
     camera = cls(mapsize=mapsize, windowsize=windowsize, tilesize=tilesize)
     camera.x = data.get("x", 0)
     camera.y = data.get("y", 0)
+    camera.coordinates.update(camera.x, camera.y)
     camera.coefscale = data.get("coefscale", 1.0)
     camera.zoomsize = data.get("zoomsize", windowsize)
     camera.max_scale = data.get("max_scale", 2.0)

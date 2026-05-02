@@ -9,7 +9,9 @@ KEYS = {
     "RIGHT": pygame.K_d,
     "INVENTORY": pygame.K_e,
     "INTERACT": pygame.K_a,
-    "ESCAPE": pygame.K_ESCAPE
+    "ESCAPE": pygame.K_ESCAPE,
+    "ZOOM": pygame.K_o,
+    "UNZOOM": pygame.K_p
 }
 
 MOUSE = {

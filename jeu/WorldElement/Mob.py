@@ -91,7 +91,7 @@ class Mob(Entity):
             if target is not None:
                 self.target_coordinates = target.get_coordinates
 
-                distance_player_mob = self.target_coordinates.distance_to(self.coordinates) 
+                distance_player_mob = self.target_coordinates.distance_to(self.get_coordinates) 
                 
                 if distance_player_mob < self.CONFORT_ZONE:
                     self.velocity = ZERO_VECTOR.copy()
@@ -100,14 +100,13 @@ class Mob(Entity):
                     self.wandering(self.target_coordinates)
 
                 else:
-                    direction = self.target_coordinates - self.coordinates
-                    if direction.length_squared() > 0:
+                    direction = self.target_coordinates - self.get_coordinates
+                    if direction.length_squared() > 9:
                         self.velocity = direction.normalize() * self.max_speed
                     else:
                         self.velocity = ZERO_VECTOR.copy()
             else:
                 self.wandering(self.target_coordinates)
-        self.move(dt)
 
 
 
@@ -130,7 +129,7 @@ class Mob(Entity):
             self.velocity = ZERO_VECTOR.copy()
             return
 
-        direction = self.wandering_point - self.coordinates
+        direction = self.wandering_point - self.get_coordinates
         if direction.length_squared() > 0:
             self.velocity = direction.normalize() * (self.max_speed * HALF_SPEED_FACTOR)
         else:
@@ -158,7 +157,7 @@ class Mob(Entity):
             target (pygame.Vector2, optional): The position to generate a random point around. Defaults to None, which uses the mob's current position.
         """
         if target == None:
-            target = self.coordinates
+            target = self.get_coordinates
         
         rayon = uniform(min_rayon_limite, max_rayon_limite)
         angle = uniform(RANDOM_BOOL_MIN, TAU)
@@ -185,7 +184,7 @@ class Mob(Entity):
                 "is_paused": self.is_paused,
                 "timer": self.timer,
                 "is_boss": self.is_boss,
-                "coordinates": vec_to_list(self.coordinates)
+                "coordinates": vec_to_list(self.get_coordinates)
             }
         )
         return data

@@ -73,6 +73,13 @@ class Gameplay(State):
                 for element in self.map.get_worldelements(self.player, INTERACT_RANGE):
                     if element.interact(self.player):
                         continue
+
+                    
+            if event.key == KEYS["ZOOM"]:
+                self.camera.scaling(self.camera.coefscale * 1.1)
+            
+            if event.key == KEYS["UNZOOM"]:
+                self.camera.scaling(self.camera.coefscale * 0.9)
             
             if event.key == KEYS["ESCAPE"]:
                 pygame.event.post(pygame.event.Event(STATE_POP))
@@ -103,6 +110,12 @@ class Gameplay(State):
         self.map.update(dt, self.player)
         self.camera.update(self.player)
 
+        self.map.handle_collisions(dt, self.player)
+
+        self.player.move(dt)
+        self.map.move_elements(dt)
+
+
     def render(self, screen: pygame.Surface):
         self.camera.scaled_window.fill(BACKGROUND_COLOR)
         self.map.draw(self.camera)
@@ -117,9 +130,6 @@ class Gameplay(State):
 
         self.camera.render(screen)
 
-    def handle_collision(self):
-        """Placeholder collision-handling hook."""
-        self.map.handle_collisions(self.player)
 
     def unload(self):
         self.save()

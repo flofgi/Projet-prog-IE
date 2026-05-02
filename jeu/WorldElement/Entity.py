@@ -4,12 +4,15 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from WorldElement.Player import Player
     from Camera import Camera
+    from Map import Map
 
 from abc import ABC, abstractmethod
 import pygame
+from random import random
 
 from WorldElement.WorldElement import WorldElement
 from utilitary import DEAD, vec_to_list, list_to_vec
+
 
 
 DEFAULT_VELOCITY = pygame.Vector2(0, 0)
@@ -18,6 +21,8 @@ DEFAULT_ANIMATION_TIMER = 0
 DEFAULT_MAX_SPEED = 1
 MIN_HP = 0
 DEFAULT_NAME = " "
+HEIGH_COLLISION = 10
+COLLISION_COEF = 2
 
 
 class Entity(WorldElement):
@@ -56,6 +61,17 @@ class Entity(WorldElement):
         self.animation_timer = DEFAULT_ANIMATION_TIMER
         self.max_speed = DEFAULT_MAX_SPEED
         self.BASE_FPS = BASE_FPS
+        self.collision_rect = self.rect.copy()
+
+
+    def update_collision_rect(self) -> None:
+        """Rebuild the collision hitbox at the entity's feet."""
+        self.collision_rect = pygame.Rect(
+            self.rect.left,
+            self.rect.bottom - HEIGH_COLLISION,
+            self.rect.width,
+            HEIGH_COLLISION,
+        )
 
 
     def move(self, dt: float, mouvement: pygame.Vector2 = None) -> None:
@@ -66,12 +82,11 @@ class Entity(WorldElement):
         """
         if mouvement is not None:
             self.velocity = mouvement
-        self.coordinates += self.velocity * dt * self.BASE_FPS
-        self.rect.topleft = (
-            int(self.coordinates.x + self.hitbox_offset.x),
-            int(self.coordinates.y + self.hitbox_offset.y),
-        )
 
+        self.get_coordinates = self.get_coordinates + self.velocity * dt * self.BASE_FPS
+        self.update_collision_rect()
+
+        
     @abstractmethod
     def combat(self):
         """Execute combat logic for the entity.
@@ -116,7 +131,7 @@ class Entity(WorldElement):
             name=data.get("name", DEFAULT_NAME)
         )
         entity.scale = data.get("scale", 1.0)
-
+        entity.update_collision_rect()
         
         entity.velocity = pygame.Vector2(data.get("velocity", [0, 0]))
         entity.current_frame = data.get("current_frame", 0)
@@ -131,6 +146,65 @@ class Entity(WorldElement):
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:
             frame = self.sprite[self.current_frame]
-            draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
-            surface.blit(frame, draw_pos)
+            frame_offset = self.sprite_bounding_offsets[self.current_frame] if self.sprite_bounding_offsets else pygame.Vector2()
+            draw_x = self.rect.x - camera.x - frame_offset.x
+            draw_y = self.rect.y - camera.y - frame_offset.y
+            surface.blit(frame, (draw_x, draw_y))
 
+
+    def load(self):
+        super().load()
+        self.update_collision_rect()
+
+
+    def handle_entity_collision(self, dt, other: Entity) -> None:
+        """Handle collision with another world element.
+        
+        This method can be overridden by subclasses to implement specific collision
+        responses, such as taking damage, bouncing off, or triggering events.
+        """
+        direction = (pygame.Vector2(self.collision_rect.center) - pygame.Vector2(other.collision_rect.center))
+        if direction.length() == 0:
+            direction = pygame.Vector2(random(),random()) 
+        else:
+            direction = direction.normalize()
+
+        self.velocity += direction * COLLISION_COEF * dt
+        other.velocity -= direction * COLLISION_COEF * dt 
+
+    def handle_wall_collision(self, dt, wall: pygame.Rect, map: Map) -> None:
+        """Handle collision with a wall using AABB logic.
+        
+        Check if next position would collide, and if so, resolve along the axis
+        of minimum penetration depth.
+        """
+        next_rect = self.collision_rect.copy()
+        next_rect.topleft = self.collision_rect.topleft + self.velocity * dt * self.BASE_FPS
+
+        if not next_rect.colliderect(wall):
+            return
+
+        new_coordinates = self.get_coordinates.copy()
+
+        overlap_left   = next_rect.right  - wall.left
+        overlap_right  = wall.right  - next_rect.left
+        overlap_top    = next_rect.bottom - wall.top
+        overlap_bottom = wall.bottom  - next_rect.top
+
+        min_overlap = min(overlap_left, overlap_right, overlap_top, overlap_bottom)
+
+        if min_overlap == overlap_left:
+            new_coordinates.x -= overlap_left
+            self.velocity.x = 0
+        elif min_overlap == overlap_right:
+            new_coordinates.x += overlap_right
+            self.velocity.x = 0
+        elif min_overlap == overlap_top:
+            new_coordinates.y -= overlap_top
+            self.velocity.y = 0
+        elif min_overlap == overlap_bottom:
+            new_coordinates.y += overlap_bottom
+            self.velocity.y = 0
+
+        self.get_coordinates = new_coordinates
+        self.update_collision_rect()

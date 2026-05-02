@@ -16,7 +16,6 @@ import pygame
 DEFAULT_NAME = " "
 DEFAULT_COORDINATES = pygame.Vector2(0, 0)
 DEFAULT_RECT_SIZE = pygame.Vector2(0, 0)
-DEFAULT_HITBOX_OFFSET = pygame.Vector2(0, 0)
 DEFAULT_SCALE = 1
 BOUNDING_RECT_MIN_ALPHA = 1
 
@@ -42,10 +41,11 @@ class WorldElement(ABC):
         """
         self.sprite_paths = sprites
         self.sprite: list[pygame.Surface] = []
+        self.sprite_bounding_offsets: list[pygame.Vector2] = []
         self.name = name
-        self.coordinates = pygame.Vector2(coordinates) if coordinates is not None else DEFAULT_COORDINATES.copy()
-        self.rect = pygame.Rect(self.coordinates.x, self.coordinates.y, DEFAULT_RECT_SIZE.x, DEFAULT_RECT_SIZE.y)
-        self.hitbox_offset = DEFAULT_HITBOX_OFFSET.copy()
+        self.rect = pygame.Rect(0, 0, DEFAULT_RECT_SIZE.x, DEFAULT_RECT_SIZE.y)
+        self.coordinates: pygame.Vector2 | None = None
+        self.get_coordinates = pygame.Vector2(coordinates) if coordinates is not None else DEFAULT_COORDINATES.copy()
         self.is_enemy = False
         self.scale = DEFAULT_SCALE
 
@@ -66,14 +66,13 @@ class WorldElement(ABC):
     @property    
     def get_coordinates(self) -> pygame.Vector2:
         """Return the current position of the entity as pygame.Vector2."""
-        return pygame.Vector2(self.rect.centerx ,self.rect.bottom)
+        return self.coordinates
     
     @get_coordinates.setter
     def get_coordinates(self, new_coordinates: pygame.Vector2):
         """Set the entity's position to the given coordinates."""
-        self.rect.centerx = int(new_coordinates.x)
-        self.rect.bottom = int(new_coordinates.y)
-
+        self.coordinates = pygame.Vector2(new_coordinates)
+        self.rect.midbottom = self.coordinates.x, self.coordinates.y
 
     @property
     def get_rect(self) -> pygame.Rect:
@@ -82,8 +81,10 @@ class WorldElement(ABC):
     
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         """Draw the entity on the given surface, optionally using player information for relative positioning."""
-        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
-        surface.blit(self.sprite[0], draw_pos)
+        sprite_offset = self.sprite_bounding_offsets[0] if self.sprite_bounding_offsets else pygame.Vector2()
+        draw_x = self.rect.x - camera.x - sprite_offset.x
+        draw_y = self.rect.y - camera.y - sprite_offset.y
+        surface.blit(self.sprite[0], (draw_x, draw_y))
 
 
     def load(self):
@@ -93,16 +94,18 @@ class WorldElement(ABC):
         """
         self.sprite = [pygame.image.load(s).convert_alpha() for s in self.sprite_paths]
         self.sprite_size = [s.get_size() for s in self.sprite]
-        hitbox_rect = self.sprite[0].get_bounding_rect(min_alpha=BOUNDING_RECT_MIN_ALPHA)
-        if hitbox_rect.width == DEFAULT_RECT_SIZE.x or hitbox_rect.height == DEFAULT_RECT_SIZE.y:
-            hitbox_rect = self.sprite[0].get_rect()
+        self.sprite_bounding_offsets = []
+        for image in self.sprite:
+            bounding_rect = image.get_bounding_rect(min_alpha=BOUNDING_RECT_MIN_ALPHA)
+            self.sprite_bounding_offsets.append(pygame.Vector2(bounding_rect.topleft))
 
-        self.hitbox_offset = pygame.Vector2(hitbox_rect.topleft)
-        self.rect = pygame.Rect(0, 0, hitbox_rect.width, hitbox_rect.height)
-        self.rect.topleft = (
-            int(self.coordinates.x + self.hitbox_offset.x),
-            int(self.coordinates.y + self.hitbox_offset.y),
-        )
+        self.rect = self.sprite[0].get_bounding_rect(min_alpha=BOUNDING_RECT_MIN_ALPHA)
+        if self.rect.width == DEFAULT_RECT_SIZE.x or self.rect.height == DEFAULT_RECT_SIZE.y:
+            self.rect = self.sprite[0].get_rect()
+            if self.sprite_bounding_offsets:
+                self.sprite_bounding_offsets[0] = pygame.Vector2()
+        self.get_coordinates = self.coordinates.copy() if self.coordinates is not None else None
+
 
     def save(self, map_name: str, data: dict | None = None) -> dict:
         """Serialize the common state shared by every world element."""
@@ -112,7 +115,7 @@ class WorldElement(ABC):
             "name": self.name,
             "sprites": list(self.sprite_paths),
             map_name:{
-                "coordinates": vec_to_list(self.coordinates),
+                "coordinates": vec_to_list(self.get_coordinates),
             },
             "scale": self.scale,
         })

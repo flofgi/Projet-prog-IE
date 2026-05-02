@@ -94,6 +94,14 @@ class Player(Entity):
             new_ally (Ally): The ally to be added to the player's list of allies."""
         if new_ally not in self.allies:
             self.allies.append(new_ally)
+    
+    def move(self, dt: float) -> None:
+        """Update player movement from keyboard input. And allies movement.
+        Args:
+            dt (float): Time delta since last update, used for timing animations and movements."""
+        super().move(dt)
+        for ally in self.allies:
+            ally.move(dt)
 
     def update(self, dt: float, map: Map, target: "Player" = None):
         """Update player movement from keyboard input and update allies.
@@ -104,7 +112,6 @@ class Player(Entity):
         keys = pygame.key.get_pressed()
 
         self.handle_keys(keys)
-        self.move(dt)
 
         for ally in self.allies:
             ally.update(dt, self)
@@ -205,7 +212,7 @@ class Player(Entity):
         """Update the player's map reference when transitioning to a new map."""
         self.map = new_map
         self.camera = new_camera
-        self.coordinates = coordinates
+        self.get_coordinates = coordinates
 
     def save(self, map_name: str, data: dict | None = None) -> dict:
         data = super().save(map_name, data)
@@ -217,7 +224,7 @@ class Player(Entity):
                 "allies": [ally.save(map_name) for ally in self.allies],
                 "INVENTORY": self.inventory.save(map_name),
                 f"{map_name}": {
-                    "coordinates": vec_to_list(self.coordinates)
+                    "coordinates": vec_to_list(self.get_coordinates)
                 }
             }
         )
@@ -251,9 +258,9 @@ class Player(Entity):
         self.camera = camera
         map = player_data.get(self.map.name, {})
         if map == {}:
-            self.coordinates = self.map.spawn_point.copy()
+            self.get_coordinates = self.map.spawn_point.copy()
         else:
-            self.coordinates = list_to_vec(map.get("coordinates", vec_to_list(self.map.spawn_point)))
+            self.get_coordinates = list_to_vec(map.get("coordinates", vec_to_list(self.map.spawn_point)))
 
     @property
     def get_allies(self) -> list[Ally]:
@@ -274,8 +281,10 @@ class Player(Entity):
 
     def draw(self, surface: pygame.Surface, camera: Camera, player = None):
         frame = self.sprite[self.current_frame]
-        draw_pos = pygame.Vector2(self.rect.topleft) - self.hitbox_offset - camera.get_coordinates
-        surface.blit(frame, draw_pos)
+        frame_offset = self.sprite_bounding_offsets[self.current_frame] if self.sprite_bounding_offsets else pygame.Vector2()
+        draw_x = self.rect.x - camera.x - frame_offset.x
+        draw_y = self.rect.y - camera.y - frame_offset.y
+        surface.blit(frame, (draw_x, draw_y))
         if self.inventory.held_item is not None:
             self.inventory.held_item.draw_equip(surface, camera, player)
         else:
