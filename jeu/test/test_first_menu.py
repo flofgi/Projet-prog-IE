@@ -9,6 +9,7 @@ from States.SwitchKeyState import SwitchKeyState
 from States.LanguageState import LanguageState
 from States.Gameplay import Gameplay
 from States.InventoryState import InventoryState
+from States.Fight.FightState import FightState
 
 from Item.Grenade import grenade
 from Item.Gun import gun
@@ -28,7 +29,7 @@ Is_Fullscreen = data.get("Options", {}).get("button_fullscreen", {}).get("Clicke
 SCREEN_WIDTH = 1280 # de même
 SCREEN_HEIGHT = 720 # de même
 
-STATE_BACK_COLOR = (6, 6, 7)
+STATE_BACK_COLOR = (6, 255, 7)
 
 #screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE | pygame.SCALED | pygame.DOUBLEBUF)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE| pygame.DOUBLEBUF)
@@ -50,8 +51,10 @@ language_state = LanguageState(state_manager)
 gameplay = Gameplay(state_manager, "bip bip bip je suis un satelite", "gameplay_test_map")
 inventorystate = InventoryState(state_manager)
 
+fight_state = FightState(state_manager)
 
-state_manager.push_state(first_menu)
+
+state_manager.push_state(fight_state)
 
 state_manager.register_route("title", title)
 state_manager.register_route("first_menu", first_menu)
@@ -70,7 +73,6 @@ clock = pygame.time.Clock()
 
 run = True
 while run:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             state_manager.current_state.unload()
