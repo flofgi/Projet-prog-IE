@@ -82,10 +82,8 @@ class Entity(WorldElement):
         """
         if mouvement is not None:
             self.velocity = mouvement
-        
-        self.get_coordinates += self.velocity * dt * self.BASE_FPS
-        self.rect.bottom = self.get_coordinates.y
-        self.rect.centerx = self.get_coordinates.x
+
+        self.get_coordinates = self.get_coordinates + self.velocity * dt * self.BASE_FPS
         self.update_collision_rect()
 
         
@@ -148,8 +146,10 @@ class Entity(WorldElement):
     def draw(self, surface: pygame.Surface, camera: Camera, player: Player = None) -> None:
         if self.sprite:
             frame = self.sprite[self.current_frame]
-            draw_pos = pygame.Vector2(self.rect.topleft) - camera.get_coordinates
-            surface.blit(frame, draw_pos)
+            frame_offset = self.sprite_bounding_offsets[self.current_frame] if self.sprite_bounding_offsets else pygame.Vector2()
+            draw_x = self.rect.x - camera.x - frame_offset.x
+            draw_y = self.rect.y - camera.y - frame_offset.y
+            surface.blit(frame, (draw_x, draw_y))
 
 
     def load(self):
@@ -184,32 +184,27 @@ class Entity(WorldElement):
         if not next_rect.colliderect(wall):
             return
 
-        # Penetration depths (toujours positifs si collision réelle)
-        overlap_left   = next_rect.right  - wall.left   # entité dépasse à droite du mur
-        overlap_right  = wall.right  - next_rect.left   # entité dépasse à gauche du mur
-        overlap_top    = next_rect.bottom - wall.top     # entité dépasse en bas du mur
-        overlap_bottom = wall.bottom  - next_rect.top   # entité dépasse en haut du mur
+        new_coordinates = self.get_coordinates.copy()
 
-        # Axe de correction = pénétration minimale
+        overlap_left   = next_rect.right  - wall.left
+        overlap_right  = wall.right  - next_rect.left
+        overlap_top    = next_rect.bottom - wall.top
+        overlap_bottom = wall.bottom  - next_rect.top
+
         min_overlap = min(overlap_left, overlap_right, overlap_top, overlap_bottom)
 
         if min_overlap == overlap_left:
-            # Entité vient de la gauche → recule à gauche
-            self.get_coordinates.x -= overlap_left
+            new_coordinates.x -= overlap_left
             self.velocity.x = 0
         elif min_overlap == overlap_right:
-            # Entité vient de la droite → recule à droite
-            self.get_coordinates.x += overlap_right
+            new_coordinates.x += overlap_right
             self.velocity.x = 0
         elif min_overlap == overlap_top:
-            # Entité vient du haut → recule vers le haut
-            self.get_coordinates.y -= overlap_top
+            new_coordinates.y -= overlap_top
             self.velocity.y = 0
         elif min_overlap == overlap_bottom:
-            # Entité vient du bas → recule vers le bas
-            self.get_coordinates.y += overlap_bottom
+            new_coordinates.y += overlap_bottom
             self.velocity.y = 0
 
-        self.rect.bottom  = self.get_coordinates.y
-        self.rect.centerx = self.get_coordinates.x
+        self.get_coordinates = new_coordinates
         self.update_collision_rect()

@@ -77,7 +77,8 @@ class Map :
                     x = j * tile_w - camera.x
                     y = i * tile_h - camera.y
                     surface.blit(tile, (x, y))
-  
+
+
     @property
     def get_worldelement(self) -> list[WorldElement]:
         return self.allies + self.items + self.mobs
@@ -164,8 +165,7 @@ class Map :
                     elem1.handle_entity_collision(dt, elem2)
         
         for i in self.mobs:
-            for wall in self.tilesrect(i):
-                i.handle_wall_collision(dt, wall, self)
+            for wall in self.tilesrect(i):                i.handle_wall_collision(dt, wall, self)
         
         for i in self.allies:
              for wall in self.tilesrect(i, self.ally_walls + self.walls):
@@ -255,24 +255,29 @@ class Map :
     
     def tilesrect(self, entity: Entity, walls: list[str] = None) -> list[pygame.Rect]:
         """Get the tile rectangles corresponding to nearby wall tiles."""
-        tile_x, tile_y = self.tile(entity)
-
         if walls is None:
             walls = self.walls
 
-        list_rect = []
         tile_w, tile_h = self.tileset.getTileSize
-        for i in range(3):
-            for j in range(3):
-                y = tile_y + i - 1
-                x = tile_x + j - 1
 
-                if 0 <= y < self.mapset.shape[0] and 0 <= x < self.mapset.shape[1]:
-                    if self.mapset[y, x] in walls:
+        # Use the entity's collision_rect (feet hitbox) to determine which tiles
+        # actually overlap the entity. This avoids always returning a 3x3 block
+        # which can include an extra tile at edges (e.g., at 0,0).
+        if hasattr(entity, "collision_rect"):
+            rect = entity.collision_rect
+        else:
+            rect = entity.rect
 
-                        list_rect.append(pygame.Rect(x * tile_w, y * tile_h, tile_w, tile_h))
-        
-    
+        left_tile = max(0, rect.left // tile_w)
+        right_tile = min(self.mapset.shape[1] - 1, (max(0, rect.right - 1)) // tile_w)
+        top_tile = max(0, rect.top // tile_h)
+        bottom_tile = min(self.mapset.shape[0] - 1, (max(0, rect.bottom - 1)) // tile_h)
+
+        list_rect: list[pygame.Rect] = []
+        for y in range(top_tile, bottom_tile + 1):
+            for x in range(left_tile, right_tile + 1):
+                if self.mapset[y, x] in walls:
+                    list_rect.append(pygame.Rect(x * tile_w, y * tile_h, tile_w, tile_h))
         return list_rect
 
     def tilerect(self, Entity: Entity | pygame.Vector2) -> pygame.Rect:

@@ -4,9 +4,9 @@
         250.0,
         250.0
     ],
-    "walls": [ 0 ],
-    "player_walls":[ 15 ],
-    "ally_walls":[ 0 ],
+    "walls": [0, 18, 19, 22, 23 ],
+    "player_walls":[0, 18, 19, 22, 23 ],
+    "ally_walls":[0, 18, 19, 22, 23 ],
     "Tileset": {
         "file": "Design/Tileset/MAP1_tileset.png",
         "tilesize": [

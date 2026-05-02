@@ -281,8 +281,10 @@ class Player(Entity):
 
     def draw(self, surface: pygame.Surface, camera: Camera, player = None):
         frame = self.sprite[self.current_frame]
-        draw_pos = pygame.Vector2(self.rect.topleft) - camera.get_coordinates
-        surface.blit(frame, draw_pos)
+        frame_offset = self.sprite_bounding_offsets[self.current_frame] if self.sprite_bounding_offsets else pygame.Vector2()
+        draw_x = self.rect.x - camera.x - frame_offset.x
+        draw_y = self.rect.y - camera.y - frame_offset.y
+        surface.blit(frame, (draw_x, draw_y))
         if self.inventory.held_item is not None:
             self.inventory.held_item.draw_equip(surface, camera, player)
         else:

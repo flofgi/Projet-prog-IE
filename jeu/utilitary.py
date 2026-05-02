@@ -52,3 +52,6 @@ def list_to_vec(lst: list[float] | None) -> pygame.Vector2 | None:
     if lst is None:
         return None
     return pygame.Vector2(lst[0], lst[1])
+
+# Toggle detailed collision debug prints
+DEBUG_COLLISIONS = False
